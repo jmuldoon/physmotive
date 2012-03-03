@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="app_name">PhysMotive</string>
+	<string name="btnAddCollection">Add Collection</string>
+	<string name="btnSave">Save</string>
+	<string name="btnUpdate">Update</string>
+	<string name="btnCancel">Cancel</string>
+	<string name="CollTitle">Enter name of collection:</string>
+	<string name="CollHint">Name</string>
+	<string name="CollName">Collection Name: (Max 25)</string>
+
+</resources>
