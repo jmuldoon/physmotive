@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string-array name="SEDC_menu">
+		<item>Select</item>
+		<item>Edit</item>
+		<item>Delete</item>
+		<item>Cancel</item>
+	</string-array>
+	<string-array name="SDC_menu">
+		<item>Select</item>
+		<item>Delete</item>
+		<item>Cancel</item>
+	</string-array>
+	<string-array name="SC_menu">
+		<item>Select</item>
+		<item>Cancel</item>
+	</string-array>
+
+</resources>
