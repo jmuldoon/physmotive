@@ -6,7 +6,7 @@
 	android:orientation="vertical" >
 
 	<Button
-		android:id="@+id/btnAddCollection"
+		android:id="@+id/btnAddDiary"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentBottom="true"
@@ -16,7 +16,7 @@
 		android:id="@+id/android:list"
 		android:layout_width="match_parent"
 		android:layout_height="fill_parent"
-		android:layout_above="@id/btnAddCollection"
+		android:layout_above="@id/btnAddDiary"
 		android:layout_alignParentTop="true" >
 	</ListView>
 
