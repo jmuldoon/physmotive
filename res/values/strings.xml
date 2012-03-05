@@ -2,12 +2,13 @@
 <resources>
 
 	<string name="app_name">PhysMotive</string>
-	<string name="btnAddCollection">Add Collection</string>
+	<string name="btnAddDiary">Add Diary Entry</string>
+	<string name="btnAddActivity">Add Activity</string>
 	<string name="btnSave">Save</string>
 	<string name="btnUpdate">Update</string>
 	<string name="btnCancel">Cancel</string>
-	<string name="CollTitle">Enter name of collection:</string>
-	<string name="CollHint">Name</string>
-	<string name="CollName">Collection Name: (Max 25)</string>
+	<string name="diaryTitle">Enter name of diary entry:</string>
+	<string name="diaryHint">Name</string>
+	<string name="nameOfDiary">Diary Name:</string>
 
 </resources>
