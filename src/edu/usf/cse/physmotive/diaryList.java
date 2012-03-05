@@ -30,7 +30,7 @@ public class DiaryList extends ListActivity
     protected ListView diary_lv;
     private DiaryDBM DBM;
     private Cursor cursor;
-    private ListAdapter adapter;
+    private ListAdapter adapter; 
 
     @Override
     public void onCreate(Bundle savedInstanceState)
