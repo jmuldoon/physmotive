@@ -6,7 +6,6 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -22,26 +21,35 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
-import edu.usf.cse.physmotive.db.diaryDBM;
+import edu.usf.cse.physmotive.db.DiaryDBM;
 
-public class diaryList extends ListActivity
+public class DiaryList extends ListActivity
 {
     private long Usr = 1;
     protected Button addDiary;
     protected ListView diary_lv;
-    private SQLiteDatabase newDB;
-    private diaryDBM DBM;
+    private DiaryDBM DBM;
     private Cursor cursor;
-    private ListAdapter adapter;
+    private ListAdapter adapter; 
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
 	super.onCreate(savedInstanceState);
-	setContentView(R.layout.activity_list);
+	setContentView(R.layout.diary_list);
 
-	DBM = new diaryDBM(this);
+	DBM = new DiaryDBM(this);
 	diary_lv = (ListView) this.getListView();
+
+	setupButton();
+	registerForContextMenu(diary_lv);
+
+	// Move DB info Into List View
+	updateList();
+    }
+
+    private void setupButton()
+    {
 	addDiary = (Button) findViewById(R.id.btnAddDiary);
 	addDiary.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v)
@@ -49,11 +57,6 @@ public class diaryList extends ListActivity
 		showDialog(0);
 	    }
 	});
-
-	registerForContextMenu(diary_lv);
-
-	// Move DB info Into List View
-	updateList();
     }
 
     // ////////////////////////////////////////
@@ -89,7 +92,7 @@ public class diaryList extends ListActivity
 	int item_id = item.getInt(0);
 
 	// the new activity being started
-	Intent myIntent = new Intent(v.getContext(), diaryView.class);
+	Intent myIntent = new Intent(v.getContext(), DiaryView.class);
 	// The information being passed to the new activity
 	Bundle bundle = new Bundle();
 
@@ -138,7 +141,7 @@ public class diaryList extends ListActivity
 
 	if (item.getTitle().equals("Select"))
 	{
-	    Intent myIntent = new Intent(this, diaryView.class);
+	    Intent myIntent = new Intent(this, DiaryView.class);
 
 	    bundle.putLong("User_Id", Usr);
 	    bundle.putInt("Coll_Id", item_id);
@@ -166,7 +169,7 @@ public class diaryList extends ListActivity
     protected Dialog onCreateDialog(int i, Bundle args)
     {
 	LayoutInflater factory = LayoutInflater.from(this);
-	final View textEntryView = factory.inflate(R.layout.new_coll, null);
+	final View textEntryView = factory.inflate(R.layout.new_diary, null);
 
 	switch (i) {
 
@@ -174,24 +177,22 @@ public class diaryList extends ListActivity
 	// This dialog is for the creation of a new diary entry //
 	// ///////////////////////////////////////////////////////
 	case 0:
-	    return new AlertDialog.Builder(CollectionsList.this)
+	    return new AlertDialog.Builder(DiaryList.this)
 		    // .setIconAttribute(android.R.attr.alertDialogIcon)
-		    .setTitle(R.string.CollTitle).setView(textEntryView)
+		    .setTitle(R.string.diaryTitle).setView(textEntryView)
 		    .setPositiveButton(R.string.btnSave, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton)
 			{
-			    EditText collName = (EditText) textEntryView.findViewById(R.id.collName);
+			    EditText collName = (EditText) textEntryView.findViewById(R.id.diaryName);
 
 			    /* User clicked OK so do some stuff */
 			    if (collName.getText().toString().equals("") || collName.getText().toString().trim().equals(""))
 			    {
-				Toast.makeText(CollectionsList.this, "Collections must have a name.", Toast.LENGTH_LONG)
-					.show();
+				Toast.makeText(DiaryList.this, "Collections must have a name.", Toast.LENGTH_LONG).show();
 			    } else
 			    {
-				Toast.makeText(CollectionsList.this, "The collection is saving...", Toast.LENGTH_SHORT)
-					.show();
-				insert(collectionsDAO, collName.getText().toString());
+				Toast.makeText(DiaryList.this, "The collection is saving...", Toast.LENGTH_SHORT).show();
+				insert(DBM, collName.getText().toString());
 				collName.setText("");
 
 			    }
@@ -200,7 +201,7 @@ public class diaryList extends ListActivity
 			public void onClick(DialogInterface dialog, int whichButton)
 			{
 			    /* User clicked cancel, close dialog */
-			    EditText collName = (EditText) textEntryView.findViewById(R.id.collName);
+			    EditText collName = (EditText) textEntryView.findViewById(R.id.diaryName);
 			    collName.setText("");
 			}
 		    }).create();
@@ -208,25 +209,23 @@ public class diaryList extends ListActivity
 
 	    final int item_id = args.getInt("Coll_Id");
 
-	    return new AlertDialog.Builder(CollectionsList.this)
+	    return new AlertDialog.Builder(DiaryList.this)
 		    // .setIconAttribute(android.R.attr.alertDialogIcon)
-		    .setTitle(R.string.CollTitle).setView(textEntryView)
+		    .setTitle(R.string.diaryTitle).setView(textEntryView)
 		    .setPositiveButton(R.string.btnUpdate, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton)
 			{
-			    EditText collName = (EditText) textEntryView.findViewById(R.id.collName);
+			    EditText collName = (EditText) textEntryView.findViewById(R.id.diaryName);
 
 			    /* User clicked OK so do some stuff */
 			    if (collName.getText().toString().equals("") || collName.getText().toString().trim().equals(""))
 			    {
-				Toast.makeText(CollectionsList.this, "Collections must have a name.", Toast.LENGTH_LONG)
-					.show();
+				Toast.makeText(DiaryList.this, "Collections must have a name.", Toast.LENGTH_LONG).show();
 			    } else
 			    {
-				Toast.makeText(CollectionsList.this, "The collection is updating...", Toast.LENGTH_SHORT)
-					.show();
+				Toast.makeText(DiaryList.this, "The collection is updating...", Toast.LENGTH_SHORT).show();
 
-				update(collectionsDAO, item_id, collName.getText().toString());
+				update(DBM, item_id, collName.getText().toString());
 				collName.setText("");
 			    }
 			}
@@ -234,7 +233,7 @@ public class diaryList extends ListActivity
 			public void onClick(DialogInterface dialog, int whichButton)
 			{
 			    /* User clicked cancel, close dialog */
-			    EditText collName = (EditText) textEntryView.findViewById(R.id.collName);
+			    EditText collName = (EditText) textEntryView.findViewById(R.id.diaryName);
 			    collName.setText("");
 			}
 		    }).create();
@@ -246,7 +245,7 @@ public class diaryList extends ListActivity
     @Override
     protected void onPrepareDialog(final int id, final Dialog dialog, Bundle args)
     {
-	EditText collName = (EditText) dialog.findViewById(R.id.collName);
+	EditText collName = (EditText) dialog.findViewById(R.id.diaryName);
 
 	switch (id) {
 	case 0:
@@ -257,22 +256,22 @@ public class diaryList extends ListActivity
 	    ad.setButton(AlertDialog.BUTTON_POSITIVE, "test", new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int whichButton)
 		{
-		    EditText collName = (EditText) ad.findViewById(R.id.collName);
+		    EditText collName = (EditText) ad.findViewById(R.id.diaryName);
 
 		    /* User clicked OK so do some stuff */
 		    if (collName.getText().toString().equals("") || collName.getText().toString().trim().equals(""))
 		    {
-			Toast.makeText(CollectionsList.this, "Collections must have a name.", Toast.LENGTH_LONG).show();
+			Toast.makeText(DiaryList.this, "Collections must have a name.", Toast.LENGTH_LONG).show();
 		    } else
 		    {
-			Toast.makeText(CollectionsList.this, "The collection is updating...", Toast.LENGTH_SHORT).show();
+			Toast.makeText(DiaryList.this, "The collection is updating...", Toast.LENGTH_SHORT).show();
 
-			update(collectionsDAO, item_id, collName.getText().toString());
+			update(DBM, item_id, collName.getText().toString());
 			collName.setText("");
 		    }
 		}
 	    });
-	    Cursor cursor = get(collectionsDAO, item_id);
+	    Cursor cursor = get(DBM, item_id);
 	    collName.setText(cursor.getString(1));
 
 	}
@@ -281,47 +280,46 @@ public class diaryList extends ListActivity
 
     private void updateList()
     {
-	cursor = newDB.rawQuery("Select _id, mC_Name as mC_Name from MT_Collections where mC_EntryUsr = " + Usr
-		+ " and mC_Deleted <> 1", null);
+	cursor = DBM.getList(1);
 	startManagingCursor(cursor);
-	adapter = new SimpleCursorAdapter(this, R.layout.collection_list_item, cursor, new String[] { "_id", "mC_Name" },
-		new int[] { R.id.C_ID, R.id.C_Name });
+	adapter = new SimpleCursorAdapter(this, R.layout.diary_list_item, cursor, new String[] { "_id", "name" }, new int[] {
+		R.id.D_ID, R.id.D_Name });
 	setListAdapter(adapter);
     }
 
-    private long insert(CollectionsDAO collectionsDAO, String coll_name)
+    private long insert(DiaryDBM dbm, String diaryName)
     {
 
-	collectionsDAO.open();
-	long id = collectionsDAO.insert(coll_name, Usr);
-	collectionsDAO.close();
+	dbm.open();
+	// long id = dbm.insert(diaryName, Usr);
+	dbm.close();
 	updateList();
 
-	return id;
+	return 1; // id
     }
 
-    private void update(CollectionsDAO collectionsDAO, int item_id, String coll_name)
+    private void update(DiaryDBM dbm, int item_id, String diary_name)
     {
-	collectionsDAO.open();
-	collectionsDAO.update(item_id, coll_name, Usr);
-	collectionsDAO.close();
-	updateList();
-    }
-
-    private void delete(CollectionsDAO collectionsDAO, int item_id)
-    {
-	collectionsDAO.open();
-	collectionsDAO.delete(item_id, Usr);
-	collectionsDAO.close();
+	dbm.open();
+	// dbm.update(item_id, dairy_name, Usr);
+	dbm.close();
 	updateList();
     }
 
-    private Cursor get(CollectionsDAO collectionsDAO, int item_id)
+    private void delete(DiaryDBM dbm, int item_id)
     {
-	collectionsDAO.open();
-	Cursor c = collectionsDAO.get(item_id);
+	dbm.open();
+	// dbm.delete(item_id, Usr);
+	dbm.close();
+	updateList();
+    }
+
+    private Cursor get(DiaryDBM dbm, int item_id)
+    {
+	dbm.open();
+	Cursor c = dbm.get(item_id);
 	startManagingCursor(c);
-	collectionsDAO.close();
+	dbm.close();
 	if (c.moveToFirst())
 	    return c;
 	else

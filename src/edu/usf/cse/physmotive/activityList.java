@@ -4,7 +4,7 @@ package edu.usf.cse.physmotive;
 import android.app.ListActivity;
 import android.os.Bundle;
 
-public class activityList extends ListActivity
+public class ActivityList extends ListActivity
 {
     /** Called when the activity is first created. */
     @Override

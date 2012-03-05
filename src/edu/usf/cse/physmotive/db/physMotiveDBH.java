@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class physMotiveDBH extends SQLiteOpenHelper
+public class PhysMotiveDBH extends SQLiteOpenHelper
 {
 
     static final String DATABASE_NAME = "physmotive";
@@ -27,7 +27,7 @@ public class physMotiveDBH extends SQLiteOpenHelper
 	    + " entryUsr integer not null, entryDate integer not null, updateUsr integer,"
 	    + " updateDate integer, deleted integer);";
 
-    physMotiveDBH(Context context) {
+    PhysMotiveDBH(Context context) {
 	super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

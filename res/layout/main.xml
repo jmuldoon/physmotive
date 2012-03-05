@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<TextView 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	/>
+
+<TableLayout
+    android:id="@+id/mainMenuTableLayout"
+    android:layout_width="match_parent"
+    android:layout_height="486dp" >
+
+    <TableRow android:layout_height="wrap_content" android:id="@+id/tableRow1" android:layout_width="wrap_content">
+        <Button android:id="@+id/newActivityButton" android:text="@string/newActivityButtonName" android:layout_width="150dip" android:layout_height="60dip"></Button>
+        <Button android:id="@+id/viewActivityButton" android:text="@string/viewActivityButtonName" android:layout_width="150dip" android:layout_height="60dip"></Button>
+    </TableRow>
+    
+    <TableRow android:layout_height="wrap_content" android:id="@+id/tableRow2" android:layout_width="match_parent">
+        <Button android:id="@+id/mapButton" android:layout_width="wrap_content" android:text="@string/mapButtonName" android:layout_height="60dip"></Button>
+        <Button android:id="@+id/diaryButton" android:layout_width="wrap_content" android:text="@string/diaryButtonName" android:layout_height="60dip"></Button>
+    </TableRow>
+    
+    <TableRow android:layout_height="wrap_content" android:id="@+id/tableRow3" android:layout_width="match_parent">
+        <Button android:id="@+id/statisticsButton" android:layout_width="wrap_content" android:text="@string/statisticsButtonName" android:layout_height="60dip"></Button>
+        <Button android:id="@+id/settingsButton" android:layout_width="wrap_content" android:text="@string/settingsButtonName" android:layout_height="60dip"></Button>
+    </TableRow>
+</TableLayout>
+</LinearLayout>
