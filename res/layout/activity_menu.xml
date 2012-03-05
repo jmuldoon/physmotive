@@ -4,11 +4,7 @@
     android:id="@+id/activityMenuTableLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-    <TableRow android:layout_height="wrap_content" android:id="@+id/tableRow1" android:layout_width="wrap_content">
-    	<Spinner android:id="@+id/userSpinner" android:layout_width="238dp" android:layout_height="wrap_content" />
-    	<Button android:id="@+id/newUserbutton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/newUserName" />
-	</TableRow>
+   
     <TableRow android:id="@+id/tableRow2" android:layout_width="wrap_content" android:layout_height="wrap_content">
         <Spinner android:id="@+id/activitySpinner" android:layout_width="238dp" android:layout_height="wrap_content"/>
     </TableRow>
@@ -20,7 +16,7 @@
 	    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/selectedDistanceOrTime" android:text = "@string/selectedDistanceOrTimeValue"/>
 	</TableRow>
 	<TableRow android:layout_height="wrap_content" android:id="@+id/tableRow5" android:layout_width="match_parent">
-	    <ImageView android:id="@+id/distanceOrTimeChartImageView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_launcher" />
+	    <ImageView android:id="@+id/distanceOrTimeChartImageView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_launcher" android:contentDescription="@string/activityMenuGraph"/>
 	</TableRow>
 	<TableRow android:layout_height="wrap_content" android:id="@+id/tableRow6" android:layout_width="match_parent">
 		<Button android:id="@+id/manualButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/manualButtonText" />

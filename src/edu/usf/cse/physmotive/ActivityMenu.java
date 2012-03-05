@@ -1,6 +1,5 @@
 package edu.usf.cse.physmotive;
 
-import edu.usf.cse.physmotive.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,7 +38,7 @@ public class ActivityMenu extends Activity {
 		});
     	automaticButton.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				onButtonClickManualStart(v);
+				onButtonClickAutomaticStart(v);
 			}
 		});
     }
