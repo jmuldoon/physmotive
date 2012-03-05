@@ -1,5 +1,7 @@
 package edu.usf.cse.physmotive;
 
-public class ActiveActivity {
+import android.app.Activity;
+
+public class ActiveActivity extends Activity {
 	// To Do: Nick
 }
