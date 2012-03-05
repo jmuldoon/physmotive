@@ -9,7 +9,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-public class diaryDBM
+public class DiaryDBM
 {
     // Database
     static final String TABLENAME = "diary";
@@ -27,12 +27,12 @@ public class diaryDBM
     static final String DEL = "deleted";
 
     private final Context androidContext;
-    private physMotiveDBH dbHelper;
+    private PhysMotiveDBH dbHelper;
     private SQLiteDatabase db;
 
-    public diaryDBM(Context ctx) {
+    public DiaryDBM(Context ctx) {
 	this.androidContext = ctx;
-	dbHelper = new physMotiveDBH(androidContext);
+	dbHelper = new PhysMotiveDBH(androidContext);
     }
 
     public void open() throws SQLException

@@ -21,14 +21,14 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
-import edu.usf.cse.physmotive.db.diaryDBM;
+import edu.usf.cse.physmotive.db.DiaryDBM;
 
-public class diaryList extends ListActivity
+public class DiaryList extends ListActivity
 {
     private long Usr = 1;
     protected Button addDiary;
     protected ListView diary_lv;
-    private diaryDBM DBM;
+    private DiaryDBM DBM;
     private Cursor cursor;
     private ListAdapter adapter;
 
@@ -38,7 +38,7 @@ public class diaryList extends ListActivity
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.diary_list);
 
-	DBM = new diaryDBM(this);
+	DBM = new DiaryDBM(this);
 	diary_lv = (ListView) this.getListView();
 
 	setupButton();
@@ -92,7 +92,7 @@ public class diaryList extends ListActivity
 	int item_id = item.getInt(0);
 
 	// the new activity being started
-	Intent myIntent = new Intent(v.getContext(), diaryView.class);
+	Intent myIntent = new Intent(v.getContext(), DiaryView.class);
 	// The information being passed to the new activity
 	Bundle bundle = new Bundle();
 
@@ -141,7 +141,7 @@ public class diaryList extends ListActivity
 
 	if (item.getTitle().equals("Select"))
 	{
-	    Intent myIntent = new Intent(this, diaryView.class);
+	    Intent myIntent = new Intent(this, DiaryView.class);
 
 	    bundle.putLong("User_Id", Usr);
 	    bundle.putInt("Coll_Id", item_id);
@@ -177,7 +177,7 @@ public class diaryList extends ListActivity
 	// This dialog is for the creation of a new diary entry //
 	// ///////////////////////////////////////////////////////
 	case 0:
-	    return new AlertDialog.Builder(diaryList.this)
+	    return new AlertDialog.Builder(DiaryList.this)
 		    // .setIconAttribute(android.R.attr.alertDialogIcon)
 		    .setTitle(R.string.diaryTitle).setView(textEntryView)
 		    .setPositiveButton(R.string.btnSave, new DialogInterface.OnClickListener() {
@@ -188,10 +188,10 @@ public class diaryList extends ListActivity
 			    /* User clicked OK so do some stuff */
 			    if (collName.getText().toString().equals("") || collName.getText().toString().trim().equals(""))
 			    {
-				Toast.makeText(diaryList.this, "Collections must have a name.", Toast.LENGTH_LONG).show();
+				Toast.makeText(DiaryList.this, "Collections must have a name.", Toast.LENGTH_LONG).show();
 			    } else
 			    {
-				Toast.makeText(diaryList.this, "The collection is saving...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DiaryList.this, "The collection is saving...", Toast.LENGTH_SHORT).show();
 				insert(DBM, collName.getText().toString());
 				collName.setText("");
 
@@ -209,7 +209,7 @@ public class diaryList extends ListActivity
 
 	    final int item_id = args.getInt("Coll_Id");
 
-	    return new AlertDialog.Builder(diaryList.this)
+	    return new AlertDialog.Builder(DiaryList.this)
 		    // .setIconAttribute(android.R.attr.alertDialogIcon)
 		    .setTitle(R.string.diaryTitle).setView(textEntryView)
 		    .setPositiveButton(R.string.btnUpdate, new DialogInterface.OnClickListener() {
@@ -220,10 +220,10 @@ public class diaryList extends ListActivity
 			    /* User clicked OK so do some stuff */
 			    if (collName.getText().toString().equals("") || collName.getText().toString().trim().equals(""))
 			    {
-				Toast.makeText(diaryList.this, "Collections must have a name.", Toast.LENGTH_LONG).show();
+				Toast.makeText(DiaryList.this, "Collections must have a name.", Toast.LENGTH_LONG).show();
 			    } else
 			    {
-				Toast.makeText(diaryList.this, "The collection is updating...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(DiaryList.this, "The collection is updating...", Toast.LENGTH_SHORT).show();
 
 				update(DBM, item_id, collName.getText().toString());
 				collName.setText("");
@@ -261,10 +261,10 @@ public class diaryList extends ListActivity
 		    /* User clicked OK so do some stuff */
 		    if (collName.getText().toString().equals("") || collName.getText().toString().trim().equals(""))
 		    {
-			Toast.makeText(diaryList.this, "Collections must have a name.", Toast.LENGTH_LONG).show();
+			Toast.makeText(DiaryList.this, "Collections must have a name.", Toast.LENGTH_LONG).show();
 		    } else
 		    {
-			Toast.makeText(diaryList.this, "The collection is updating...", Toast.LENGTH_SHORT).show();
+			Toast.makeText(DiaryList.this, "The collection is updating...", Toast.LENGTH_SHORT).show();
 
 			update(DBM, item_id, collName.getText().toString());
 			collName.setText("");
@@ -287,7 +287,7 @@ public class diaryList extends ListActivity
 	setListAdapter(adapter);
     }
 
-    private long insert(diaryDBM dbm, String diaryName)
+    private long insert(DiaryDBM dbm, String diaryName)
     {
 
 	dbm.open();
@@ -298,7 +298,7 @@ public class diaryList extends ListActivity
 	return 1; // id
     }
 
-    private void update(diaryDBM dbm, int item_id, String diary_name)
+    private void update(DiaryDBM dbm, int item_id, String diary_name)
     {
 	dbm.open();
 	// dbm.update(item_id, dairy_name, Usr);
@@ -306,7 +306,7 @@ public class diaryList extends ListActivity
 	updateList();
     }
 
-    private void delete(diaryDBM dbm, int item_id)
+    private void delete(DiaryDBM dbm, int item_id)
     {
 	dbm.open();
 	// dbm.delete(item_id, Usr);
@@ -314,7 +314,7 @@ public class diaryList extends ListActivity
 	updateList();
     }
 
-    private Cursor get(diaryDBM dbm, int item_id)
+    private Cursor get(DiaryDBM dbm, int item_id)
     {
 	dbm.open();
 	Cursor c = dbm.get(item_id);

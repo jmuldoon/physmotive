@@ -1,6 +1,6 @@
 package edu.usf.cse.physmotive;
 
-public class diaryView
+public class DiaryView
 {
-
+	//TO DO: jmuldoon
 }

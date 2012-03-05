@@ -10,5 +10,11 @@
 	<string name="diaryTitle">Enter name of diary entry:</string>
 	<string name="diaryHint">Name</string>
 	<string name="nameOfDiary">Diary Name:</string>
+	<string name="newActivityButtonName">New Activity</string>
+	<string name="viewActivityButtonName">View Activity</string>
+	<string name="mapButtonName">Map</string>
+	<string name="diaryButtonName">Diary</string>
+	<string name="statisticsButtonName">Statistics</string>
+	<string name="settingsButtonName">Settings</string>
 
 </resources>
