@@ -2,6 +2,7 @@ package edu.usf.cse.physmotive;
 
 import edu.usf.cse.physmotive.R;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +17,7 @@ public class PhysMotiveActivity extends Activity {
 	protected Button statisticsButton;
 	protected Button settingsButton;
 	
-	/** Called when the activity is first created. */
+	// Called when the activity is first created.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +33,11 @@ public class PhysMotiveActivity extends Activity {
         
         setOnClickListeners();
     }
+    
+    private void invokeActivityMenu(View arg0){
+    	Intent myIntent = new Intent(arg0.getContext(), ActivityMenu.class);
+        startActivityForResult(myIntent, 0);
+	}
     
     private void setOnClickListeners()
     {
@@ -73,6 +79,7 @@ public class PhysMotiveActivity extends Activity {
     }
     private void onButtonClickViewActivity(View w)
     {
+    	invokeActivityMenu(w);
     	Log.d("onButtonClick", viewActivityButton.getText()+": works");
     }
     private void onButtonClickMap(View w)
