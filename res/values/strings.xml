@@ -16,5 +16,10 @@
 	<string name="diaryButtonName">Diary</string>
 	<string name="statisticsButtonName">Statistics</string>
 	<string name="settingsButtonName">Settings</string>
+	<string name="newUserName">New User</string>
+	<string name="distanceOrTimeToggleButton">distance, time</string>
+	<string name="selectedDistanceOrTimeValue">min : sec</string>
+	<string name="manualButtonText">Manual</string>
+	<string name="automaticButtonText">Automatic</string>
 
 </resources>
