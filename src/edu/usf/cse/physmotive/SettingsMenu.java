@@ -1,5 +1,7 @@
 package edu.usf.cse.physmotive;
 
-public class SettingsMenu {
+import android.app.Activity;
+
+public class SettingsMenu extends Activity{
 
 }

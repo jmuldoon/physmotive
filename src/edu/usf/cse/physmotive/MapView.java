@@ -1,5 +1,7 @@
 package edu.usf.cse.physmotive;
 
-public class MapView {
+import android.app.Activity;
+
+public class MapView extends Activity{
 
 }
