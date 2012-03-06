@@ -48,6 +48,6 @@ public class ActivityView extends Activity
     private void onButtonClickDiary(View w)
     {
     	Intent myIntent = new Intent(w.getContext(), DiaryView.class);
-        startActivity(myIntent);
+    	startActivityForResult(myIntent, 0);
     }
 }

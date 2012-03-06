@@ -44,5 +44,12 @@
 	<string name="raceIDName">Race ID</string>
 	<string name="currentSpeedValue">#NA MPH</string>
 	<string name="currentPaceValue">#NA MPH</string>
+	<string name="orientationTitleName">Orientation</string>
+	<string name="unitTitleName">Units</string>
+	<string name="orientationToggleButtonValue">Portrait , Landscape</string>
+	<string name="unitToggleButtonValue">imperial, metric</string>
+	<string name="genderTitleValue">Gender</string>
+	<string name="updateButtonName">Update</string>
+	<string name="exportButtonName">Export</string>
 
 </resources>

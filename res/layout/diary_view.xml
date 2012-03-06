@@ -135,4 +135,13 @@
         android:layout_alignParentRight="true"
         android:text="@string/bindRacesButtonName" />
 
+    <TextView
+        android:id="@+id/genderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/heightTextView"
+        android:layout_below="@+id/heightEditText"
+        android:text="@string/genderTitleValue"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
 </RelativeLayout>
