@@ -46,6 +46,11 @@ public class DiaryDBM
 	dbHelper.close();
     }
 
+    public SQLiteDatabase getDB()
+    {
+	return db;
+    }
+
     public long insert(String Name, long ht, long wt, long age, long gender, String note, long usr)
     {
 	String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
@@ -113,8 +118,8 @@ public class DiaryDBM
     public Cursor getList(long userId)
     {
 	String[] columns = new String[] { ID, NAME, UDATE };
-	// String whereClause = EUSR + " = " + userId + " and " + DEL + " <> 1";
-	Cursor c = db.query(TABLENAME, columns, null/* whereClause */, null, null, null, null, null);
+	String whereClause = EUSR + " = " + userId + " and " + DEL + " <> 1";
+	Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
 	c.moveToFirst();
 
 	return c;

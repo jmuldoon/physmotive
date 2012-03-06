@@ -49,9 +49,7 @@ public class DiaryList extends ListActivity
 	addDiary.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v)
 	    {
-
-		Toast.makeText(DiaryList.this, Long.toString(insert("Temp Entry", 120, 185, 25, 1, "This is a note.", Usr)),
-			Toast.LENGTH_LONG).show();
+		insert("Temp Entry", 120, 185, 25, 1, "This is a note.", Usr);
 	    }
 	});
     }
@@ -154,7 +152,7 @@ public class DiaryList extends ListActivity
 	} else if (item.getTitle().equals("Delete"))
 	{
 	    delete(item_id, Usr);
-	    Toast.makeText(this, " Collection Deleted", Toast.LENGTH_LONG).show();
+	    Toast.makeText(this, "Entry Deleted", Toast.LENGTH_LONG).show();
 	} else
 	{
 	    return false;
@@ -164,21 +162,13 @@ public class DiaryList extends ListActivity
 
     private void updateList()
     {
-	// Gets a cursor of all the relevant information
 	DBM.open();
 	cursor = DBM.getList(Usr);
 
 	startManagingCursor(cursor);
-	// Stages the information for the list view
-	adapter = new SimpleCursorAdapter(DiaryList.this, R.layout.diary_list_item, cursor, new String[] { "_id", "name" },
-		new int[] { R.id.D_ID, R.id.D_Name });
-
-	// Inserts the information into the listView
+	adapter = new SimpleCursorAdapter(this, R.layout.diary_list_item, cursor, new String[] { "_id", "name" }, new int[] {
+		R.id.D_ID, R.id.D_Name });
 	setListAdapter(adapter);
-
-	cursor.close();
-	DBM.close();
-
     }
 
     private long insert(String _name, int _ht, int _wt, int _age, int _gender, String _note, long _usr)
