@@ -1,14 +1,17 @@
 package edu.usf.cse.physmotive;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ToggleButton;
 import edu.usf.cse.physmotive.db.DiaryDBM;
-import edu.usf.cse.physmotive.ui.MultipleSelectionDialogue;
 
 public class DiaryView extends Activity
 {
@@ -22,8 +25,10 @@ public class DiaryView extends Activity
     protected Button cancelButton;
     protected Button saveButton;
     private DiaryDBM dbManager;
-    private MultipleSelectionDialogue msdBox;
 
+    protected CharSequence[] _options = { "Race 1", "Race 2", "Race 3", "Race 4" };
+	protected boolean[] _selections =  new boolean[ _options.length ];
+    
     private long diaryID;
     private long Usr;
 
@@ -31,61 +36,51 @@ public class DiaryView extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.diary_view);
-
-	// Creating DBM object
-	dbManager = new DiaryDBM(this);
-
-	// Connect interface elements to properties
-	cancelButton = (Button) findViewById(R.id.cancelButton);
-	saveButton = (Button) findViewById(R.id.saveButton);
-	diaryEntryEditText = (EditText) findViewById(R.id.diaryEntryEditText);
-	heightEditText = (EditText) findViewById(R.id.heightEditText);
-	weightEditText = (EditText) findViewById(R.id.weightEditText);
-	ageEditText = (EditText) findViewById(R.id.ageEditText);
-	notesEditText = (EditText) findViewById(R.id.notesEditText);
-	genderToggleButton = (ToggleButton) findViewById(R.id.genderToggleButton);
-	bindRacesButton = (Button) findViewById(R.id.bindRacesButton);
-
-	Bundle b = getIntent().getExtras();
-	if (b != null)
-	    diaryID = b.getInt("Coll_Id");
-	msdBox = new MultipleSelectionDialogue();
-
-	setOnClickListeners();
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.diary_view);
+	
+		// Creating DBM object
+		dbManager = new DiaryDBM(this);
+	
+		// Connect interface elements to properties
+		cancelButton = (Button) findViewById(R.id.cancelButton);
+		saveButton = (Button) findViewById(R.id.saveButton);
+		diaryEntryEditText = (EditText) findViewById(R.id.diaryEntryEditText);
+		heightEditText = (EditText) findViewById(R.id.heightEditText);
+		weightEditText = (EditText) findViewById(R.id.weightEditText);
+		ageEditText = (EditText) findViewById(R.id.ageEditText);
+		notesEditText = (EditText) findViewById(R.id.notesEditText);
+		genderToggleButton = (ToggleButton) findViewById(R.id.genderToggleButton);		
+		bindRacesButton = (Button) findViewById(R.id.bindRacesButton);
+		
+		Bundle b = getIntent().getExtras();
+		if (b != null)
+		    diaryID = b.getInt("Coll_Id");
+	
+		setOnClickListeners();
     }
 
     private void setOnClickListeners()
     {
-	cancelButton.setOnClickListener(new OnClickListener() {
-	    public void onClick(View v)
-	    {
-		onButtonClickCancel(v);
-	    }
-	});
-	saveButton.setOnClickListener(new OnClickListener() {
-	    public void onClick(View v)
-	    {
-		onButtonClickSave(v);
-	    }
-	});
-	bindRacesButton.setOnClickListener(new OnClickListener() {
-	    public void onClick(View v)
-	    {
-		onButtonClickBindRaces(v);
-	    }
-	});
-    }
-
-    private void onButtonClickBindRaces(View w)
-    {
-	msdBox.showDialog(0);
+	    cancelButton.setOnClickListener(new OnClickListener() {
+		    public void onClick(View v)
+		    {
+		    	onButtonClickCancel(v);
+		    }
+		});
+		saveButton.setOnClickListener(new OnClickListener() {
+		    public void onClick(View v)
+		    {
+		    	onButtonClickSave(v);
+		    }
+		});
+		
+		bindRacesButton.setOnClickListener(new ButtonClickHandler());
     }
 
     private void onButtonClickCancel(View w)
     {
-	this.finish();
+    	this.finish();
     }
 
     private void onButtonClickSave(View w)
@@ -100,4 +95,50 @@ public class DiaryView extends Activity
 		    Long.valueOf(ageEditText.getText().toString()), Long.valueOf(genderToggleButton.getText().toString()),
 		    notesEditText.getText().toString(), Usr);
     }
+    
+    public class ButtonClickHandler implements View.OnClickListener {
+		public void onClick( View view ) {
+			showDialog( 0 );
+		}
+	}
+    
+	@Override
+	protected Dialog onCreateDialog( int id ) 
+	{
+		return 
+		new AlertDialog.Builder( this )
+        	.setTitle( "Races" )
+        	.setMultiChoiceItems( _options, _selections, new DialogSelectionClickHandler() )
+        	.setPositiveButton( "OK", new DialogButtonClickHandler() )
+        	.create();
+	}
+	
+	
+	public class DialogSelectionClickHandler implements DialogInterface.OnMultiChoiceClickListener
+	{
+		public void onClick( DialogInterface dialog, int clicked, boolean selected )
+		{
+			Log.i( "ME", _options[ clicked ] + " selected: " + selected );
+		}
+	}
+	
+
+	public class DialogButtonClickHandler implements DialogInterface.OnClickListener
+	{
+		public void onClick( DialogInterface dialog, int clicked )
+		{
+			switch( clicked )
+			{
+				case DialogInterface.BUTTON_POSITIVE:
+					printSelectedRaces();
+					break;
+			}
+		}
+	}
+	
+	protected void printSelectedRaces(){
+		for( int i = 0; i < _options.length; i++ ){
+			Log.i( "ME", _options[ i ] + " selected: " + _selections[i] );
+		}
+	}
 }
