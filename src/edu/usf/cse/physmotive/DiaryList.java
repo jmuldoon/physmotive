@@ -92,8 +92,8 @@ public class DiaryList extends ListActivity
 	Bundle bundle = new Bundle();
 
 	// Preparing the data
-	bundle.putLong("user_id", Usr);
-	bundle.putInt("diary_id", item_id);
+	bundle.putLong("userId", Usr);
+	bundle.putLong("diaryId", item_id);
 
 	// Attaching info and starting new activity
 	myIntent.putExtras(bundle);
