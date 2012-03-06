@@ -21,9 +21,9 @@ public class MultipleSelectionDialogue extends Activity {
     {
         super.onCreate(savedInstanceState);
        
-        setContentView(R.layout.diary_view);
+        setContentView(R.layout.multiple_select_dialogue);
         
-        _optionsButton =(Button)findViewById(R.id.bindRacesButton);
+        _optionsButton =(Button)findViewById(R.id.okayButton);
         _optionsButton.setOnClickListener(new ButtonClickHandler());
     }
     

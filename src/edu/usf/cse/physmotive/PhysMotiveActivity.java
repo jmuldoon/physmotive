@@ -1,10 +1,10 @@
 package edu.usf.cse.physmotive;
 
-
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -16,6 +16,7 @@ public class PhysMotiveActivity extends Activity {
 	protected Button diaryButton;
 	protected Button statisticsButton;
 	protected Button settingsButton;
+	protected Button newUserButton;
 	
 	// Called when the activity is first created.
     @Override
@@ -30,8 +31,21 @@ public class PhysMotiveActivity extends Activity {
         diaryButton =(Button)findViewById(R.id.diaryButton);
         statisticsButton =(Button)findViewById(R.id.statisticsButton);
         settingsButton =(Button)findViewById(R.id.settingsButton);
+        newUserButton =(Button)findViewById(R.id.newUserButton);
         
         setOnClickListeners();
+    }
+    
+    @Override
+    protected Dialog onCreateDialog(int i, Bundle args){
+    	LayoutInflater factory = LayoutInflater.from(this);
+    	final View textEntryView = factory.inflate(R.layout.new_user, null);
+
+    	switch (i) {
+    		case 0:
+    		default: break;
+    	}
+    	return null;
     }
     
     private void invokeActivityMenu(View arg0){
@@ -91,36 +105,38 @@ public class PhysMotiveActivity extends Activity {
 				onButtonClickSettings(v);
 			}
 		});
+    	newUserButton.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				onButtonClickNewUser(v);
+			}
+		});
     }
         
     private void onButtonClickNewActivity(View w)
     {
     	invokeActivityMenu(w);
-    	Log.d("onButtonClick", newActivityButton.getText()+": works");
     }
     private void onButtonClickViewActivity(View w)
     {
     	invokeActivityView(w);
-    	Log.d("onButtonClick", viewActivityButton.getText()+": works");
     }
     private void onButtonClickMap(View w)
     {
     	invokeMapView(w);
-    	Log.d("onButtonClick", mapButton.getText()+": works");
     }
     private void onButtonClickDiary(View w)
     {
     	invokeDiaryList(w);
-    	Log.d("onButtonClick", diaryButton.getText()+": works");
     }
     private void onButtonClickStatistics(View w)
     {
     	invokeStatisticsMenu(w);
-    	Log.d("onButtonClick", statisticsButton.getText()+": works");
     }
     private void onButtonClickSettings(View w)
     {
     	invokeSettingsMenu(w);
-    	Log.d("onButtonClick", settingsButton.getText()+": works");
+    }
+    private void onButtonClickNewUser(View w){
+    	showDialog(0, null);
     }
 }
