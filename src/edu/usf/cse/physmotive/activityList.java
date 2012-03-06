@@ -1,3 +1,4 @@
+//This is a test to see if I am commiting to the repo correctly
 package edu.usf.cse.physmotive;
 
 import android.app.ListActivity;

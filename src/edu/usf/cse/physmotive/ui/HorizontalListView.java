@@ -155,54 +155,54 @@ public class HorizontalListView extends AdapterView<ListAdapter> {
 				MeasureSpec.makeMeasureSpec(getHeight(), MeasureSpec.AT_MOST));
 	}
 
-	@Override
-	protected synchronized void onLayout(boolean changed, int left, int top, int right, int bottom) {
-		super.onLayout(changed, left, top, right, bottom);
-
-		if(mAdapter == null){
-			return;
-		}
-
-		if(mDataChanged){
-			int oldCurrentX = mCurrentX;
-			initView();
-			removeAllViewsInLayout();
-			mNextX = oldCurrentX;
-			mDataChanged = false;
-		}
-
-		if(mScroller.computeScrollOffset()){
-			int scrollx = mScroller.getCurrX();
-			mNextX = scrollx;
-		}
-
-		if(mNextX <= 0){
-			mNextX = 0;
-			mScroller.forceFinished(true);
-		}
-		if(mNextX >= mMaxX) {
-			mNextX = mMaxX;
-			mScroller.forceFinished(true);
-		}
-
-		int dx = mCurrentX - mNextX;
-
-		removeNonVisibleItems(dx);
-		fillList(dx);
-		positionItems(dx);
-
-		mCurrentX = mNextX;
-
-		if(!mScroller.isFinished()){
-			post(new Runnable(){
-				@Override
-				public void run() {
-					requestLayout();
-				}
-			});
-
-		}
-	}
+//	@Override
+//	protected synchronized void onLayout(boolean changed, int left, int top, int right, int bottom) {
+//		super.onLayout(changed, left, top, right, bottom);
+//
+//		if(mAdapter == null){
+//			return;
+//		}
+//
+//		if(mDataChanged){
+//			int oldCurrentX = mCurrentX;
+//			initView();
+//			removeAllViewsInLayout();
+//			mNextX = oldCurrentX;
+//			mDataChanged = false;
+//		}
+//
+//		if(mScroller.computeScrollOffset()){
+//			int scrollx = mScroller.getCurrX();
+//			mNextX = scrollx;
+//		}
+//
+//		if(mNextX <= 0){
+//			mNextX = 0;
+//			mScroller.forceFinished(true);
+//		}
+//		if(mNextX >= mMaxX) {
+//			mNextX = mMaxX;
+//			mScroller.forceFinished(true);
+//		}
+//
+//		int dx = mCurrentX - mNextX;
+//
+//		removeNonVisibleItems(dx);
+//		fillList(dx);
+//		positionItems(dx);
+//
+//		mCurrentX = mNextX;
+//
+//		if(!mScroller.isFinished()){
+//			post(new Runnable(){
+//				@Override
+//				public void run() {
+//					requestLayout();
+//				}
+//			});
+//
+//		}
+//	}
 
 	private void fillList(final int dx) {
 		int edge = 0;

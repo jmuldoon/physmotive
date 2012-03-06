@@ -49,8 +49,8 @@ public class DiaryView extends Activity
 	bindRacesButton = (Button) findViewById(R.id.bindRacesButton);
 
 	Bundle b = getIntent().getExtras();
-	diaryID = b.getLong("diaryId");
-	Usr = b.getLong("Usr");
+	if (b != null)
+	    diaryID = b.getInt("Coll_Id");
 	msdBox = new MultipleSelectionDialogue();
 
 	setOnClickListeners();

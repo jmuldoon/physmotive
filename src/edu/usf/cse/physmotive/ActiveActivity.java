@@ -1,7 +1,12 @@
 package edu.usf.cse.physmotive;
 
 import android.app.Activity;
+import android.os.Bundle;
 
 public class ActiveActivity extends Activity {
-	// To Do: Nick
+	@Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.active_activity);
+    }
 }

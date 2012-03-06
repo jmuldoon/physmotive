@@ -81,6 +81,7 @@ public class DiaryList extends ListActivity
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id)
     {
+
 	// Gets the cursor from the entry selected
 	Cursor item = (Cursor) getListAdapter().getItem(position);
 	// Gets the entry _id of the cursor
