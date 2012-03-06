@@ -6,6 +6,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:clickable="false" 
-    android:apiKey="WTF, we need a key!  Your Maps API Key goes here"
+    android:apiKey="04eJyZI7vlctleEmr-7rk3VLNTNkRwB2YGyhhAQ"
 />
     
