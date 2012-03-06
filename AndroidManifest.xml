@@ -12,7 +12,7 @@
 		android:label="@string/app_name" >
 		<uses-library android:name="com.google.android.maps" />
 		<activity
-			android:name=".PhysMotiveActivity"
+			android:name=".MainMenu"
 			android:label="@string/app_name" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -35,6 +35,8 @@
 		<activity android:name=".SettingsMenu" >
 		</activity>
 		<activity android:name=".StatisticsMenu" >
+		</activity>
+		<activity android:name=".ActivityView" >
 		</activity>
 		<activity android:name=".ui.HorizontalListView"></activity>
 		<activity android:name=".ui.MultipleSelectionDialogue"></activity>

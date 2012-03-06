@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class PhysMotiveActivity extends Activity {
+public class MainMenu extends Activity {
 	protected Button newActivityButton;
 	protected Button viewActivityButton;
 	protected Button mapButton;

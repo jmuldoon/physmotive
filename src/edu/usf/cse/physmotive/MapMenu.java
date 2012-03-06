@@ -10,9 +10,9 @@ public class MapMenu extends MapActivity{
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        mapView = (MapView)findViewById(R.id.mapview);
-        mapView.setBuiltInZoomControls(true);
+        setContentView(R.layout.map_menu);
+      //  mapView = (MapView)findViewById(R.id.mapview);
+      //  mapView.setBuiltInZoomControls(true);
     }
     
     @Override

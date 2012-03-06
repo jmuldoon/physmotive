@@ -36,5 +36,13 @@
 	<string name="saveButtonName">Save</string>
 	<string name="cancelButtonName">Cancel</string>
 	<string name="okayButtonName">Ok</string>
+	<string name="toDiaryButtonName">Diary</string>
+	<string name="toStatisticsButtonName">Statistics</string>
+	<string name="avDistanceValue">#NA</string>
+	<string name="avTimeValue">#NA</string>
+	<string name="avPaceValue">#NA</string>
+	<string name="raceIDName">Race ID</string>
+	<string name="currentSpeedValue">#NA MPH</string>
+	<string name="currentPaceValue">#NA MPH</string>
 
 </resources>
