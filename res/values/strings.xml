@@ -22,5 +22,18 @@
 	<string name="manualButtonText">Manual</string>
 	<string name="automaticButtonText">Automatic</string>
 	<string name="activityMenuGraph">Distance v Time Graph</string>
+	<string name="numberOfRacesValue">#NA</string>
+	<string name="totalTimeValue">#NA</string>
+	<string name="totalDistanceValue">#NA</string>
+	<string name="averageTimeValue">#NA</string>
+	<string name="averageDistanceValue">#NA</string>
+	<string name="statisticsProgressGraph">Stats over Time</string>
+	<string name="heightTitle">Height</string>
+	<string name="weightTitle">Weight</string>
+	<string name="ageTitle">Age</string>
+	<string name="maleOrFemaleToggleButtonValue">Male, Female</string>
+	<string name="bindRacesButtonName">Bind Races</string>
+	<string name="saveButtonName">Save</string>
+	<string name="cancelButtonName">Cancel</string>
 
 </resources>
