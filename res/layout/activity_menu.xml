@@ -1,26 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activityMenuTableLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-   
-    <TableRow android:id="@+id/tableRow2" android:layout_width="wrap_content" android:layout_height="wrap_content">
-        <Spinner android:id="@+id/activitySpinner" android:layout_width="238dp" android:layout_height="wrap_content"/>
-    </TableRow>
-    <TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="wrap_content">
-        <ToggleButton android:id="@+id/distanceOrTimeToggleButton" android:layout_width="50dp" android:layout_height="wrap_content" android:text="@string/distanceOrTimeToggleButton"/>
-		<SeekBar android:id="@+id/distanceOrTimeSeekBar" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-    </TableRow>
-    <TableRow android:layout_height="wrap_content" android:id="@+id/tableRow4" android:layout_width="match_parent">
-	    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/selectedDistanceOrTime" android:text = "@string/selectedDistanceOrTimeValue"/>
-	</TableRow>
-	<TableRow android:layout_height="wrap_content" android:id="@+id/tableRow5" android:layout_width="match_parent">
-	    <ImageView android:id="@+id/distanceOrTimeChartImageView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_launcher" android:contentDescription="@string/activityMenuGraph"/>
-	</TableRow>
-	<TableRow android:layout_height="wrap_content" android:id="@+id/tableRow6" android:layout_width="match_parent">
-		<Button android:id="@+id/manualButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/manualButtonText" />
-		<Button android:id="@+id/automaticButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/automaticButtonText" />		
-	</TableRow>
 
-</TableLayout>
+    <Button
+        android:id="@+id/automaticButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/automaticButtonText" />
+
+    <Spinner
+        android:id="@+id/activitySpinner"
+        android:layout_width="238dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+
+    <ToggleButton
+        android:id="@+id/distanceOrTimeToggleButton"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/activitySpinner"
+        android:layout_marginTop="17dp"
+        android:text="@string/distanceOrTimeToggleButton" />
+
+    <SeekBar
+        android:id="@+id/distanceOrTimeSeekBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/distanceOrTimeToggleButton"
+        android:layout_toRightOf="@+id/distanceOrTimeToggleButton" />
+
+    <TextView
+        android:id="@+id/selectedDistanceOrTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/distanceOrTimeSeekBar"
+        android:layout_marginRight="45dp"
+        android:text="@string/selectedDistanceOrTimeValue" />
+
+    <ImageView
+        android:id="@+id/distanceOrTimeChartImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/selectedDistanceOrTime"
+        android:layout_marginTop="53dp"
+        android:contentDescription="@string/activityMenuGraph"
+        android:src="@drawable/ic_launcher" />
+
+    <Button
+        android:id="@+id/manualButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/manualButtonText" />
+
+</RelativeLayout>
