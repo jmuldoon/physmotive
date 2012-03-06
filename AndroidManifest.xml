@@ -19,6 +19,13 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".ActivityMenu"></activity>
+		<activity android:name=".DiaryList"></activity>
+		<activity android:name=".ActiveActivity"></activity>
+		<activity android:name=".ActiveActivity"></activity>
+		<activity android:name=".DiaryView"></activity>
+		<activity android:name=".MapView"></activity>
+		<activity android:name=".SettingsMenu"></activity>
+		<activity android:name=".StatisticsMenu"></activity>
 	</application>
 
 </manifest>

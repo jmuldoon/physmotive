@@ -1,5 +1,7 @@
 package edu.usf.cse.physmotive;
 
-public class StatisticsMenu {
+import android.app.Activity;
+
+public class StatisticsMenu extends Activity{
 	//TO DO: jmuldoon
 }
