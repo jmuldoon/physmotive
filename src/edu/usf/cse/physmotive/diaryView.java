@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,7 +31,7 @@ public class DiaryView extends Activity
 	protected boolean[] _selections =  new boolean[ _options.length ];
     
     private long diaryID;
-    private long Usr;
+    private long usrID;
 
     // Called when the activity is first created.
     @Override
@@ -85,16 +86,22 @@ public class DiaryView extends Activity
 
     private void onButtonClickSave(View w)
     {
-	if (diaryID == 0)
-	    dbManager.insert(diaryEntryEditText.getText().toString(), Long.valueOf(heightEditText.getText().toString()),
-		    Long.valueOf(weightEditText.getText().toString()), Long.valueOf(ageEditText.getText().toString()),
-		    Long.valueOf(genderToggleButton.getText().toString()), notesEditText.getText().toString(), 0);
-	else
-	    dbManager.update(diaryID, diaryEntryEditText.getText().toString(),
-		    Long.valueOf(heightEditText.getText().toString()), Long.valueOf(weightEditText.getText().toString()),
-		    Long.valueOf(ageEditText.getText().toString()), Long.valueOf(genderToggleButton.getText().toString()),
-		    notesEditText.getText().toString(), Usr);
+		if (diaryID == 0)
+		    dbManager.insert(diaryEntryEditText.getText().toString(), Long.valueOf(heightEditText.getText().toString()),
+			    Long.valueOf(weightEditText.getText().toString()), Long.valueOf(ageEditText.getText().toString()),
+			    Long.valueOf(genderToggleButton.getText().toString()), notesEditText.getText().toString(), 0);
+		else
+		    dbManager.update(diaryID, diaryEntryEditText.getText().toString(),
+			    Long.valueOf(heightEditText.getText().toString()), Long.valueOf(weightEditText.getText().toString()),
+			    Long.valueOf(ageEditText.getText().toString()), Long.valueOf(genderToggleButton.getText().toString()),
+			    notesEditText.getText().toString(), usrID);
+		invokeActivityDiaryList(w);
     }
+    
+    private void invokeActivityDiaryList(View w){
+    	Intent myIntent = new Intent(w.getContext(), DiaryList.class);
+        startActivityForResult(myIntent, 0);
+	}
     
     public class ButtonClickHandler implements View.OnClickListener {
 		public void onClick( View view ) {
