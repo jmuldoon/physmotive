@@ -31,9 +31,10 @@
 	<string name="heightTitle">Height</string>
 	<string name="weightTitle">Weight</string>
 	<string name="ageTitle">Age</string>
-	<string name="maleOrFemaleToggleButtonValue">Male, Female</string>
+	<string name="genderToggleButtonValue">Male, Female</string>
 	<string name="bindRacesButtonName">Bind Races</string>
 	<string name="saveButtonName">Save</string>
 	<string name="cancelButtonName">Cancel</string>
+	<string name="okayButtonName">Ok</string>
 
 </resources>

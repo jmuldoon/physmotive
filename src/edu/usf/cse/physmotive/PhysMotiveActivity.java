@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -116,35 +115,28 @@ public class PhysMotiveActivity extends Activity {
     private void onButtonClickNewActivity(View w)
     {
     	invokeActivityMenu(w);
-    	Log.d("onButtonClick", newActivityButton.getText()+": works");
     }
     private void onButtonClickViewActivity(View w)
     {
     	invokeActivityView(w);
-    	Log.d("onButtonClick", viewActivityButton.getText()+": works");
     }
     private void onButtonClickMap(View w)
     {
     	invokeMapView(w);
-    	Log.d("onButtonClick", mapButton.getText()+": works");
     }
     private void onButtonClickDiary(View w)
     {
     	invokeDiaryList(w);
-    	Log.d("onButtonClick", diaryButton.getText()+": works");
     }
     private void onButtonClickStatistics(View w)
     {
     	invokeStatisticsMenu(w);
-    	Log.d("onButtonClick", statisticsButton.getText()+": works");
     }
     private void onButtonClickSettings(View w)
     {
     	invokeSettingsMenu(w);
-    	Log.d("onButtonClick", settingsButton.getText()+": works");
     }
     private void onButtonClickNewUser(View w){
     	showDialog(0, null);
-    	Log.d("onButtonClick", newUserButton.getText()+": works");
     }
 }

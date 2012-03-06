@@ -74,39 +74,14 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ToggleButton
-        android:id="@+id/maleOrFemaleToggleButton"
+        android:id="@+id/genderToggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignRight="@+id/heightEditText"
         android:layout_below="@+id/heightEditText"
         android:layout_marginTop="20dp"
-        android:text="@string/maleOrFemaleToggleButtonValue" />
-
-    <Button
-        android:id="@+id/bindRacesButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/maleOrFemaleToggleButton"
-        android:layout_alignLeft="@+id/weightEditText"
-        android:layout_alignParentRight="true"
-        android:text="@string/bindRacesButtonName" />
-
-    <ScrollView
-        android:id="@+id/racesScrollView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/maleOrFemaleToggleButton"
-        android:layout_marginTop="14dp" >
-
-        <LinearLayout
-            android:id="@+id/scrollViewLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </LinearLayout>
-    </ScrollView>
+        android:text="@string/genderToggleButtonValue" />
     
     <Button
         android:id="@+id/cancelButton"
@@ -135,5 +110,29 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="28dp"
         android:inputType="textMultiLine" />
+
+    <ScrollView
+        android:id="@+id/racesScrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" >
+
+        <LinearLayout
+            android:id="@+id/scrollViewLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/bindRacesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/genderToggleButton"
+        android:layout_alignLeft="@+id/weightEditText"
+        android:layout_alignParentRight="true"
+        android:text="@string/bindRacesButtonName" />
 
 </RelativeLayout>
