@@ -32,17 +32,23 @@ public class DiaryDBM
 
     public DiaryDBM(Context ctx) {
 	this.androidContext = ctx;
-	dbHelper = new PhysMotiveDBH(androidContext);
     }
 
     public void open() throws SQLException
     {
+	dbHelper = new PhysMotiveDBH(androidContext);
 	db = dbHelper.getWritableDatabase();
     }
 
     public void close()
     {
+	db.close();
 	dbHelper.close();
+    }
+
+    public SQLiteDatabase getDB()
+    {
+	return db;
     }
 
     public long insert(String Name, long ht, long wt, long age, long gender, String note, long usr)
@@ -114,6 +120,7 @@ public class DiaryDBM
 	String[] columns = new String[] { ID, NAME, UDATE };
 	String whereClause = EUSR + " = " + userId + " and " + DEL + " <> 1";
 	Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+	c.moveToFirst();
 
 	return c;
     }

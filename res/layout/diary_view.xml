@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/diaryEntryEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/heightEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/diaryEntryEditText"
+        android:layout_marginTop="27dp"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/weightEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/heightEditText"
+        android:layout_alignBottom="@+id/heightEditText"
+        android:layout_centerHorizontal="true"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/ageEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/weightEditText"
+        android:layout_alignBottom="@+id/weightEditText"
+        android:layout_alignParentRight="true"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/heightTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/weightEditText"
+        android:layout_alignRight="@+id/heightEditText"
+        android:layout_marginRight="27dp"
+        android:text="@string/heightTitle"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/weightTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/heightTextView"
+        android:layout_alignBottom="@+id/heightTextView"
+        android:layout_centerHorizontal="true"
+        android:text="@string/weightTitle"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/ageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/weightTextView"
+        android:layout_alignBottom="@+id/weightTextView"
+        android:layout_alignLeft="@+id/ageEditText"
+        android:layout_marginLeft="36dp"
+        android:text="@string/ageTitle"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ToggleButton
+        android:id="@+id/genderToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/heightEditText"
+        android:layout_below="@+id/heightEditText"
+        android:layout_marginTop="20dp"
+        android:text="@string/genderToggleButtonValue" />
+    
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/weightTextView"
+        android:text="@string/cancelButtonName" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/weightTextView"
+        android:text="@string/saveButtonName" />
+
+    <EditText
+        android:id="@+id/notesEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_above="@+id/cancelButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="28dp"
+        android:inputType="textMultiLine" />
+
+    <ScrollView
+        android:id="@+id/racesScrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" >
+
+        <LinearLayout
+            android:id="@+id/scrollViewLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/bindRacesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/genderToggleButton"
+        android:layout_alignLeft="@+id/weightEditText"
+        android:layout_alignParentRight="true"
+        android:text="@string/bindRacesButtonName" />
+
+</RelativeLayout>

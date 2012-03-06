@@ -1,10 +1,8 @@
 package edu.usf.cse.physmotive;
 
-import edu.usf.cse.physmotive.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -39,7 +37,7 @@ public class ActivityMenu extends Activity {
 		});
     	automaticButton.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				onButtonClickManualStart(v);
+				onButtonClickAutomaticStart(v);
 			}
 		});
     }
@@ -47,11 +45,9 @@ public class ActivityMenu extends Activity {
     private void onButtonClickManualStart(View w)
     {
     	invokeActiveActivity(w);
-    	Log.d("onButtonClick", manualButton.getText()+": works");
     }
     private void onButtonClickAutomaticStart(View w)
     {
     	invokeActiveActivity(w);
-    	Log.d("onButtonClick", automaticButton.getText()+": works");
     }
 }
