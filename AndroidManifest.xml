@@ -30,13 +30,14 @@
 		</activity>
 		<activity android:name=".DiaryView" >
 		</activity>
-		<activity android:name=".MapView" >
+		<activity android:name=".MapMenu" >
 		</activity>
 		<activity android:name=".SettingsMenu" >
 		</activity>
 		<activity android:name=".StatisticsMenu" >
 		</activity>
 		<activity android:name=".ui.HorizontalListView"></activity>
+		<activity android:name=".ui.MultipleSelectionDialogue"></activity>
 	</application>
 
 </manifest>
