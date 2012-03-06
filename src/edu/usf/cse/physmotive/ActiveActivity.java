@@ -1,6 +1,6 @@
 package edu.usf.cse.physmotive;
 
-import android.app.Activity;
+import com.google.android.maps.MapActivity;
 import android.os.Bundle;
 
 public class ActiveActivity extends MapActivity {
@@ -9,8 +9,8 @@ public class ActiveActivity extends MapActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        MapView mapView = (MapView) findViewById(R.id.mapview);
-        mapView.setBuiltInZoomControls(true);
+        //MapView mapView = (MapView) findViewById(R.id.mapview);
+        //mapView.setBuiltInZoomControls(true);
     }
     
     @Override
