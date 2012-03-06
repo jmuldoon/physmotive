@@ -32,16 +32,17 @@ public class DiaryDBM
 
     public DiaryDBM(Context ctx) {
 	this.androidContext = ctx;
-	dbHelper = new PhysMotiveDBH(androidContext);
     }
 
     public void open() throws SQLException
     {
+	dbHelper = new PhysMotiveDBH(androidContext);
 	db = dbHelper.getWritableDatabase();
     }
 
     public void close()
     {
+	db.close();
 	dbHelper.close();
     }
 
@@ -112,8 +113,9 @@ public class DiaryDBM
     public Cursor getList(long userId)
     {
 	String[] columns = new String[] { ID, NAME, UDATE };
-	String whereClause = EUSR + " = " + userId + " and " + DEL + " <> 1";
-	Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+	// String whereClause = EUSR + " = " + userId + " and " + DEL + " <> 1";
+	Cursor c = db.query(TABLENAME, columns, null/* whereClause */, null, null, null, null, null);
+	c.moveToFirst();
 
 	return c;
     }
