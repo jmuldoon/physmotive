@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
 	<string name="app_name">PhysMotive</string>
 	<string name="btnAddDiary">Add Diary Entry</string>
 	<string name="btnAddActivity">Add Activity</string>
@@ -17,8 +16,8 @@
 	<string name="statisticsButtonName">Statistics</string>
 	<string name="settingsButtonName">Settings</string>
 	<string name="newUserName">New User</string>
-	<string name="distanceOrTimeToggleButtonOn">1</string>
-	<string name="distanceOrTimeToggleButtonOff">0</string>
+	<string name="distanceOrTimeToggleButtonOn">Distance</string>
+	<string name="distanceOrTimeToggleButtonOff">Time</string>
 	<string name="selectedDistanceOrTimeValue">min : sec</string>
 	<string name="manualButtonText">Manual</string>
 	<string name="automaticButtonText">Automatic</string>
@@ -35,7 +34,6 @@
 	<string name="bindRacesButtonName">Bind Races</string>
 	<string name="saveButtonName">Save</string>
 	<string name="cancelButtonName">Cancel</string>
-	<string name="okayButtonName">Ok</string>
 	<string name="toDiaryButtonName">Diary</string>
 	<string name="toStatisticsButtonName">Statistics</string>
 	<string name="avDistanceValue">#NA</string>
@@ -46,9 +44,9 @@
 	<string name="currentPaceValue">#NA MPH</string>
 	<string name="orientationTitleName">Orientation</string>
 	<string name="unitTitleName">Units</string>
-	<string name="orientationToggleButtonValueOn">1</string>
-	<string name="genderToggleButtonValueOn">1</string>
-	<string name="genderToggleButtonValueOff">0</string>
+	<string name="orientationToggleButtonValueOn">Portrait</string>
+	<string name="genderToggleButtonValueOn">Male</string>
+	<string name="genderToggleButtonValueOff">Female</string>
 	<string name="genderTitleValue">Gender</string>
 	<string name="updateButtonName">Update</string>
 	<string name="exportButtonName">Export</string>
@@ -57,8 +55,8 @@
 	<string name="newUserText">Enter First and Last Name</string>
 	<string name="newUserTitle">New User Creation</string>
 	<string name="newUserHelp">Please view the settings page to add additional information about the user.</string>
-	<string name="orientationToggleButtonValueOff">0</string>
-	<string name="unitToggleButtonValueOn">1</string>
-	<string name="unitToggleButtonValueOff">0</string>
+	<string name="orientationToggleButtonValueOff">Landscape</string>
+	<string name="unitToggleButtonValueOn">Empirical</string>
+	<string name="unitToggleButtonValueOff">Metric</string>
 
 </resources>

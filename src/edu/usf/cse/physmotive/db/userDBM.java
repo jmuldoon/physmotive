@@ -78,6 +78,26 @@ public class UserDBM
 	return db.insert(TABLENAME, null, values);
     }
 
+    public boolean update(long id, long ht, long wt, long age, long gender, long units, long ori, long dateFormat, long usr){
+		String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+		String whereClause;
+		ContentValues values = new ContentValues();
+	
+		values.put(HEIGHT, ht);
+		values.put(WEIGHT, wt);
+		values.put(AGE, age);
+		values.put(GENDER, gender);
+		values.put(UNITS, units);
+		values.put(ORI, ori);
+		values.put(DATEFORMAT, dateFormat);
+		values.put(UUSR, usr);
+		values.put(UDATE, timeStamp);
+	
+		whereClause = ID + "=" + id;
+	
+		return db.update(TABLENAME, values, whereClause, null) > 0;
+    }
+    
     public boolean update(long id, String firstName, String lastName, long ht, long wt, long age, long gender, long units,
 	    long ori, long dateFormat, long usr)
     {
@@ -94,8 +114,6 @@ public class UserDBM
 	values.put(UNITS, units);
 	values.put(ORI, ori);
 	values.put(DATEFORMAT, dateFormat);
-	values.put(EUSR, usr);
-	values.put(EDATE, timeStamp);
 	values.put(UUSR, usr);
 	values.put(UDATE, timeStamp);
 
@@ -137,5 +155,4 @@ public class UserDBM
 
 	return c;
     }
-
 }
