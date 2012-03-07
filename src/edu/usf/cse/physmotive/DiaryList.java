@@ -181,11 +181,13 @@ public class DiaryList extends ListActivity
     {
 	DBM.open();
 	cursor = DBM.getList(Usr);
-
+	DBM.close();
+	
 	startManagingCursor(cursor);
 	adapter = new SimpleCursorAdapter(this, R.layout.diary_list_item, cursor, new String[] { "_id", "name" }, new int[] {
 		R.id.D_ID, R.id.D_Name });
 	setListAdapter(adapter);
+	
     }
 
     private long insert(String _name, int _ht, int _wt, int _age, int _gender, String _note, long _usr)

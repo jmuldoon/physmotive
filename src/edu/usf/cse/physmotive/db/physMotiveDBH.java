@@ -18,7 +18,8 @@ public class PhysMotiveDBH extends SQLiteOpenHelper
     // Only created so I can make a list of activities, Please update as
     // necessary. I will be using EntryDate as the name of the activity.
     static final String CREATE_ACTIVITY = "create table activity (_id integer primary key autoincrement,"
-	    + " entryUsr integer not null, entryDate integer not null,"
+    	+ " diaryId integer, checked integer,"
+    	+ " entryUsr integer not null, entryDate integer not null,"
 	    + " updateUsr integer, updateDate integer, deleted integer);";
 
     static final String CREATE_USER = "create table users (_id integer primary key autoincrement,"

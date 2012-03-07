@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ToggleButton;
+import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.DiaryDBM;
 
 public class DiaryView extends Activity
@@ -25,13 +27,15 @@ public class DiaryView extends Activity
     protected Button bindRacesButton;
     protected Button cancelButton;
     protected Button saveButton;
-    private DiaryDBM dbManager;
+    private DiaryDBM dbdManager;
+    private ActivityDBM dbaManager;
+    private Cursor cur;
 
-    protected CharSequence[] _options = { "Race 1", "Race 2", "Race 3", "Race 4" };
-	protected boolean[] _selections =  new boolean[ _options.length ];
+    //protected CharSequence[] _options = { "Race 1", "Race 2", "Race 3", "Race 4" };
+	//protected boolean[] _selections =  new boolean[ _options.length ];
     
-    private long diaryID;
-    private long usrID;
+    private int diaryID;
+    private int usrID;
 
     // Called when the activity is first created.
     @Override
@@ -41,7 +45,8 @@ public class DiaryView extends Activity
 		setContentView(R.layout.diary_view);
 	
 		// Creating DBM object
-		dbManager = new DiaryDBM(this);
+		dbdManager = new DiaryDBM(this);
+		dbaManager = new ActivityDBM(this);
 	
 		// Connect interface elements to properties
 		cancelButton = (Button) findViewById(R.id.cancelButton);
@@ -81,20 +86,22 @@ public class DiaryView extends Activity
 
     private void onButtonClickCancel(View w)
     {
+    	cur.close();
     	this.finish();
     }
 
     private void onButtonClickSave(View w)
     {
 		if (diaryID == 0)
-		    dbManager.insert(diaryEntryEditText.getText().toString(), Long.valueOf(heightEditText.getText().toString()),
-			    Long.valueOf(weightEditText.getText().toString()), Long.valueOf(ageEditText.getText().toString()),
-			    Long.valueOf(genderToggleButton.getText().toString()), notesEditText.getText().toString(), 0);
+			dbdManager.insert(diaryEntryEditText.getText().toString(), Integer.valueOf(heightEditText.getText().toString()),
+			    Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
+			    Integer.valueOf(genderToggleButton.getText().toString()), notesEditText.getText().toString(), 0);
 		else
-		    dbManager.update(diaryID, diaryEntryEditText.getText().toString(),
-			    Long.valueOf(heightEditText.getText().toString()), Long.valueOf(weightEditText.getText().toString()),
-			    Long.valueOf(ageEditText.getText().toString()), Long.valueOf(genderToggleButton.getText().toString()),
+			dbdManager.update(diaryID, diaryEntryEditText.getText().toString(),
+				Integer.valueOf(heightEditText.getText().toString()), Integer.valueOf(weightEditText.getText().toString()),
+				Integer.valueOf(ageEditText.getText().toString()), Integer.valueOf(genderToggleButton.getText().toString()),
 			    notesEditText.getText().toString(), usrID);
+		cur.close();
 		invokeActivityDiaryList(w);
     }
     
@@ -112,10 +119,13 @@ public class DiaryView extends Activity
 	@Override
 	protected Dialog onCreateDialog( int id ) 
 	{
+		dbaManager.open();
+		cur = dbaManager.getBindingList(usrID, diaryID);
+		dbaManager.close();
 		return 
 		new AlertDialog.Builder( this )
         	.setTitle( "Races" )
-        	.setMultiChoiceItems( _options, _selections, new DialogSelectionClickHandler() )
+        	.setMultiChoiceItems(cur, "checked", "entryDate", new DialogSelectionClickHandler() )
         	.setPositiveButton( "OK", new DialogButtonClickHandler() )
         	.create();
 	}
@@ -125,7 +135,7 @@ public class DiaryView extends Activity
 	{
 		public void onClick( DialogInterface dialog, int clicked, boolean selected )
 		{
-			Log.i( "ME", _options[ clicked ] + " selected: " + selected );
+			//Log.i( "ME", _options[ clicked ] + " selected: " + selected );
 		}
 	}
 	
@@ -137,15 +147,15 @@ public class DiaryView extends Activity
 			switch( clicked )
 			{
 				case DialogInterface.BUTTON_POSITIVE:
-					printSelectedRaces();
+					//printSelectedRaces();
 					break;
 			}
 		}
 	}
 	
-	protected void printSelectedRaces(){
-		for( int i = 0; i < _options.length; i++ ){
-			Log.i( "ME", _options[ i ] + " selected: " + _selections[i] );
-		}
-	}
+//	protected void printSelectedRaces(){
+//		for( int i = 0; i < _options.length; i++ ){
+//			Log.i( "ME", _options[ i ] + " selected: " + _selections[i] );
+//		}
+//	}
 }

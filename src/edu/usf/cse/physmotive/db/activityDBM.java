@@ -14,6 +14,8 @@ public class ActivityDBM
     // Database Values, NOT COMPLETE LIST PLEASE ADD WHERE NEEDED
     static final String TABLENAME = "activity";
     static final String ID = "_id";
+    static final String DID = "diaryId";
+    static final String CHECK = "checked";
     static final String EUSR = "entryUsr";
     static final String EDATE = "entryDate";
     static final String UUSR = "updateUsr";
@@ -105,6 +107,15 @@ public class ActivityDBM
 	c.moveToFirst();
 
 	return c;
+    }
+    
+    public Cursor getBindingList(int userId, int diaryId){
+		String[] columns = new String[] { ID, DID, EDATE, CHECK };
+		String whereClause = DID + " = " + diaryId + " or " + DID + " is null";
+		Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+		c.moveToFirst();
+	
+		return c;
     }
 
 }
