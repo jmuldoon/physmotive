@@ -27,7 +27,8 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/activitySpinner"
         android:layout_marginTop="17dp"
-        android:text="@string/distanceOrTimeToggleButton" />
+        android:textOn="@string/distanceOrTimeToggleButtonOn"
+        android:textOff="@string/distanceOrTimeToggleButtonOff" />
 
     <SeekBar
         android:id="@+id/distanceOrTimeSeekBar"

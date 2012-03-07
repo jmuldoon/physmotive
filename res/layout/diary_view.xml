@@ -79,7 +79,8 @@
         android:layout_alignRight="@+id/heightEditText"
         android:layout_below="@+id/heightEditText"
         android:layout_marginTop="20dp"
-        android:text="@string/genderToggleButtonValue" />
+        android:textOff="@string/genderToggleButtonValueOff"
+        android:textOn="@string/genderToggleButtonValueOn" />
 
     <Button
         android:id="@+id/bindRacesButton"

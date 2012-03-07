@@ -21,7 +21,8 @@
 		android:layout_alignLeft="@+id/weightEditText"
 		android:layout_alignRight="@+id/weightEditText"
 		android:layout_marginTop="16dp"
-		android:text="@string/orientationToggleButtonValue" />
+		android:textOff="@string/orientationToggleButtonValueOff"
+		android:textOn="@string/orientationToggleButtonValueOn" />
 
 	<ToggleButton
 		android:id="@+id/unitToggleButton"
@@ -31,7 +32,8 @@
 		android:layout_alignBottom="@+id/orientationToggleButton"
 		android:layout_alignParentLeft="true"
 		android:layout_alignRight="@+id/heightEditText"
-		android:text="@string/unitToggleButtonValue" />
+		android:textOff="@string/unitToggleButtonValueOff"
+		android:textOn="@string/unitToggleButtonValueOn" />
 
 	<TextView
 		android:id="@+id/heightTextView"
@@ -106,11 +108,12 @@
 		android:layout_above="@+id/ageTextView"
 		android:layout_alignLeft="@+id/ageEditText"
 		android:layout_alignParentRight="true"
-		android:text="@string/genderToggleButtonValue" />
+		android:textOff="@string/genderToggleButtonValueOff"
+		android:textOn="@string/genderToggleButtonValueOn" />
 
 	<RadioGroup
 		android:id="@+id/exportRadioGroup"
-		android:layout_width="fill_parent"
+		android:layout_width="300dp"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/heightEditText"
 		android:layout_marginTop="118dp"
@@ -127,6 +130,7 @@
 			android:id="@+id/radio1"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_toRightOf="@+id/radio0"
 			android:text=".TXT" />
 	</RadioGroup>
 
