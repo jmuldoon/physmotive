@@ -51,5 +51,10 @@
 	<string name="genderTitleValue">Gender</string>
 	<string name="updateButtonName">Update</string>
 	<string name="exportButtonName">Export</string>
+	<string name="firstNameHint">First Name</string>
+	<string name="lastNameHint">Last Name</string>
+	<string name="newUserText">Enter First and Last Name</string>
+	<string name="newUserTitle">New User Creation</string>
+	<string name="newUserHelp">Please view the settings page to add additional information about the user.</string>
 
 </resources>

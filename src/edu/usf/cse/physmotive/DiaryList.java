@@ -43,6 +43,22 @@ public class DiaryList extends ListActivity
 	updateList();
     }
 
+    @Override
+    protected void onResume()
+    {
+	super.onResume();
+	// Restore state here
+	updateList();
+    }
+
+    @Override
+    protected void onPause()
+    {
+	super.onPause();
+	cursor.close();
+	DBM.close();
+    }
+
     private void setupButton()
     {
 	addDiary = (Button) findViewById(R.id.btnAddDiary);

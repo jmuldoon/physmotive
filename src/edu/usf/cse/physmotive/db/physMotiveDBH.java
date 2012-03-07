@@ -23,7 +23,7 @@ public class PhysMotiveDBH extends SQLiteOpenHelper
 
     static final String CREATE_USER = "create table users (_id integer primary key autoincrement,"
 	    + " firstName text not null, lastName text not null, height float, weight float,"
-	    + " age integer, gender integer, units integer, orientation integer, dareFormat integer,"
+	    + " age integer, gender integer, units integer, orientation integer, dateFormat integer,"
 	    + " entryUsr integer not null, entryDate integer not null, updateUsr integer,"
 	    + " updateDate integer, deleted integer);";
 
