@@ -39,7 +39,6 @@
 		<activity android:name=".ActivityView" >
 		</activity>
 		<activity android:name=".ui.HorizontalListView"></activity>
-		<activity android:name=".ui.MultipleSelectionDialogue"></activity>
 	</application>
 
 </manifest>
