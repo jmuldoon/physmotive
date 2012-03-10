@@ -1,41 +1,46 @@
 package edu.usf.cse.physmotive;
-
-//This will be put in later
-
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
-public class MapItemizedOverlay extends ItemizedOverlay
-{
 
-    private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
+public class MapItemizedOverlay extends ItemizedOverlay {
+	private ArrayList<OverlayItem> myOverlays = new ArrayList<OverlayItem>();
+	private Context myContext;
+	
+	public MapItemizedOverlay(Drawable defaultMarker, Context context){
+		super(boundCenterBottom(defaultMarker));
+		myContext = context;
+	}
+	
+	public void addOverlay(OverlayItem overlay) {
+		myOverlays.add(overlay);
+	    populate();
+	}
 
-    public MapItemizedOverlay(Drawable defaultMarker) {
-	super(boundCenterBottom(defaultMarker));
-    }
+	@Override
+	protected boolean onTap(int index) {
+	  OverlayItem item = myOverlays.get(index);
+	  AlertDialog.Builder dialog = new AlertDialog.Builder(myContext);
+	  dialog.setTitle(item.getTitle());
+	  dialog.setMessage(item.getSnippet());
+	  dialog.show();
+	  return true;
+	}
+	
+	@Override
+	protected OverlayItem createItem(int i) {
+		return myOverlays.get(i);
+	}
 
-    @Override
-    protected OverlayItem createItem(int i)
-    {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
-    @Override
-    public int size()
-    {
-	// TODO Auto-generated method stub
-	return 0;
-    }
-
-    public void addOverlay(OverlayItem overlay)
-    {
-	mOverlays.add(overlay);
-	populate();
-    }
+	@Override
+	public int size() {
+		return myOverlays.size();
+	}
 
 }
