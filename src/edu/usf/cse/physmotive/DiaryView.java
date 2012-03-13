@@ -41,119 +41,119 @@ public class DiaryView extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.diary_view);
-
-	// Creating DBM object
-	dbdManager = new DiaryDBM(this);
-	dbaManager = new ActivityDBM(this);
-
-	// Connect interface elements to properties
-	cancelButton = (Button) findViewById(R.id.cancelButton);
-	saveButton = (Button) findViewById(R.id.saveButton);
-	diaryEntryEditText = (EditText) findViewById(R.id.diaryEntryEditText);
-	heightEditText = (EditText) findViewById(R.id.heightEditText);
-	weightEditText = (EditText) findViewById(R.id.weightEditText);
-	ageEditText = (EditText) findViewById(R.id.ageEditText);
-	notesEditText = (EditText) findViewById(R.id.notesEditText);
-	genderToggleButton = (ToggleButton) findViewById(R.id.genderToggleButton);
-	bindRacesButton = (Button) findViewById(R.id.bindRacesButton);
-
-	Bundle b = getIntent().getExtras();
-	if (b != null)
-	    diaryID = b.getInt("Coll_Id");
-
-	setOnClickListeners();
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.diary_view);
+	
+		// Creating DBM object
+		dbdManager = new DiaryDBM(this);
+		dbaManager = new ActivityDBM(this);
+	
+		// Connect interface elements to properties
+		cancelButton = (Button) findViewById(R.id.cancelButton);
+		saveButton = (Button) findViewById(R.id.saveButton);
+		diaryEntryEditText = (EditText) findViewById(R.id.diaryEntryEditText);
+		heightEditText = (EditText) findViewById(R.id.heightEditText);
+		weightEditText = (EditText) findViewById(R.id.weightEditText);
+		ageEditText = (EditText) findViewById(R.id.ageEditText);
+		notesEditText = (EditText) findViewById(R.id.notesEditText);
+		genderToggleButton = (ToggleButton) findViewById(R.id.genderToggleButton);
+		bindRacesButton = (Button) findViewById(R.id.bindRacesButton);
+	
+		Bundle b = getIntent().getExtras();
+		if (b != null)
+		    diaryID = b.getInt("Coll_Id");
+	
+		setOnClickListeners();
     }
 
     private void setOnClickListeners()
     {
-	cancelButton.setOnClickListener(new OnClickListener() {
-	    public void onClick(View v)
-	    {
-		onButtonClickCancel(v);
-	    }
-	});
-	saveButton.setOnClickListener(new OnClickListener() {
-	    public void onClick(View v)
-	    {
-		onButtonClickSave(v);
-	    }
-	});
+		cancelButton.setOnClickListener(new OnClickListener() {
+		    public void onClick(View v)
+		    {
+		    	onButtonClickCancel(v);
+		    }
+		});
+		saveButton.setOnClickListener(new OnClickListener() {
+		    public void onClick(View v)
+		    {
+			onButtonClickSave(v);
+		    }
+		});
 
-	bindRacesButton.setOnClickListener(new ButtonClickHandler());
+		bindRacesButton.setOnClickListener(new ButtonClickHandler());
     }
 
     private void onButtonClickCancel(View w)
     {
-	cur.close();
-	this.finish();
+		//cur.close();
+		this.finish();
     }
 
     private void onButtonClickSave(View w)
     {
-	int gend;
-	if (genderToggleButton.isChecked())
-	    gend = 1;
-	else
-	    gend = 0;
-
-	if (diaryID == 0)
-	    dbdManager.insert(diaryEntryEditText.getText().toString(), Integer.valueOf(heightEditText.getText().toString()),
-		    Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
-		    gend, notesEditText.getText().toString(), 0);
-	else
-	    dbdManager.update(diaryID, diaryEntryEditText.getText().toString(),
-		    Integer.valueOf(heightEditText.getText().toString()),
-		    Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
-		    gend, notesEditText.getText().toString(), usrID);
-	cur.close();
-	invokeActivityDiaryList(w);
+		int gend;
+		if (genderToggleButton.isChecked())
+		    gend = 1;
+		else
+		    gend = 0;
+	
+		if (diaryID == 0)
+		    dbdManager.insert(diaryEntryEditText.getText().toString(), Integer.valueOf(heightEditText.getText().toString()),
+			    Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
+			    gend, notesEditText.getText().toString(), 0);
+		else
+		    dbdManager.update(diaryID, diaryEntryEditText.getText().toString(),
+			    Integer.valueOf(heightEditText.getText().toString()),
+			    Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
+			    gend, notesEditText.getText().toString(), usrID);
+		cur.close();
+		invokeActivityDiaryList(w);
     }
 
     private void invokeActivityDiaryList(View w)
     {
-	Intent myIntent = new Intent(w.getContext(), DiaryList.class);
-	startActivityForResult(myIntent, 0);
+		Intent myIntent = new Intent(w.getContext(), DiaryList.class);
+		startActivityForResult(myIntent, 0);
     }
 
     public class ButtonClickHandler implements View.OnClickListener
     {
-	public void onClick(View view)
-	{
-	    showDialog(0);
-	}
+		public void onClick(View view)
+		{
+		    showDialog(0);
+		}
     }
 
     @Override
     protected Dialog onCreateDialog(int id)
     {
-	dbaManager.open();
-	cur = dbaManager.getBindingList(usrID, diaryID);
-	dbaManager.close();
-	return new AlertDialog.Builder(this).setTitle("Races")
-		.setMultiChoiceItems(cur, "checked", "entryDate", new DialogSelectionClickHandler())
-		.setPositiveButton("OK", new DialogButtonClickHandler()).create();
+		dbaManager.open();
+		cur = dbaManager.getBindingList(usrID, diaryID);
+		dbaManager.close();
+		return new AlertDialog.Builder(this).setTitle("Races")
+			.setMultiChoiceItems(cur, "checked", "entryDate", new DialogSelectionClickHandler())
+			.setPositiveButton("OK", new DialogButtonClickHandler()).create();
     }
 
     public class DialogSelectionClickHandler implements DialogInterface.OnMultiChoiceClickListener
     {
-	public void onClick(DialogInterface dialog, int clicked, boolean selected)
-	{
-	    // Log.i( "ME", _options[ clicked ] + " selected: " + selected );
-	}
+		public void onClick(DialogInterface dialog, int clicked, boolean selected)
+		{
+		    // Log.i( "ME", _options[ clicked ] + " selected: " + selected );
+		}
     }
 
     public class DialogButtonClickHandler implements DialogInterface.OnClickListener
     {
-	public void onClick(DialogInterface dialog, int clicked)
-	{
-	    switch (clicked) {
-	    case DialogInterface.BUTTON_POSITIVE:
-		// printSelectedRaces();
-		break;
-	    }
-	}
+		public void onClick(DialogInterface dialog, int clicked)
+		{
+		    switch (clicked) {
+			    case DialogInterface.BUTTON_POSITIVE:
+				// printSelectedRaces();
+				break;
+		    }
+		}
     }
 
     // protected void printSelectedRaces(){
