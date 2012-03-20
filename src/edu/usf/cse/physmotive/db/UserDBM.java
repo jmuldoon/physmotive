@@ -54,8 +54,8 @@ public class UserDBM
 	return db;
     }
 
-    public long insert(String firstName, String lastName, long ht, long wt, long age, long gender, long units, long ori,
-	    long dateFormat, long usr)
+    public int insert(String firstName, String lastName, int ht, int wt, int age, int gender, int units, int ori,
+	    int dateFormat, int usr)
     {
 	String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 	ContentValues values = new ContentValues();
@@ -75,31 +75,32 @@ public class UserDBM
 	values.put(UDATE, timeStamp);
 	values.put(DEL, 0);
 
-	return db.insert(TABLENAME, null, values);
+	return (int) db.insert(TABLENAME, null, values);
     }
 
-    public boolean update(long id, long ht, long wt, long age, long gender, long units, long ori, long dateFormat, long usr){
-		String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
-		String whereClause;
-		ContentValues values = new ContentValues();
-	
-		values.put(HEIGHT, ht);
-		values.put(WEIGHT, wt);
-		values.put(AGE, age);
-		values.put(GENDER, gender);
-		values.put(UNITS, units);
-		values.put(ORI, ori);
-		values.put(DATEFORMAT, dateFormat);
-		values.put(UUSR, usr);
-		values.put(UDATE, timeStamp);
-	
-		whereClause = ID + "=" + id;
-	
-		return db.update(TABLENAME, values, whereClause, null) > 0;
+    public boolean update(int id, int ht, int wt, int age, int gender, int units, int ori, int dateFormat, int usr)
+    {
+	String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+	String whereClause;
+	ContentValues values = new ContentValues();
+
+	values.put(HEIGHT, ht);
+	values.put(WEIGHT, wt);
+	values.put(AGE, age);
+	values.put(GENDER, gender);
+	values.put(UNITS, units);
+	values.put(ORI, ori);
+	values.put(DATEFORMAT, dateFormat);
+	values.put(UUSR, usr);
+	values.put(UDATE, timeStamp);
+
+	whereClause = ID + "=" + id;
+
+	return db.update(TABLENAME, values, whereClause, null) > 0;
     }
-    
-    public boolean update(long id, String firstName, String lastName, long ht, long wt, long age, long gender, long units,
-	    long ori, long dateFormat, long usr)
+
+    public boolean update(int id, String firstName, String lastName, int ht, int wt, int age, int gender, int units,
+	    int ori, int dateFormat, int usr)
     {
 	String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 	String whereClause;
@@ -149,7 +150,7 @@ public class UserDBM
     public Cursor getList(long userId)
     {
 	String[] columns = new String[] { ID, FIRSTNAME, LASTNAME, UDATE };
-	String whereClause = EUSR + " = " + userId + " and " + DEL + " <> 1";
+	String whereClause = DEL + " <> 1";
 	Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
 	c.moveToFirst();
 
