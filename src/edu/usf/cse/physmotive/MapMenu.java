@@ -9,6 +9,9 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
+//import edu.usf.cse.physmotive.loc.MyLocation;
+//import edu.usf.cse.physmotive.loc.MyLocation.LocationResult;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -17,7 +20,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
-public class MapMenu extends MapActivity{	
+public class MapMenu extends MapActivity{
+	//protected MyLocation myLocation;
 	protected MapView mapView;
     protected MapController mapController;
     protected MapItemizedOverlay itemizedOverlay;
@@ -25,6 +29,19 @@ public class MapMenu extends MapActivity{
     protected LocationManager locationManager;
 	protected LocationListener locationListener;
 	protected List<Overlay> mapOverlays;
+	//protected LocationResult locRes;
+	
+//	private void locationClick() {
+//	    myLocation.getLocation(this, locationResult);
+//	}
+//
+//	public LocationResult locationResult = new LocationResult(){
+//	    @Override
+//	    public void gotLocation(final Location loc){
+//	    	point = new GeoPoint((int)(loc.getLatitude() * 1E6),(int)(loc.getLongitude() * 1E6));
+//	    	addGeoPoint(point, "Current Location", loc.getLatitude()+":"+loc.getLongitude());
+//	    }
+//	};
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +50,9 @@ public class MapMenu extends MapActivity{
         mapView = (MapView)findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mapView.setStreetView(true);
+        
+//        myLocation = new MyLocation();
+//        myLocation.getLocation(this, locRes);
         
         // Use the LocationManager class to obtain GPS locations.
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
