@@ -9,9 +9,6 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-//import edu.usf.cse.physmotive.loc.MyLocation;
-//import edu.usf.cse.physmotive.loc.MyLocation.LocationResult;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
