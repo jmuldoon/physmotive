@@ -1,12 +1,21 @@
 package edu.usf.cse.physmotive;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import edu.usf.cse.physmotive.db.UserDBM;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 public class SettingsMenu extends Activity{
@@ -84,7 +93,44 @@ public class SettingsMenu extends Activity{
     }
     private void onButtonClickExport(View w)
     {
-    	//nothing as of right now
+        String state = Environment.getExternalStorageState();
+        String fileName = "taco.txt";
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            File file = new File(Environment.getExternalStorageDirectory(), fileName);
+            String unit;
+            if (unitToggleButton.isChecked()) {
+                unit = "Imperial";
+            } else {
+                unit = "Metric";
+            }
+            String orientation;
+            if (orientationToggleButton.isChecked()) {
+                orientation = "Portrait";
+            } else {
+                orientation = "Landscape";
+            }
+            String gender;
+            if (genderToggleButton.isChecked()) {
+                gender = "Male";
+            } else {
+                gender = "Female";
+            }
+            String height = heightEditText.getText().toString();
+            String weight = weightEditText.getText().toString();
+            String age = ageEditText.getText().toString();
+            String writeString = unit + "\n" + orientation + "\n" + gender
+                    + "\n" + height + "\n" + weight + "\n" + age + "\n";
+            try {
+                OutputStream outFile = new FileOutputStream(file);
+                outFile.write(writeString.getBytes());
+                outFile.close();
+                Toast.makeText(this, "It workeed " + fileName, Toast.LENGTH_SHORT).show();
+            } 
+            
+            catch (FileNotFoundException ex) {} 
+            catch (IOException ex) {}
+        }
+         
     }
 	
 }
