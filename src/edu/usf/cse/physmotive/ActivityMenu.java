@@ -10,6 +10,7 @@ import android.widget.Button;
 public class ActivityMenu extends Activity {
 	protected Button manualButton;
 	protected Button automaticButton;
+	
 	// Called when the activity is first created.
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class ActivityMenu extends Activity {
     }
     private void onButtonClickAutomaticStart(View w)
     {
+    	
     	invokeActiveActivity(w);
     }
 }

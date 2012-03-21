@@ -20,7 +20,6 @@ public class LocationDBM {
     static final String EDATE = "entryDate";
     static final String UUSR = "updateUsr";
     static final String UDATE = "updateDate";
-	static final String DEL = "deleted";
 	
 	private final Context androidContext;
 	private PhysMotiveDBH dbHelper;
@@ -56,7 +55,6 @@ public class LocationDBM {
 		values.put(EDATE, timeStamp);
 		values.put(UUSR, usr);
 		values.put(UDATE, timeStamp);
-		values.put(DEL, 0);
 
 		return (int) db.insert(TABLENAME, null, values);
 	}
@@ -65,8 +63,7 @@ public class LocationDBM {
 		ContentValues values = new ContentValues();
 		String whereClause = FKEY + "=" + raceID;
 		String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
-
-		values.put(DEL, 1);
+		
 		values.put(UUSR, usr);
 		values.put(UDATE, timeStamp);
 
@@ -74,7 +71,7 @@ public class LocationDBM {
 	}
 
 	public Cursor get(long id) {
-		String[] columns = new String[] { ID, EUSR, EDATE, UUSR, UDATE, DEL };
+		String[] columns = new String[] { ID, EUSR, EDATE, UUSR, UDATE };
 		String whereClause = ID + "=" + id;
 		Cursor mCursor = db.query(TABLENAME, columns, whereClause, null, null,
 				null, null, null);
@@ -84,9 +81,9 @@ public class LocationDBM {
 		return mCursor;
 	}
 
-	public Cursor getList(long userId) {
+	public Cursor getList(long userId, long raceID) {
 		String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS, UDATE };
-		String whereClause = DEL + " <> 1";
+		String whereClause = FKEY + "=" + raceID;
 		Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null,
 				null, null);
 		c.moveToFirst();
