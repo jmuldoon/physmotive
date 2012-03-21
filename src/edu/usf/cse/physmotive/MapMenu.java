@@ -107,8 +107,6 @@ public class MapMenu extends MapActivity implements LocationListener{
     	Location lastKnown = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     	if(lastKnown != null){
     		Log.d("last known lat:long", lastKnown.getLatitude()+":"+lastKnown.getLongitude());
-    		GeoPoint p = new GeoPoint((int)(lastKnown.getLatitude() * 1E6),(int)(lastKnown.getLongitude() * 1E6));
-    		addGeoPoint(p, "Initial", lastKnown.getLatitude()+":"+lastKnown.getLongitude());
     	}
     	else{
     		Log.d("GPS", "Determining location...");
