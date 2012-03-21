@@ -53,6 +53,7 @@ public class MapMenu extends MapActivity implements LocationListener{
     
 	@Override
 	public void onRestart(){
+		super.onRestart();
 		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);

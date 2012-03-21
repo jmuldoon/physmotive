@@ -86,6 +86,7 @@ public class ActiveActivity extends MapActivity implements LocationListener{
     
 	@Override
 	public void onRestart(){
+		super.onRestart();
 		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 3, this);
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 3, this);
