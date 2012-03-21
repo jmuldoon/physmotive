@@ -4,14 +4,14 @@
 	android:layout_height="match_parent" >
 
 	<TextView
-		android:id="@+id/orientationTextView"
+		android:id="@+id/unitTextView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignBaseline="@+id/toggleButton1"
 		android:layout_alignBottom="@+id/toggleButton1"
 		android:layout_marginRight="22dp"
 		android:layout_toLeftOf="@+id/toggleButton1"
-		android:text="@string/orientationTitleName"
+		android:text="@string/unitTitleName"
 		android:textAppearance="?android:attr/textAppearanceSmall" />
 
 	<ToggleButton
@@ -93,12 +93,12 @@
 		android:textAppearance="?android:attr/textAppearanceSmall" />
 
 	<TextView
-		android:id="@+id/unitTextView"
+		android:id="@+id/orientationTextView"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignLeft="@+id/weightTextView"
 		android:layout_alignParentTop="true"
-		android:text="@string/unitTitleName"
+		android:text="@string/orientationTitleName"
 		android:textAppearance="?android:attr/textAppearanceSmall" />
 
 	<ToggleButton
@@ -120,17 +120,17 @@
 		android:layout_toLeftOf="@+id/weightEditText" >
 
 		<RadioButton
-			android:id="@+id/radio0"
+			android:id="@+id/radioButtonCSV"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:checked="true"
 			android:text=".CSV" />
 
 		<RadioButton
-			android:id="@+id/radio1"
+			android:id="@+id/radioButtonTXT"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_toRightOf="@+id/radio0"
+			android:layout_toRightOf="@+id/radioButtonCSV"
 			android:text=".TXT" />
 	</RadioGroup>
 

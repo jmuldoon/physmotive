@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -29,7 +31,9 @@ public class SettingsMenu extends Activity{
     protected ToggleButton genderToggleButton;
     protected ToggleButton unitToggleButton;
     protected ToggleButton orientationToggleButton;
-
+    protected RadioButton radioButtonCSV;
+    protected RadioButton radioButtonTXT;
+    
 	
 	private int diaryID;
     private int usrID;
@@ -51,6 +55,8 @@ public class SettingsMenu extends Activity{
 		genderToggleButton = (ToggleButton) findViewById(R.id.genderToggleButton);
 		unitToggleButton = (ToggleButton)findViewById(R.id.unitToggleButton);
 		orientationToggleButton = (ToggleButton)findViewById(R.id.orientationToggleButton);
+		radioButtonCSV = (RadioButton)findViewById(R.id.radioButtonCSV);
+		radioButtonTXT = (RadioButton)findViewById(R.id.radioButtonTXT);
         
 		dbuManager = new UserDBM(this);
 		
@@ -94,27 +100,19 @@ public class SettingsMenu extends Activity{
     private void onButtonClickExport(View w)
     {
         String state = Environment.getExternalStorageState();
-        String fileName = "taco.txt";
+        String fileName;
+        String fileExtension;
+        if(radioButtonCSV.isChecked()) { fileExtension = ".csv"; } else { fileExtension = ".txt"; }
+        fileName = "test" + fileExtension;
+        
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             File file = new File(Environment.getExternalStorageDirectory(), fileName);
             String unit;
-            if (unitToggleButton.isChecked()) {
-                unit = "Imperial";
-            } else {
-                unit = "Metric";
-            }
+            if (unitToggleButton.isChecked()) { unit = "Imperial"; } else { unit = "Metric"; }
             String orientation;
-            if (orientationToggleButton.isChecked()) {
-                orientation = "Portrait";
-            } else {
-                orientation = "Landscape";
-            }
+            if (orientationToggleButton.isChecked()) { orientation = "Portrait";} else { orientation = "Landscape"; }
             String gender;
-            if (genderToggleButton.isChecked()) {
-                gender = "Male";
-            } else {
-                gender = "Female";
-            }
+            if (genderToggleButton.isChecked()) { gender = "Male"; } else { gender = "Female"; }
             String height = heightEditText.getText().toString();
             String weight = weightEditText.getText().toString();
             String age = ageEditText.getText().toString();
@@ -124,7 +122,7 @@ public class SettingsMenu extends Activity{
                 OutputStream outFile = new FileOutputStream(file);
                 outFile.write(writeString.getBytes());
                 outFile.close();
-                Toast.makeText(this, "It workeed " + fileName, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "It worked " + fileName, Toast.LENGTH_SHORT).show();
             } 
             
             catch (FileNotFoundException ex) {} 
