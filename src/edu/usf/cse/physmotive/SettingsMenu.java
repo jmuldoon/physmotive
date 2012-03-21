@@ -102,7 +102,14 @@ public class SettingsMenu extends Activity{
         String state = Environment.getExternalStorageState();
         String fileName;
         String fileExtension;
-        if(radioButtonCSV.isChecked()) { fileExtension = ".csv"; } else { fileExtension = ".txt"; }
+        String cOrNl; //comma or new line, for CSV or TXT
+        if(radioButtonCSV.isChecked()) { 
+            fileExtension = ".csv";
+            cOrNl = ","; 
+        } else { 
+            fileExtension = ".txt"; 
+            cOrNl = "\n";
+        }
         fileName = "test" + fileExtension;
         
         if (Environment.MEDIA_MOUNTED.equals(state)) {
