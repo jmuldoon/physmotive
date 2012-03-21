@@ -44,7 +44,7 @@ public class LocationDBM {
 		return db;
 	}
 
-	public int insert(String raceID, String lat, String lng, long usr) {
+	public int insert(long raceID, String lat, String lng, long usr) {
 		String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 		ContentValues values = new ContentValues();
 
@@ -60,26 +60,10 @@ public class LocationDBM {
 
 		return (int) db.insert(TABLENAME, null, values);
 	}
-
-	// Don't think we will ever be updating race data after it is ran. May be able to get away without this.
-	public boolean update(int id, String lat, String lng, long usr) {
-		String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
-		String whereClause = ID + "=" + id;
-		ContentValues values = new ContentValues();
-
-		values.put(LATITUDE, lat);
-		values.put(LONGITUDE, lng);
-		values.put(LTS, timeStamp);
-		values.put(UUSR, usr);
-		values.put(UDATE, timeStamp);
-		
-		return db.update(TABLENAME, values, whereClause, null) > 0;
-	}
-
 	
-	public boolean delete(long id, long raceID, long usr) {
+	public boolean delete(long raceID, long usr) {
 		ContentValues values = new ContentValues();
-		String whereClause = ID + "=" + id + "and" + FKEY + "=" + raceID;
+		String whereClause = FKEY + "=" + raceID;
 		String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 
 		values.put(DEL, 1);
