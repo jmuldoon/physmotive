@@ -21,6 +21,13 @@ import edu.usf.cse.physmotive.db.UserDBM;
 
 public class MainMenu extends Activity
 {
+    // Database Fields
+    static final String ID = "_id";
+    static final String FNAME = "firstName";
+    static final String LNAME = "lastName";
+    static final String USERID = "userId";
+
+    // Visible Items on screen
     protected Button newActivityButton;
     protected Button viewActivityButton;
     protected Button mapButton;
@@ -30,6 +37,7 @@ public class MainMenu extends Activity
     protected Button newUserButton;
     protected Spinner userSpinner;
 
+    // Internal Variables
     private int userId = 1;
     private UserDBM uDBM;
     private Cursor userCursor;
@@ -55,7 +63,6 @@ public class MainMenu extends Activity
 
 	setOnClickListeners();
 	updateSpinner();
-	userSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
     }
 
     @Override
@@ -74,12 +81,17 @@ public class MainMenu extends Activity
 	uDBM.close();
     }
 
+    // //////////////////////////////////////////////
+    // This is the beginning of the dialog windows //
+    // //////////////////////////////////////////////
     @Override
     protected Dialog onCreateDialog(int i, Bundle args)
     {
 	LayoutInflater factory = LayoutInflater.from(this);
 	switch (i) {
+	// This case is for the New User Dialog
 	case 0:
+	    // Setup of the view for the dialog
 	    final View textEntryView = factory.inflate(R.layout.new_user, null);
 
 	    return new AlertDialog.Builder(MainMenu.this)
@@ -88,11 +100,12 @@ public class MainMenu extends Activity
 		    .setPositiveButton(R.string.btnSave, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton)
 			{
+			    // Gets text fields from dialog
 			    EditText firstName = (EditText) textEntryView.findViewById(R.id.userFirstNameEditText);
 			    EditText lastName = (EditText) textEntryView.findViewById(R.id.userLastNameEditText);
 			    firstName.requestFocus();
 
-			    /* User clicked OK so do some stuff */
+			    // Verifies the fields have information in them
 			    if (firstName.getText().toString().equals("")
 				    || firstName.getText().toString().trim().equals("")
 				    || lastName.getText().toString().equals("")
@@ -117,10 +130,10 @@ public class MainMenu extends Activity
 		    }).setNegativeButton(R.string.btnCancel, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton)
 			{
+			    // clears the fields and closes the dialog
 			    EditText firstName = (EditText) textEntryView.findViewById(R.id.userFirstNameEditText);
 			    EditText lastName = (EditText) textEntryView.findViewById(R.id.userLastNameEditText);
 			    firstName.requestFocus();
-			    /* User clicked cancel, close dialog */
 			    firstName.setText("");
 			    lastName.setText("");
 			}
@@ -131,30 +144,35 @@ public class MainMenu extends Activity
 	return null;
     }
 
+    // //////////////////////////////////
+    // User Spinner setup and controls //
+    // //////////////////////////////////
     private void updateSpinner()
     {
 	int user;
 	uDBM.open();
+	// gets list of available users
 	userCursor = uDBM.getList(userId);
 	startManagingCursor(userCursor);
-	userCursor.moveToFirst();
-	String[] from = new String[] { "_id", "firstName", "lastName" };
+
+	String[] from = new String[] { ID, FNAME, LNAME };
 	int[] to = new int[] { R.id.userIdTV, R.id.userFirstNameTV, R.id.userLastNameTV };
 
 	adapter = new SimpleCursorAdapter(this, R.layout.user_list_item, userCursor, from, to);
 	userSpinner.setAdapter(adapter);
 
+	// Sets the proper name to display
 	for (int i = 0; i < userSpinner.getCount(); i++)
 	{
 	    Cursor value = (Cursor) userSpinner.getItemAtPosition(i);
-	    user = value.getInt(value.getColumnIndex("_id"));
+	    user = value.getInt(value.getColumnIndex(ID));
 
 	    if (user == userId)
 	    {
 		userSpinner.setSelection(i);
 	    }
 	}
-
+	userSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
 	uDBM.close();
     }
 
@@ -162,50 +180,71 @@ public class MainMenu extends Activity
     {
 	public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
 	{
-
+	    // Gets cursor from list, updates the new userId
 	    Cursor value = (Cursor) parent.getItemAtPosition(pos);
 	    userId = value.getInt(0);
 	}
 
-	public void onNothingSelected(AdapterView parent)
+	public void onNothingSelected(AdapterView<?> parent)
 	{
 	    // Do nothing.
 	}
     }
 
+    // ///////////////
+    // Button Setup //
+    // ///////////////
     private void invokeActivityMenu(View arg0)
     {
 	Intent myIntent = new Intent(arg0.getContext(), ActivityMenu.class);
+	Bundle b = new Bundle();
+	b.putInt(USERID, userId);
+	myIntent.putExtras(b);
 	startActivityForResult(myIntent, 0);
     }
 
     private void invokeActivityView(View arg0)
     {
 	Intent myIntent = new Intent(arg0.getContext(), ActivityList.class);
+	Bundle b = new Bundle();
+	b.putInt(USERID, userId);
+	myIntent.putExtras(b);
 	startActivityForResult(myIntent, 0);
     }
 
     private void invokeDiaryList(View arg0)
     {
 	Intent myIntent = new Intent(arg0.getContext(), DiaryList.class);
+	Bundle b = new Bundle();
+	b.putInt(USERID, userId);
+	myIntent.putExtras(b);
 	startActivityForResult(myIntent, 0);
     }
 
     private void invokeMapView(View arg0)
     {
 	Intent myIntent = new Intent(arg0.getContext(), MapMenu.class);
+	Bundle b = new Bundle();
+	b.putInt(USERID, userId);
+	myIntent.putExtras(b);
 	startActivityForResult(myIntent, 0);
     }
 
     private void invokeStatisticsMenu(View arg0)
     {
 	Intent myIntent = new Intent(arg0.getContext(), StatisticsMenu.class);
+	Bundle b = new Bundle();
+	b.putInt(USERID, userId);
+	myIntent.putExtras(b);
 	startActivityForResult(myIntent, 0);
     }
 
     private void invokeSettingsMenu(View arg0)
     {
 	Intent myIntent = new Intent(arg0.getContext(), SettingsMenu.class);
+	Bundle b = new Bundle();
+	b.putInt(USERID, userId);
+	myIntent.putExtras(b);
 	startActivityForResult(myIntent, 0);
     }
 
