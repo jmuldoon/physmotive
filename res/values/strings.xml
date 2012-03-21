@@ -60,7 +60,7 @@
 	<string name="weightHint">kg</string>
 	<string name="ageHint">years</string>
 	<string name="orientationToggleButtonValueOff">Landscape</string>
-	<string name="unitToggleButtonValueOn">Empirical</string>
+	<string name="unitToggleButtonValueOn">Imperial</string>
 	<string name="unitToggleButtonValueOff">Metric</string>
 
 </resources>
