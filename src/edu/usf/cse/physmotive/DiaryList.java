@@ -20,7 +20,11 @@ import edu.usf.cse.physmotive.db.DiaryDBM;
 
 public class DiaryList extends ListActivity
 {
-    private long Usr = 1;
+    // Internal Strings
+    static final String USERID = "userId";
+    static final String DIARYID = "diaryId";
+
+    private int userId;
     protected Button addDiary;
     protected ListView diary_lv;
     private DiaryDBM DBM;
@@ -32,6 +36,8 @@ public class DiaryList extends ListActivity
     {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.diary_list);
+	Bundle b = getIntent().getExtras();
+	userId = b.getInt(USERID);
 
 	DBM = new DiaryDBM(this);
 	diary_lv = (ListView) this.getListView();
@@ -65,7 +71,7 @@ public class DiaryList extends ListActivity
 	addDiary.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v)
 	    {
-		insert("Temp Entry", 120, 185, 25, 1, "This is a note.", Usr);
+		insert("Temp Entry", 120, 185, 25, 1, "This is a note.", userId);
 	    }
 	});
     }
@@ -109,8 +115,8 @@ public class DiaryList extends ListActivity
 	Bundle bundle = new Bundle();
 
 	// Preparing the data
-	bundle.putLong("userId", Usr);
-	bundle.putLong("diaryId", item_id);
+	bundle.putLong(USERID, userId);
+	bundle.putLong(DIARYID, item_id);
 
 	// Attaching info and starting new activity
 	myIntent.putExtras(bundle);
@@ -155,20 +161,20 @@ public class DiaryList extends ListActivity
 	{
 	    Intent myIntent = new Intent(this, DiaryView.class);
 
-	    bundle.putLong("User_Id", Usr);
-	    bundle.putInt("Coll_Id", item_id);
+	    bundle.putLong(USERID, userId);
+	    bundle.putInt(DIARYID, item_id);
 
 	    myIntent.putExtras(bundle);
 	    startActivity(myIntent);
 	} else if (item.getTitle().equals("Edit"))
 	{
-	    bundle.putInt("Coll_Id", item_id);
+	    bundle.putInt(DIARYID, item_id);
 
 	    showDialog(1, bundle);
 
 	} else if (item.getTitle().equals("Delete"))
 	{
-	    delete(item_id, Usr);
+	    delete(item_id, userId);
 	    Toast.makeText(this, "Entry Deleted", Toast.LENGTH_LONG).show();
 	} else
 	{
@@ -180,14 +186,14 @@ public class DiaryList extends ListActivity
     private void updateList()
     {
 	DBM.open();
-	cursor = DBM.getList(Usr);
+	cursor = DBM.getList(userId);
 	DBM.close();
-	
+
 	startManagingCursor(cursor);
 	adapter = new SimpleCursorAdapter(this, R.layout.diary_list_item, cursor, new String[] { "_id", "name" }, new int[] {
 		R.id.D_ID, R.id.D_Name });
 	setListAdapter(adapter);
-	
+
     }
 
     private long insert(String _name, int _ht, int _wt, int _age, int _gender, String _note, long _usr)

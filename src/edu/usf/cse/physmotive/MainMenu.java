@@ -28,6 +28,13 @@ import android.location.LocationManager;
 import edu.usf.cse.physmotive.db.UserDBM;
 
 public class MainMenu extends Activity implements LocationListener {
+	// Database Fields
+	static final String ID = "_id";
+	static final String FNAME = "firstName";
+	static final String LNAME = "lastName";
+	static final String USERID = "userId";
+
+	// Visible Items on screen
 	protected Button newActivityButton;
 	protected Button viewActivityButton;
 	protected Button mapButton;
@@ -39,6 +46,7 @@ public class MainMenu extends Activity implements LocationListener {
 	protected LocationManager locationManager;
 	protected GeoPoint point;
 
+	// Internal Variables
 	private int userId = 1;
 	private UserDBM uDBM;
 	private Cursor userCursor;
@@ -64,9 +72,9 @@ public class MainMenu extends Activity implements LocationListener {
 		setOnClickListeners();
 		updateSpinner();
 		userSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
-		
+
 		// Get initial location locations.
-        this.getInitialLocation();
+		this.getInitialLocation();
 	}
 
 	@Override
@@ -74,10 +82,12 @@ public class MainMenu extends Activity implements LocationListener {
 		super.onResume();
 		// Restore state here
 		updateSpinner();
-		
-		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+				0, this);
+		locationManager.requestLocationUpdates(
+				LocationManager.NETWORK_PROVIDER, 0, 0, this);
 	}
 
 	@Override
@@ -86,55 +96,64 @@ public class MainMenu extends Activity implements LocationListener {
 		userCursor.close();
 		uDBM.close();
 	}
-	
+
 	@Override
-	public void onStop(){
+	public void onStop() {
 		super.onStop();
 		locationManager.removeUpdates(this);
 	}
 
 	@Override
-	public void onLocationChanged(Location loc){		
-        // Stores the information in the point
-		point = new GeoPoint((int)(loc.getLatitude() * 1E6),(int)(loc.getLongitude() * 1E6));
-        
-        Log.d("lat:long", loc.getLatitude()+":"+loc.getLongitude());
-        locationManager.removeUpdates(this);
-    }
-	
+	public void onLocationChanged(Location loc) {
+		// Stores the information in the point
+		point = new GeoPoint((int) (loc.getLatitude() * 1E6),
+				(int) (loc.getLongitude() * 1E6));
+
+		Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
+		locationManager.removeUpdates(this);
+	}
+
 	@Override
-    public void onProviderDisabled(String provider){
-    	Log.d("onProviderDisabled", "GPS Disabled");
-    }
-	
+	public void onProviderDisabled(String provider) {
+		Log.d("onProviderDisabled", "GPS Disabled");
+	}
+
 	@Override
-    public void onProviderEnabled(String provider){
-    	Log.d("onProviderEnabled", "GPS Enabled");
-    }
-	
+	public void onProviderEnabled(String provider) {
+		Log.d("onProviderEnabled", "GPS Enabled");
+	}
+
 	@Override
-    public void onStatusChanged(String provider, int status, Bundle extras){
+	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO: Something
-    }
-    	
-	public void getInitialLocation(){
-    	locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-    	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,this);
-    	locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-    	Location lastKnown = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-    	if(lastKnown != null){
-    		Log.d("last known lat:long", lastKnown.getLatitude()+":"+lastKnown.getLongitude());
-    	}
-    	else{
-    		Log.d("GPS", "Determining location...");
-    	}
-    }
-	
+	}
+
+	public void getInitialLocation() {
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+				0, this);
+		locationManager.requestLocationUpdates(
+				LocationManager.NETWORK_PROVIDER, 0, 0, this);
+		Location lastKnown = locationManager
+				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		if (lastKnown != null) {
+			Log.d("last known lat:long", lastKnown.getLatitude() + ":"
+					+ lastKnown.getLongitude());
+		} else {
+			Log.d("GPS", "Determining location...");
+		}
+	}
+
+	// //////////////////////////////////////////////
+	// This is the beginning of the dialog windows //
+	// //////////////////////////////////////////////
 	@Override
 	protected Dialog onCreateDialog(int i, Bundle args) {
 		LayoutInflater factory = LayoutInflater.from(this);
 		switch (i) {
+		// This case is for the New User Dialog
 		case 0:
+			// Setup of the view for the dialog
 			final View textEntryView = factory.inflate(R.layout.new_user, null);
 
 			return new AlertDialog.Builder(MainMenu.this)
@@ -145,13 +164,15 @@ public class MainMenu extends Activity implements LocationListener {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
+									// Gets text fields from dialog
 									EditText firstName = (EditText) textEntryView
 											.findViewById(R.id.userFirstNameEditText);
 									EditText lastName = (EditText) textEntryView
 											.findViewById(R.id.userLastNameEditText);
 									firstName.requestFocus();
 
-									/* User clicked OK so do some stuff */
+									// Verifies the fields have information in
+									// them
 									if (firstName.getText().toString()
 											.equals("")
 											|| firstName.getText().toString()
@@ -186,12 +207,12 @@ public class MainMenu extends Activity implements LocationListener {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int whichButton) {
+									// clears the fields and closes the dialog
 									EditText firstName = (EditText) textEntryView
 											.findViewById(R.id.userFirstNameEditText);
 									EditText lastName = (EditText) textEntryView
 											.findViewById(R.id.userLastNameEditText);
 									firstName.requestFocus();
-									/* User clicked cancel, close dialog */
 									firstName.setText("");
 									lastName.setText("");
 								}
@@ -202,13 +223,17 @@ public class MainMenu extends Activity implements LocationListener {
 		return null;
 	}
 
+	// //////////////////////////////////
+	// User Spinner setup and controls //
+	// //////////////////////////////////
 	private void updateSpinner() {
 		int user;
 		uDBM.open();
+		// gets list of available users
 		userCursor = uDBM.getList(userId);
 		startManagingCursor(userCursor);
-		userCursor.moveToFirst();
-		String[] from = new String[] { "_id", "firstName", "lastName" };
+
+		String[] from = new String[] { ID, FNAME, LNAME };
 		int[] to = new int[] { R.id.userIdTV, R.id.userFirstNameTV,
 				R.id.userLastNameTV };
 
@@ -216,58 +241,80 @@ public class MainMenu extends Activity implements LocationListener {
 				userCursor, from, to);
 		userSpinner.setAdapter(adapter);
 
+		// Sets the proper name to display
 		for (int i = 0; i < userSpinner.getCount(); i++) {
 			Cursor value = (Cursor) userSpinner.getItemAtPosition(i);
-			user = value.getInt(value.getColumnIndex("_id"));
+			user = value.getInt(value.getColumnIndex(ID));
 
 			if (user == userId) {
 				userSpinner.setSelection(i);
 			}
 		}
-
+		userSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
 		uDBM.close();
 	}
 
 	public class MyOnItemSelectedListener implements OnItemSelectedListener {
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
-
+			// Gets cursor from list, updates the new userId
 			Cursor value = (Cursor) parent.getItemAtPosition(pos);
 			userId = value.getInt(0);
 		}
 
-		public void onNothingSelected(AdapterView parent) {
+		public void onNothingSelected(AdapterView<?> parent) {
 			// Do nothing.
 		}
 	}
 
+	// ///////////////
+	// Button Setup //
+	// ///////////////
 	private void invokeActivityMenu(View arg0) {
 		Intent myIntent = new Intent(arg0.getContext(), ActivityMenu.class);
+		Bundle b = new Bundle();
+		b.putInt(USERID, userId);
+		myIntent.putExtras(b);
 		startActivityForResult(myIntent, 0);
 	}
 
 	private void invokeActivityView(View arg0) {
 		Intent myIntent = new Intent(arg0.getContext(), ActivityList.class);
+		Bundle b = new Bundle();
+		b.putInt(USERID, userId);
+		myIntent.putExtras(b);
 		startActivityForResult(myIntent, 0);
 	}
 
 	private void invokeDiaryList(View arg0) {
 		Intent myIntent = new Intent(arg0.getContext(), DiaryList.class);
+		Bundle b = new Bundle();
+		b.putInt(USERID, userId);
+		myIntent.putExtras(b);
 		startActivityForResult(myIntent, 0);
 	}
 
 	private void invokeMapView(View arg0) {
 		Intent myIntent = new Intent(arg0.getContext(), MapMenu.class);
+		Bundle b = new Bundle();
+		b.putInt(USERID, userId);
+		myIntent.putExtras(b);
 		startActivityForResult(myIntent, 0);
 	}
 
 	private void invokeStatisticsMenu(View arg0) {
 		Intent myIntent = new Intent(arg0.getContext(), StatisticsMenu.class);
+		Bundle b = new Bundle();
+		b.putInt(USERID, userId);
+		myIntent.putExtras(b);
 		startActivityForResult(myIntent, 0);
 	}
 
 	private void invokeSettingsMenu(View arg0) {
 		Intent myIntent = new Intent(arg0.getContext(), SettingsMenu.class);
+		Bundle b = new Bundle();
+		b.putInt(USERID, userId);
+		myIntent.putExtras(b);
 		startActivityForResult(myIntent, 0);
 	}
 
