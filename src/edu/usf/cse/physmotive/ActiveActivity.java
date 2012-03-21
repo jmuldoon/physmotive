@@ -9,6 +9,9 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
+import edu.usf.cse.physmotive.db.ActivityDBM;
+import edu.usf.cse.physmotive.db.LocationDBM;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -28,19 +31,34 @@ public class ActiveActivity extends MapActivity implements LocationListener{
 	protected GeoPoint point;
     protected LocationManager locationManager;
 	protected List<Overlay> mapOverlays;
+	private LocationDBM dblManager;
+	private ActivityDBM dbaManager;
+	
+	private int usrID, raceID;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.active_activity);
         
+        Bundle b = getIntent().getExtras();
+        usrID = b.getInt("userId");
+        
+        dblManager = new LocationDBM(this);
+        dbaManager = new ActivityDBM(this);
+        raceID = (int)dbaManager.insert(usrID);
+        
         mapView = (MapView)findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mapView.setStreetView(true);
         
+        // TODO:get eddy to pass into bundle button manual / auto
+        // 		if manual, force button click to start, else start
+        
         // Use the LocationManager class to obtain GPS locations.
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 3, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 3, this);
         
         mapOverlays = mapView.getOverlays();
         Drawable drawable = this.getResources().getDrawable(R.drawable.androidmarker);
@@ -55,6 +73,12 @@ public class ActiveActivity extends MapActivity implements LocationListener{
 	}
 	
 	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		dblManager.delete(raceID, usrID);
+	}
+	
+	@Override
 	public void onStop(){
 		super.onStop();
 		locationManager.removeUpdates(this);
@@ -63,8 +87,8 @@ public class ActiveActivity extends MapActivity implements LocationListener{
 	@Override
 	public void onRestart(){
 		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 3, this);
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 3, this);
 	}
 	
     @Override
@@ -84,6 +108,8 @@ public class ActiveActivity extends MapActivity implements LocationListener{
         
         addGeoPoint(point, "Current Location", loc.getLatitude()+" : "+loc.getLongitude());
         Log.d("lat:long", loc.getLatitude()+":"+loc.getLongitude());
+        
+        dblManager.insert(raceID, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()), usrID);
     }
 
     @Override
