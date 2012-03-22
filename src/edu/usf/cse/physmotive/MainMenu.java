@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -265,6 +266,19 @@ public class MainMenu extends Activity implements LocationListener
     // ///////////////
     // Button Setup //
     // ///////////////
+
+    // Overrides the back button to always exit the app
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            moveTaskToBack(true);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     private void invokeActivityMenu(View arg0)
     {
         Intent myIntent = new Intent(arg0.getContext(), ActivityMenu.class);

@@ -54,7 +54,10 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
         dblManager = new LocationDBM(this);
         dbaManager = new ActivityDBM(this);
-        raceID = (int) dbaManager.insert(userID);
+
+        dbaManager.open();
+        raceID = dbaManager.insert(userID);
+        dbaManager.close();
 
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
@@ -92,7 +95,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
     public void onDestroy()
     {
         super.onDestroy();
+        dblManager.open();
         dblManager.delete(raceID, userID);
+        dblManager.close();
     }
 
     @Override
@@ -131,7 +136,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
         addGeoPoint(point, "Current Location", loc.getLatitude() + " : " + loc.getLongitude());
         Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
 
+        dblManager.open();
         dblManager.insert(raceID, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()), userID);
+        dblManager.close();
     }
 
     @Override
