@@ -44,6 +44,7 @@
 	        android:layout_alignParentRight="true"
 	        android:layout_marginRight="20dp"
 	        android:text="@string/currentPaceValue"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />	    
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	    
 	</RelativeLayout>  
 </RelativeLayout>

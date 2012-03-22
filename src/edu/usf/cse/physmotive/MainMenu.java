@@ -80,16 +80,19 @@ public class MainMenu extends Activity implements LocationListener
         this.getInitialLocation();
     }
 
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        // Restore state here
-        updateSpinner();
-
+    private void initiateLocationServices(){
+    	// Use the LocationManager class to obtain GPS locations.
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+    }
+    
+    @Override
+    protected void onResume(){
+        super.onResume();
+        // Restore state here
+        updateSpinner(); 
+        initiateLocationServices();
     }
 
     @Override
@@ -137,9 +140,7 @@ public class MainMenu extends Activity implements LocationListener
 
     public void getInitialLocation()
     {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+    	initiateLocationServices();
         Location lastKnown = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (lastKnown != null)
         {

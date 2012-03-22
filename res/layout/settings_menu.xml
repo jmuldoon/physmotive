@@ -1,165 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-	<TextView
-		android:id="@+id/unitTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignBaseline="@+id/toggleButton1"
-		android:layout_alignBottom="@+id/toggleButton1"
-		android:layout_marginRight="22dp"
-		android:layout_toLeftOf="@+id/toggleButton1"
-		android:text="@string/unitTitleName"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:id="@+id/unitTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/toggleButton1"
+        android:layout_alignBottom="@+id/toggleButton1"
+        android:layout_marginRight="22dp"
+        android:layout_toLeftOf="@+id/toggleButton1"
+        android:text="@string/unitTitleName"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	<ToggleButton
-		android:id="@+id/orientationToggleButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignLeft="@+id/weightEditText"
-		android:layout_alignRight="@+id/weightEditText"
-		android:layout_marginTop="16dp"
-		android:textOff="@string/orientationToggleButtonValueOff"
-		android:textOn="@string/orientationToggleButtonValueOn" />
+    <ToggleButton
+        android:id="@+id/orientationToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/weightEditText"
+        android:layout_alignRight="@+id/weightEditText"
+        android:layout_marginTop="16dp"
+        android:textOff="@string/orientationToggleButtonValueOff"
+        android:textOn="@string/orientationToggleButtonValueOn" />
 
-	<ToggleButton
-		android:id="@+id/unitToggleButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignBaseline="@+id/orientationToggleButton"
-		android:layout_alignBottom="@+id/orientationToggleButton"
-		android:layout_alignParentLeft="true"
-		android:layout_alignRight="@+id/heightEditText"
-		android:textOff="@string/unitToggleButtonValueOff"
-		android:textOn="@string/unitToggleButtonValueOn" />
+    <ToggleButton
+        android:id="@+id/unitToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/orientationToggleButton"
+        android:layout_alignBottom="@+id/orientationToggleButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/heightEditText"
+        android:textOff="@string/unitToggleButtonValueOff"
+        android:textOn="@string/unitToggleButtonValueOn" />
 
-	<TextView
-		android:id="@+id/heightTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@+id/unitToggleButton"
-		android:text="@string/heightTitle"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:id="@+id/heightTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/unitToggleButton"
+        android:text="@string/heightTitle"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	<EditText
-		android:id="@+id/heightEditText"
-		android:layout_width="100dp"
-		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
-		android:layout_below="@+id/heightTextView"
-		android:hint="@string/heightHint"
-		android:inputType="number" />
+    <EditText
+        android:id="@+id/heightEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/heightTextView"
+        android:hint="@string/heightHint"
+        android:inputType="number" />
 
-	<EditText
-		android:id="@+id/weightEditText"
-		android:layout_width="100dp"
-		android:layout_height="wrap_content"
-		android:layout_below="@+id/heightTextView"
-		android:layout_centerHorizontal="true"
-		android:hint="@string/weightHint"
-		android:inputType="number" />
+    <EditText
+        android:id="@+id/weightEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/heightTextView"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/weightHint"
+        android:inputType="number" />
 
-	<EditText
-		android:id="@+id/ageEditText"
-		android:layout_width="100dp"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:layout_below="@+id/heightTextView"
-		android:hint="@string/ageHint"
-		android:inputType="number" >
+    <EditText
+        android:id="@+id/ageEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/heightTextView"
+        android:hint="@string/ageHint"
+        android:inputType="number" >
 
-		<requestFocus />
-	</EditText>
+        <requestFocus />
+    </EditText>
 
-	<TextView
-		android:id="@+id/weightTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_above="@+id/weightEditText"
-		android:layout_centerHorizontal="true"
-		android:text="@string/weightTitle"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:id="@+id/weightTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/weightEditText"
+        android:layout_centerHorizontal="true"
+        android:text="@string/weightTitle"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	<TextView
-		android:id="@+id/ageTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:layout_below="@+id/orientationToggleButton"
-		android:layout_marginRight="34dp"
-		android:text="@string/ageTitle"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:id="@+id/ageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/orientationToggleButton"
+        android:layout_marginRight="34dp"
+        android:text="@string/ageTitle"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	<TextView
-		android:id="@+id/orientationTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignLeft="@+id/weightTextView"
-		android:layout_alignParentTop="true"
-		android:text="@string/orientationTitleName"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
+    <TextView
+        android:id="@+id/orientationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/weightTextView"
+        android:layout_alignParentTop="true"
+        android:text="@string/orientationTitleName"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-	<ToggleButton
-		android:id="@+id/genderToggleButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_above="@+id/ageTextView"
-		android:layout_alignLeft="@+id/ageEditText"
-		android:layout_alignParentRight="true"
-		android:textOff="@string/genderToggleButtonValueOff"
-		android:textOn="@string/genderToggleButtonValueOn" />
+    <ToggleButton
+        android:id="@+id/genderToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ageTextView"
+        android:layout_alignLeft="@+id/ageEditText"
+        android:layout_alignParentRight="true"
+        android:textOff="@string/genderToggleButtonValueOff"
+        android:textOn="@string/genderToggleButtonValueOn" />
 
-	<RadioGroup
-		android:id="@+id/exportRadioGroup"
-		android:layout_width="300dp"
-		android:layout_height="wrap_content"
-		android:layout_below="@+id/heightEditText"
-		android:layout_marginTop="118dp"
-		android:layout_toLeftOf="@+id/weightEditText" >
+    <TextView
+        android:id="@+id/genderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/ageTextView"
+        android:text="@string/genderTitleValue"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
-		<RadioButton
-			android:id="@+id/radioButtonCSV"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:checked="true"
-			android:text=".CSV" />
+    <Button
+        android:id="@+id/exportButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/heightEditText"
+        android:layout_below="@+id/heightEditText"
+        android:layout_marginTop="26dp"
+        android:text="@string/exportButtonName" />
 
-		<RadioButton
-			android:id="@+id/radioButtonTXT"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_toRightOf="@+id/radioButtonCSV"
-			android:text=".TXT" />
-	</RadioGroup>
+    <RadioGroup
+        android:id="@+id/exportRadioGroup"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/weightEditText"
+        android:layout_alignTop="@+id/exportButton"
+        android:orientation="horizontal" >
 
-	<Button
-		android:id="@+id/exportButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignBottom="@+id/exportRadioGroup"
-		android:layout_alignLeft="@+id/weightEditText"
-		android:layout_alignRight="@+id/weightEditText"
-		android:text="@string/exportButtonName" />
+        <RadioButton
+            android:id="@+id/radioButtonCSV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text=".CSV" />
 
-	<Button
-		android:id="@+id/updateButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignLeft="@+id/weightEditText"
-		android:layout_alignRight="@+id/weightEditText"
-		android:layout_below="@+id/weightEditText"
-		android:layout_marginTop="53dp"
-		android:text="@string/updateButtonName" />
+        <RadioButton
+            android:id="@+id/radioButtonTXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=".TXT" />
 
-	<TextView
-		android:id="@+id/genderTextView"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
-		android:layout_alignRight="@+id/ageTextView"
-		android:text="@string/genderTitleValue"
-		android:textAppearance="?android:attr/textAppearanceSmall" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/updateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/exportButton"
+        android:layout_marginTop="38dp"
+        android:text="@string/updateButtonName" />
 
 </RelativeLayout>

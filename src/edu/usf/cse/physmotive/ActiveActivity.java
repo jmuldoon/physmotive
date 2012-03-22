@@ -2,13 +2,19 @@ package edu.usf.cse.physmotive;
 
 import java.util.List;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -17,6 +23,8 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
+import edu.usf.cse.physmotive.DiaryView.DialogButtonClickHandler;
+import edu.usf.cse.physmotive.DiaryView.DialogSelectionClickHandler;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.LocationDBM;
 
@@ -37,7 +45,8 @@ public class ActiveActivity extends MapActivity implements LocationListener
     protected List<Overlay> mapOverlays;
     private LocationDBM dblManager;
     private ActivityDBM dbaManager;
-
+    protected Button manualStartButton;
+    
     private int userID, raceID;
     private String startType;
 
@@ -63,27 +72,49 @@ public class ActiveActivity extends MapActivity implements LocationListener
         mapView.setBuiltInZoomControls(true);
         mapView.setStreetView(true);
 
-        // TODO:get eddy to pass into bundle button manual / auto
-        // if manual, force button click to start, else start
+        // TODO: also give me time info etc!!
 
-        if (startType.equals(STARTTYPE_MAN))
-        {
-            // do this
-        } else
-        {
-            // do that
+        //Checks from previous screen if it starts manually or automatically.
+        //if automatic it will just call for location services, otherwise
+        //a dialog box will pop-up and wait till ready before starting them.
+        if (startType.equals(STARTTYPE_MAN)){
+        	showDialog(0);
+        } 
+        else {
+        	initiateLocationServices();
         }
-        // Use the LocationManager class to obtain GPS locations.
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 3, this);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 3, this);
 
         mapOverlays = mapView.getOverlays();
         Drawable drawable = this.getResources().getDrawable(R.drawable.androidmarker);
         itemizedOverlay = new MapItemizedOverlay(drawable, this);
     }
+    
+    @Override
+    protected Dialog onCreateDialog(int id){
+    	return new AlertDialog.Builder(this).setTitle("Manual Start")
+                .setPositiveButton("Ready!", new DialogButtonClickHandler()).create();
+    }
 
-    public void addGeoPoint(GeoPoint p, String greeting, String message)
+    public class DialogButtonClickHandler implements DialogInterface.OnClickListener
+    {
+        public void onClick(DialogInterface dialog, int clicked)
+        {
+            switch (clicked) {
+            case DialogInterface.BUTTON_POSITIVE:
+                initiateLocationServices();
+                break;
+            }
+        }
+    }
+    
+    private void initiateLocationServices(){
+    	// Use the LocationManager class to obtain GPS locations.
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 3, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 3, this);
+    }
+
+	public void addGeoPoint(GeoPoint p, String greeting, String message)
     {
         OverlayItem overlayitem = new OverlayItem(p, greeting, message);
 
@@ -111,9 +142,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
     public void onRestart()
     {
         super.onRestart();
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 3, this);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 3, this);
+        initiateLocationServices();
     }
 
     @Override
