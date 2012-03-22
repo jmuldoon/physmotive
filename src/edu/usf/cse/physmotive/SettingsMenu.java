@@ -121,12 +121,13 @@ public class SettingsMenu extends Activity
             fileExtension = ".txt";
             cOrNl = "\n";
         }
-        fileName = "test" + fileExtension;
+        fileName = "test" + fileExtension; //will take user name in future, for testing purposes currently
 
         if (Environment.MEDIA_MOUNTED.equals(state))
         {
             File file = new File(Environment.getExternalStorageDirectory(), fileName);
             String unit;
+            //need to make function for this to be prettier
             if (unitToggleButton.isChecked())
             {
                 unit = "Imperial";
@@ -170,5 +171,18 @@ public class SettingsMenu extends Activity
         }
 
     }
-
+    
+    private String writeCSV()
+    {
+        String csvString = ".csv";
+        return csvString;
+    }
+    
+    private String writeTXT()
+    {
+        String txtString = ".txt";
+        return txtString;
+    }
 }
+
+
