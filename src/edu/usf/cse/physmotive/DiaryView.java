@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -32,10 +33,7 @@ public class DiaryView extends Activity
     private DiaryDBM dbdManager;
     private ActivityDBM dbaManager;
     private Cursor cur;
-
-    // protected CharSequence[] _options = { "Race 1", "Race 2", "Race 3",
-    // "Race 4" };
-    // protected boolean[] _selections = new boolean[ _options.length ];
+    protected boolean[] _selections;
 
     private int diaryId;
     private int userId;
@@ -129,39 +127,36 @@ public class DiaryView extends Activity
     }
 
     @Override
-    protected Dialog onCreateDialog(int id)
-    {
+    protected Dialog onCreateDialog(int id){
         dbaManager.open();
         cur = dbaManager.getBindingList(userId, diaryId);
         dbaManager.close();
+        
+        _selections = new boolean[cur.getCount()];
         return new AlertDialog.Builder(this).setTitle("Races")
-                .setMultiChoiceItems(cur, "checked", "entryDate", new DialogSelectionClickHandler())
+                .setMultiChoiceItems(cur, "checked", "entryDate", new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int clicked,
+                            boolean selected) {
+                    	_selections[clicked] = selected;
+                    	Log.d( "MultiSelect", cur.moveToPosition(clicked) + " selected: " + selected );
+                    }
+                })
                 .setPositiveButton("OK", new DialogButtonClickHandler()).create();
-    }
-
-    public class DialogSelectionClickHandler implements DialogInterface.OnMultiChoiceClickListener
-    {
-        public void onClick(DialogInterface dialog, int clicked, boolean selected)
-        {
-            // Log.i( "ME", _options[ clicked ] + " selected: " + selected );
-        }
     }
 
     public class DialogButtonClickHandler implements DialogInterface.OnClickListener
     {
+    	@Override
         public void onClick(DialogInterface dialog, int clicked)
         {
             switch (clicked) {
             case DialogInterface.BUTTON_POSITIVE:
-                // printSelectedRaces();
+            	 for(int i = 0; i < cur.getCount(); i++){
+            		 Log.d( "MultiSelectOK", cur.moveToPosition(i) + " selected: " + _selections[i] );
+                 }
                 break;
             }
         }
     }
-
-    // protected void printSelectedRaces(){
-    // for( int i = 0; i < _options.length; i++ ){
-    // Log.i( "ME", _options[ i ] + " selected: " + _selections[i] );
-    // }
-    // }
 }

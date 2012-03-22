@@ -12,8 +12,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.google.android.maps.GeoPoint;
@@ -23,8 +21,6 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-import edu.usf.cse.physmotive.DiaryView.DialogButtonClickHandler;
-import edu.usf.cse.physmotive.DiaryView.DialogSelectionClickHandler;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.LocationDBM;
 
