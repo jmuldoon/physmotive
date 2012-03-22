@@ -27,95 +27,96 @@ public class ActivityDBM
     private SQLiteDatabase db;
 
     public ActivityDBM(Context ctx) {
-	this.androidContext = ctx;
+        this.androidContext = ctx;
     }
 
     public void open() throws SQLException
     {
-	dbHelper = new PhysMotiveDBH(androidContext);
-	db = dbHelper.getWritableDatabase();
+        dbHelper = new PhysMotiveDBH(androidContext);
+        db = dbHelper.getWritableDatabase();
     }
 
     public void close()
     {
-	db.close();
-	dbHelper.close();
+        db.close();
+        dbHelper.close();
     }
 
     public SQLiteDatabase getDB()
     {
-	return db;
+        return db;
     }
 
-    public long insert(long usr)
+    public int insert(int usr)
     {
-	String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
-	ContentValues values = new ContentValues();
+        String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+        ContentValues values = new ContentValues();
 
-	values.put(EUSR, usr);
-	values.put(EDATE, timeStamp);
-	values.put(UUSR, usr);
-	values.put(UDATE, timeStamp);
-	values.put(DEL, 0);
+        values.put(EUSR, usr);
+        values.put(EDATE, timeStamp);
+        values.put(UUSR, usr);
+        values.put(UDATE, timeStamp);
+        values.put(DEL, 0);
 
-	return db.insert(TABLENAME, null, values);
+        return (int) db.insert(TABLENAME, null, values);
     }
 
-    public boolean update(long id, long usr)
+    public boolean update(int id, int usr)
     {
-	String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
-	String whereClause;
-	ContentValues values = new ContentValues();
+        String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+        String whereClause;
+        ContentValues values = new ContentValues();
 
-	values.put(UUSR, usr);
-	values.put(UDATE, timeStamp);
+        values.put(UUSR, usr);
+        values.put(UDATE, timeStamp);
 
-	whereClause = ID + "=" + id;
+        whereClause = ID + "=" + id;
 
-	return db.update(TABLENAME, values, whereClause, null) > 0;
+        return db.update(TABLENAME, values, whereClause, null) > 0;
     }
 
-    public boolean delete(long id, long Usr)
+    public boolean delete(int id, int Usr)
     {
-	ContentValues values = new ContentValues();
-	String whereClause = ID + "=" + id;
-	String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+        ContentValues values = new ContentValues();
+        String whereClause = ID + "=" + id;
+        String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 
-	values.put(DEL, 1);
-	values.put(UUSR, Usr);
-	values.put(UDATE, timeStamp);
+        values.put(DEL, 1);
+        values.put(UUSR, Usr);
+        values.put(UDATE, timeStamp);
 
-	return db.update(TABLENAME, values, whereClause, null) > 0;
+        return db.update(TABLENAME, values, whereClause, null) > 0;
     }
 
-    public Cursor get(long id)
+    public Cursor get(int id)
     {
-	String[] columns = new String[] { ID, EUSR, EDATE, UUSR, UDATE, DEL };
-	String whereClause = ID + "=" + id;
-	Cursor mCursor = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
-	if (mCursor != null)
-	    mCursor.moveToFirst();
+        String[] columns = new String[] { ID, EUSR, EDATE, UUSR, UDATE, DEL };
+        String whereClause = ID + "=" + id;
+        Cursor mCursor = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        if (mCursor != null)
+            mCursor.moveToFirst();
 
-	return mCursor;
+        return mCursor;
     }
 
-    public Cursor getList(long userId)
+    public Cursor getList(int userId)
     {
-	String[] columns = new String[] { ID, UDATE };
-	String whereClause = EUSR + " = " + userId + " and " + DEL + " <> 1";
-	Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
-	c.moveToFirst();
+        String[] columns = new String[] { ID, UDATE };
+        String whereClause = EUSR + " = " + userId + " and " + DEL + " <> 1";
+        Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        c.moveToFirst();
 
-	return c;
+        return c;
     }
-    
-    public Cursor getBindingList(int userId, int diaryId){
-		String[] columns = new String[] { ID, DID, EDATE, CHECK };
-		String whereClause = DID + " = " + diaryId + " or " + DID + " is null";
-		Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
-		c.moveToFirst();
-	
-		return c;
+
+    public Cursor getBindingList(int userId, int diaryId)
+    {
+        String[] columns = new String[] { ID, DID, EDATE, CHECK };
+        String whereClause = DID + " = " + diaryId + " or " + DID + " is null";
+        Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        c.moveToFirst();
+
+        return c;
     }
 
 }

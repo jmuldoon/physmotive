@@ -10,59 +10,67 @@ import android.widget.Button;
 public class ActivityMenu extends Activity
 {
     // CONST string variables
-    static final String USERID = "userId";
+    public static final String USERID = "userId";
+    public static final String STARTTYPE = "startType";
+    public static final String STARTTYPE_MAN = "manual";
+    public static final String STARTTYPE_AUTO = "automatic";
 
     protected Button manualButton;
     protected Button automaticButton;
     // Called when the activity is first created.
 
-    private int userId = 0;
+    private int userId;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.activity_menu);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu);
 
-	// Connect interface elements to properties
-	manualButton = (Button) findViewById(R.id.manualButton);
-	automaticButton = (Button) findViewById(R.id.automaticButton);
+        // pulling in bundle information
+        Bundle b = getIntent().getExtras();
+        userId = b.getInt(USERID);
 
-	setOnClickListeners();
+        // Connect interface elements to properties
+        manualButton = (Button) findViewById(R.id.manualButton);
+        automaticButton = (Button) findViewById(R.id.automaticButton);
+
+        setOnClickListeners();
     }
 
-    private void invokeActiveActivity(View arg0)
+    private void invokeActiveActivity(View arg0, String type)
     {
-	Intent myIntent = new Intent(arg0.getContext(), ActiveActivity.class);
-	Bundle b = new Bundle();
-	b.putInt(USERID, userId);
-	myIntent.putExtras(b);
-	startActivityForResult(myIntent, 0);
+        Intent myIntent = new Intent(arg0.getContext(), ActiveActivity.class);
+        Bundle b = new Bundle();
+        b.putInt(USERID, userId);
+        b.putString(STARTTYPE, type);
+        myIntent.putExtras(b);
+        startActivityForResult(myIntent, 0);
     }
 
     private void setOnClickListeners()
     {
-	manualButton.setOnClickListener(new OnClickListener() {
-	    public void onClick(View v)
-	    {
-		onButtonClickManualStart(v);
-	    }
-	});
-	automaticButton.setOnClickListener(new OnClickListener() {
-	    public void onClick(View v)
-	    {
-		onButtonClickAutomaticStart(v);
-	    }
-	});
+        manualButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v)
+            {
+                onButtonClickManualStart(v);
+            }
+        });
+        automaticButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v)
+            {
+                onButtonClickAutomaticStart(v);
+            }
+        });
     }
 
     private void onButtonClickManualStart(View w)
     {
-	invokeActiveActivity(w);
+        invokeActiveActivity(w, STARTTYPE_MAN);
     }
 
     private void onButtonClickAutomaticStart(View w)
     {
-	invokeActiveActivity(w);
+        invokeActiveActivity(w, STARTTYPE_AUTO);
     }
 }

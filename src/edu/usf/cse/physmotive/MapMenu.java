@@ -20,7 +20,7 @@ import android.util.Log;
 public class MapMenu extends MapActivity implements LocationListener{
 	public static final int OUT_OF_SERVICE = 0;
 	public static final int TEMPORARILY_UNAVAILABLE = 1;
-	public static final int AVAILABLE = 2;
+ 	public static final int AVAILABLE = 2;
 	
 	protected MapView mapView;
     protected MapController mapController;
