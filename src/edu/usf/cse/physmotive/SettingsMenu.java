@@ -163,19 +163,27 @@ public class SettingsMenu extends Activity
                 Toast.makeText(this, "It worked " + fileName, Toast.LENGTH_SHORT).show();
             }
 
-            catch (FileNotFoundException ex)
-            {
-            } catch (IOException ex)
-            {
-            }
+            catch (FileNotFoundException ex) {}
+            catch (IOException ex) {}
         }
 
     }
     
     private String writeCSV()
     {
-        String csvString = ".csv";
-        return csvString;
+        String csvStr;
+        if(unitToggleButton.isChecked()) { csvStr = "Imperial"; } else { csvStr = "Metric"; }
+        csvStr.concat(",");
+        if(orientationToggleButton.isChecked()) { csvStr.concat("Landscape"); } else { csvStr.concat("Portrait"); }
+        csvStr.concat(",");
+        if(genderToggleButton.isChecked()) { csvStr.concat("Male"); } else { csvStr.concat("Female"); }
+        csvStr.concat(",");
+        csvStr.concat(heightEditText.getText().toString());
+        csvStr.concat(",");
+        csvStr.concat(weightEditText.getText().toString());
+        csvStr.concat(",");
+        csvStr.concat(ageEditText.getText().toString());
+        return csvStr;
     }
     
     private String writeTXT()
