@@ -43,14 +43,14 @@ public class LocationDBM {
 		return db;
 	}
 
-	public int insert(long raceID, String lat, String lng, long usr) {
+	public int insert(long raceID, String lat, String lng, String tmStmp, long usr) {
 		String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 		ContentValues values = new ContentValues();
 
 		values.put(FKEY, raceID);
 		values.put(LATITUDE, lat);
 		values.put(LONGITUDE, lng);
-		values.put(LTS, timeStamp);
+		values.put(LTS, String.valueOf(Timestamp.valueOf(tmStmp).getTime()));
 		values.put(EUSR, usr);
 		values.put(EDATE, timeStamp);
 		values.put(UUSR, usr);

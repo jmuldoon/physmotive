@@ -1,5 +1,6 @@
 package edu.usf.cse.physmotive;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import android.content.Context;
@@ -137,7 +138,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
 
         dblManager.open();
-        dblManager.insert(raceID, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()), userID);
+        dblManager.insert(raceID, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()), String.valueOf(loc.getTime()), userID);
         dblManager.close();
     }
 
