@@ -153,8 +153,7 @@ public class SettingsMenu extends Activity
             String height = heightEditText.getText().toString();
             String weight = weightEditText.getText().toString();
             String age = ageEditText.getText().toString();
-            String writeString = unit + "\n" + orientation + "\n" + gender + "\n" + height + "\n" + weight + "\n" + age
-                    + "\n";
+            String writeString = unit + cOrNl + orientation + cOrNl + gender + cOrNl + height + cOrNl + weight + cOrNl + age;
             try
             {
                 OutputStream outFile = new FileOutputStream(file);
