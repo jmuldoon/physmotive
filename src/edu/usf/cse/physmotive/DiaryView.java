@@ -92,20 +92,20 @@ public class DiaryView extends Activity
 
     private void onButtonClickSave(View w)
     {
-		int gend;
+		long gend;
 		if (genderToggleButton.isChecked())
 		    gend = 1;
 		else
 		    gend = 0;
 	
 		if (diaryID == 0)
-		    dbdManager.insert(diaryEntryEditText.getText().toString(), Integer.valueOf(heightEditText.getText().toString()),
-			    Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
+		    dbdManager.insert(diaryEntryEditText.getText().toString(), Long.valueOf(heightEditText.getText().toString()),
+		    		Long.valueOf(weightEditText.getText().toString()), Long.valueOf(ageEditText.getText().toString()),
 			    gend, notesEditText.getText().toString(), 0);
 		else
 		    dbdManager.update(diaryID, diaryEntryEditText.getText().toString(),
-			    Integer.valueOf(heightEditText.getText().toString()),
-			    Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
+		    		Long.valueOf(heightEditText.getText().toString()),
+		    		Long.valueOf(weightEditText.getText().toString()), Long.valueOf(ageEditText.getText().toString()),
 			    gend, notesEditText.getText().toString(), usrID);
 		cur.close();
 		invokeActivityDiaryList(w);
