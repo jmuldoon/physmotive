@@ -88,7 +88,6 @@ public class DiaryView extends Activity
 
     private void onButtonClickCancel(View w)
     {
-        // cur.close();
         this.finish();
     }
 
@@ -138,8 +137,8 @@ public class DiaryView extends Activity
                     @Override
                     public void onClick(DialogInterface dialog, int clicked,
                             boolean selected) {
-                    	_selections[clicked] = selected;
-                    	Log.d( "MultiSelect", cur.moveToPosition(clicked) + " selected: " + selected );
+                    	_selections[clicked] = selected;                    	
+                        Log.d( "MultiSelect", cur.moveToPosition(clicked) + " selected: " + selected );
                     }
                 })
                 .setPositiveButton("OK", new DialogButtonClickHandler()).create();
@@ -155,6 +154,7 @@ public class DiaryView extends Activity
             	 for(int i = 0; i < cur.getCount(); i++){
             		 Log.d( "MultiSelectOK", cur.moveToPosition(i) + " selected: " + _selections[i] );
                  }
+            	 cur.close();
                 break;
             }
         }
