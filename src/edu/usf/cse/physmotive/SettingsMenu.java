@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -16,6 +17,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import edu.usf.cse.physmotive.db.ActivityDBM;
+import edu.usf.cse.physmotive.db.DiaryDBM;
+import edu.usf.cse.physmotive.db.LocationDBM;
 import edu.usf.cse.physmotive.db.UserDBM;
 
 public class SettingsMenu extends Activity
@@ -34,11 +38,20 @@ public class SettingsMenu extends Activity
     protected ToggleButton orientationToggleButton;
     protected RadioButton radioButtonCSV;
     protected RadioButton radioButtonTXT;
+    protected Cursor diaryCur;
+    protected Cursor userCur;
+    protected Cursor loationCur;
+    protected Cursor activityCur;
+    
 
     private int diaryId;
     private int userId;
 
-    private UserDBM dbuManager;
+    private UserDBM dbmUser;
+    private ActivityDBM dbmActivity;
+    private DiaryDBM dbmDiary;
+    private LocationDBM dbmLocation;
+    
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -62,8 +75,17 @@ public class SettingsMenu extends Activity
         orientationToggleButton = (ToggleButton) findViewById(R.id.orientationToggleButton);
         radioButtonCSV = (RadioButton) findViewById(R.id.radioButtonCSV);
         radioButtonTXT = (RadioButton) findViewById(R.id.radioButtonTXT);
+        
 
-        dbuManager = new UserDBM(this);
+        dbmUser = new UserDBM(this);
+        dbmActivity = new ActivityDBM(this);
+        dbmDiary = new DiaryDBM(this);
+        dbmLocation = new LocationDBM(this);
+        
+        dbmUser.open();
+        //userCur = dbmUser.getList(userId)
+        
+        
 
         setOnClickListeners();
     }
@@ -99,11 +121,11 @@ public class SettingsMenu extends Activity
             ori = 1;
         else
             ori = 0;
-        dbuManager.open();
-        dbuManager.update(diaryId, Integer.valueOf(heightEditText.getText().toString()),
+        dbmUser.open();
+        dbmUser.update(diaryId, Integer.valueOf(heightEditText.getText().toString()),
                 Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
                 gend, uni, ori, 0, userId);
-        dbuManager.close();
+        dbmUser.close();
     }
 
     private void onButtonClickExport(View w)
@@ -155,28 +177,27 @@ public class SettingsMenu extends Activity
             String weight = weightEditText.getText().toString();
             String age = ageEditText.getText().toString();
             String writeString = unit + cOrNl + orientation + cOrNl + gender + cOrNl + height + cOrNl + weight + cOrNl + age;
+            OutputStream outFile = null;
             try
             {
-                OutputStream outFile = new FileOutputStream(file);
+                outFile = new FileOutputStream(file);
                 outFile.write(writeString.getBytes());
                 outFile.close();
                 Toast.makeText(this, "It worked " + fileName, Toast.LENGTH_SHORT).show();
             }
-
             catch (FileNotFoundException ex) {}
-            catch (IOException ex) {}
+            catch (IOException ex) {}         
         }
 
     }
     
     private String writeCSV()
     {
-        String csvStr;
-        if(unitToggleButton.isChecked()) { csvStr = "Imperial"; } else { csvStr = "Metric"; }
+        String csvStr = unitToggleButton.getText().toString();
         csvStr.concat(",");
-        if(orientationToggleButton.isChecked()) { csvStr.concat("Landscape"); } else { csvStr.concat("Portrait"); }
+        csvStr.concat(orientationToggleButton.getText().toString());
         csvStr.concat(",");
-        if(genderToggleButton.isChecked()) { csvStr.concat("Male"); } else { csvStr.concat("Female"); }
+        csvStr.concat(genderToggleButton.getText().toString());
         csvStr.concat(",");
         csvStr.concat(heightEditText.getText().toString());
         csvStr.concat(",");
