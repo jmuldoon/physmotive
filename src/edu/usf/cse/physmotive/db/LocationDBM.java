@@ -9,85 +9,91 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-public class LocationDBM {
-	static final String TABLENAME = "locations";
-	static final String ID = "_id";
-	static final String FKEY = "race_id";
-	static final String LATITUDE = "lat";
-	static final String LONGITUDE = "lng";
-	static final String LTS = "locationTimeStamp";
-	static final String EUSR = "entryUsr";
+public class LocationDBM
+{
+    static final String TABLENAME = "locations";
+    static final String ID = "_id";
+    static final String FKEY = "race_id";
+    static final String LATITUDE = "lat";
+    static final String LONGITUDE = "lng";
+    static final String LTS = "locationTimeStamp";
+    static final String EUSR = "entryUsr";
     static final String EDATE = "entryDate";
     static final String UUSR = "updateUsr";
     static final String UDATE = "updateDate";
-	
-	private final Context androidContext;
-	private PhysMotiveDBH dbHelper;
-	private SQLiteDatabase db;
 
-	public LocationDBM(Context ctx) {
-		this.androidContext = ctx;
-	}
+    private final Context androidContext;
+    private PhysMotiveDBH dbHelper;
+    private SQLiteDatabase db;
 
-	public void open() throws SQLException {
-		dbHelper = new PhysMotiveDBH(androidContext);
-		db = dbHelper.getWritableDatabase();
-	}
+    public LocationDBM(Context ctx) {
+        this.androidContext = ctx;
+    }
 
-	public void close() {
-		db.close();
-		dbHelper.close();
-	}
+    public void open() throws SQLException
+    {
+        dbHelper = new PhysMotiveDBH(androidContext);
+        db = dbHelper.getWritableDatabase();
+    }
 
-	public SQLiteDatabase getDB() {
-		return db;
-	}
+    public void close()
+    {
+        db.close();
+        dbHelper.close();
+    }
 
-	public int insert(long raceID, String lat, String lng, String tmStmp, long usr) {
-		String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
-		ContentValues values = new ContentValues();
+    public SQLiteDatabase getDB()
+    {
+        return db;
+    }
 
-		values.put(FKEY, raceID);
-		values.put(LATITUDE, lat);
-		values.put(LONGITUDE, lng);
-		values.put(LTS, String.valueOf(Timestamp.valueOf(tmStmp).getTime()));
-		values.put(EUSR, usr);
-		values.put(EDATE, timeStamp);
-		values.put(UUSR, usr);
-		values.put(UDATE, timeStamp);
+    public int insert(int raceID, String lat, String lng, int tmStmp, long usr)
+    {
+        String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+        ContentValues values = new ContentValues();
 
-		return (int) db.insert(TABLENAME, null, values);
-	}
-	
-	public boolean delete(long raceID, long usr) {
-		ContentValues values = new ContentValues();
-		String whereClause = FKEY + "=" + raceID;
-		String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
-		
-		values.put(UUSR, usr);
-		values.put(UDATE, timeStamp);
+        values.put(FKEY, raceID);
+        values.put(LATITUDE, lat);
+        values.put(LONGITUDE, lng);
+        values.put(LTS, Integer.toString(tmStmp));
+        values.put(EUSR, usr);
+        values.put(EDATE, timeStamp);
+        values.put(UUSR, usr);
+        values.put(UDATE, timeStamp);
 
-		return db.update(TABLENAME, values, whereClause, null) > 0;
-	}
+        return (int) db.insert(TABLENAME, null, values);
+    }
 
-	public Cursor get(long id) {
-		String[] columns = new String[] { ID, EUSR, EDATE, UUSR, UDATE };
-		String whereClause = ID + "=" + id;
-		Cursor mCursor = db.query(TABLENAME, columns, whereClause, null, null,
-				null, null, null);
-		if (mCursor != null)
-			mCursor.moveToFirst();
+    public boolean delete(long raceID, long usr)
+    {
+        ContentValues values = new ContentValues();
+        String whereClause = FKEY + "=" + raceID;
+        String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 
-		return mCursor;
-	}
+        values.put(UUSR, usr);
+        values.put(UDATE, timeStamp);
 
-	public Cursor getList(long userId, long raceID) {
-		String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS, UDATE };
-		String whereClause = FKEY + "=" + raceID;
-		Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null,
-				null, null);
-		c.moveToFirst();
+        return db.update(TABLENAME, values, whereClause, null) > 0;
+    }
 
-		return c;
-	}
+    public Cursor get(long id)
+    {
+        String[] columns = new String[] { ID, EUSR, EDATE, UUSR, UDATE };
+        String whereClause = ID + "=" + id;
+        Cursor mCursor = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        if (mCursor != null)
+            mCursor.moveToFirst();
+
+        return mCursor;
+    }
+
+    public Cursor getList(long userId, long raceID)
+    {
+        String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS, UDATE };
+        String whereClause = FKEY + "=" + raceID;
+        Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        c.moveToFirst();
+
+        return c;
+    }
 }
