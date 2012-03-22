@@ -1,6 +1,5 @@
 package edu.usf.cse.physmotive;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import android.content.Context;

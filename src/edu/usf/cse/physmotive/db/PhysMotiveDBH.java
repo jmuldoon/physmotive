@@ -31,7 +31,7 @@ public class PhysMotiveDBH extends SQLiteOpenHelper {
 			+ " entryUsr integer not null, entryDate integer not null, updateUsr integer,"
 			+ " updateDate integer, deleted integer);";
 
-	static final String CREATE_LOCATION = "create table users (_id integer primary key autoincrement,"
+	static final String CREATE_LOCATION = "create table location (_id integer primary key autoincrement,"
 			+ " race_id integer not null, lat text not null, lng text not null, locationTimeStamp integer not null, entryUsr integer not null," 
 			+ " entryDate integer not null, updateUsr integer,"
 			+ " updateDate integer);";
