@@ -4,34 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent" >
 
-    <!--
-    <linearlayout 
-	    android:orientation="vertical" 
-	    android:layout_width="fill_parent" 
-	    android:layout_height="fill_parent" 
-	    android:background="#fff">
-	<edu.usf.cse.physmotive.ui.HorizontialListView 
-	    android:id="@+id/listview" 
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:background="#ddd">
-	</edu.usf.cse.physmotive.ui.HorizontialListView>
-	</linearlayout>
-    -->
-
-    <Spinner
-        android:id="@+id/acivitySpinner"
-        android:layout_width="wrap_content"
+	<Gallery
+        android:id="@+id/activityGallery"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" />
 
     <SeekBar
         android:id="@+id/filterSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/acivitySpinner"
+        android:layout_below="@+id/activityGallery"
         android:layout_centerHorizontal="true" />
 
     <ImageView
@@ -94,5 +78,13 @@
         android:layout_alignLeft="@+id/averageDistanceTextView"
         android:text="@string/averageTimeValue"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/dateFilterTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/progressChartImageView"
+        android:layout_below="@+id/filterSeekBar"
+        android:text="@string/dateFilterTextViewValue" />
 
 </RelativeLayout>

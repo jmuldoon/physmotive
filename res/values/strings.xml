@@ -62,5 +62,6 @@
 	<string name="orientationToggleButtonValueOff">Landscape</string>
 	<string name="unitToggleButtonValueOn">Imperial</string>
 	<string name="unitToggleButtonValueOff">Metric</string>
+	<string name="dateFilterTextViewValue">#DATE</string>
 
 </resources>

@@ -4,20 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/automaticButton"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/automaticButtonText" />
-
-    <Spinner
-        android:id="@+id/activitySpinner"
-        android:layout_width="238dp"
+    <Gallery
+        android:id="@+id/activityGallery"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true" />
 
     <ToggleButton
@@ -25,27 +16,17 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/activitySpinner"
-        android:layout_marginTop="17dp"
-        android:textOn="@string/distanceOrTimeToggleButtonOn"
-        android:textOff="@string/distanceOrTimeToggleButtonOff" />
+        android:layout_below="@+id/activityGallery"
+        android:textOff="@string/distanceOrTimeToggleButtonOff"
+        android:textOn="@string/distanceOrTimeToggleButtonOn" />
 
     <SeekBar
         android:id="@+id/distanceOrTimeSeekBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/distanceOrTimeToggleButton"
+        android:layout_below="@+id/activityGallery"
         android:layout_toRightOf="@+id/distanceOrTimeToggleButton" />
-
-    <TextView
-        android:id="@+id/selectedDistanceOrTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/distanceOrTimeSeekBar"
-        android:layout_marginRight="45dp"
-        android:text="@string/selectedDistanceOrTimeValue" />
 
     <ImageView
         android:id="@+id/distanceOrTimeChartImageView"
@@ -53,17 +34,35 @@
         android:layout_height="250dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/selectedDistanceOrTime"
-        android:layout_marginTop="53dp"
+        android:layout_below="@+id/distanceOrTimeToggleButton"
         android:contentDescription="@string/activityMenuGraph"
         android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/selectedDistanceOrTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/distanceOrTimeSeekBar"
+        android:layout_marginRight="78dp"
+        android:text="@string/selectedDistanceOrTimeValue" />
 
     <Button
         android:id="@+id/manualButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_below="@+id/distanceOrTimeChartImageView"
+        android:layout_marginTop="24dp"
         android:text="@string/manualButtonText" />
+
+    <Button
+        android:id="@+id/automaticButton"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/manualButton"
+        android:layout_alignBottom="@+id/manualButton"
+        android:layout_alignParentRight="true"
+        android:text="@string/automaticButtonText" />
 
 </RelativeLayout>

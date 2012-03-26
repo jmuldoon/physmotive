@@ -1,11 +1,16 @@
 package edu.usf.cse.physmotive;
 
+import edu.usf.cse.physmotive.ui.ImageAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.Gallery;
+import android.widget.Toast;
 
 public class ActivityMenu extends Activity
 {
@@ -17,8 +22,9 @@ public class ActivityMenu extends Activity
 
     protected Button manualButton;
     protected Button automaticButton;
+    protected Gallery gallery;
+    
     // Called when the activity is first created.
-
     private int userId;
 
     @Override
@@ -35,6 +41,16 @@ public class ActivityMenu extends Activity
         manualButton = (Button) findViewById(R.id.manualButton);
         automaticButton = (Button) findViewById(R.id.automaticButton);
 
+        // Setting up gallery information.
+        gallery = (Gallery) findViewById(R.id.activityGallery);
+        gallery.setAdapter(new ImageAdapter(this));
+
+        gallery.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                Toast.makeText(ActivityMenu.this, "" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+        
         setOnClickListeners();
     }
 
