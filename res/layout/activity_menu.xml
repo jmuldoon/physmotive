@@ -16,6 +16,7 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/manualButton"
         android:layout_below="@+id/activityGallery"
         android:textOff="@string/distanceOrTimeToggleButtonOff"
         android:textOn="@string/distanceOrTimeToggleButtonOn" />

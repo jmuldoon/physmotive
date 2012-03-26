@@ -12,8 +12,12 @@ import android.widget.ImageView;
 public class ImageAdapter extends BaseAdapter {
     int mGalleryItemBackground;
     private Context mContext;
-
-    private Integer[] mImageIds = {
+    
+    // TODO: get this to work. This is the string that would be used to have the array set dynamically 
+    // 		 for the images to be loaded.
+//    String[] galleryPictures = getResources().getStringArray(R.array.Activity_Gallery);
+    
+    private Integer[] mImageIds = {    		
     		R.drawable.sample_0,
     		R.drawable.sample_1,
             R.drawable.sample_2,
@@ -27,8 +31,7 @@ public class ImageAdapter extends BaseAdapter {
     public ImageAdapter(Context c) {
         mContext = c;
         TypedArray attr = mContext.obtainStyledAttributes(R.styleable.PictureGallery);
-        mGalleryItemBackground = attr.getResourceId(
-                R.styleable.PictureGallery_android_galleryItemBackground, 0);
+        mGalleryItemBackground = attr.getResourceId(R.styleable.PictureGallery_android_galleryItemBackground, 0);
         attr.recycle();
     }
 
