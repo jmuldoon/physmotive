@@ -101,7 +101,7 @@ public class ActivityDBM
 
     public Cursor getList(int userId)
     {
-        String[] columns = new String[] { ID, UDATE };
+        String[] columns = new String[] { ID, EDATE, UDATE };
         String whereClause = EUSR + " = " + userId + " and " + DEL + " <> 1";
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();

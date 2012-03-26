@@ -23,13 +23,19 @@ public class DiaryList extends ListActivity
     // Internal Strings
     static final String USERID = "userId";
     static final String DIARYID = "diaryId";
+    static final String ID = "_id";
+    static final String NAME = "name";
+    static final String SETTINGS = "Settings";
+    static final String SELECT = "Select";
+    static final String EDIT = "Edit";
+    static final String DELETE = "Delete";
 
     private int userId;
     protected Button addDiary;
     protected ListView diary_lv;
-    private DiaryDBM DBM;
+    private DiaryDBM diaryDBM;
     private Cursor cursor;
-    private ListAdapter adapter;
+    private ListAdapter listAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -41,7 +47,7 @@ public class DiaryList extends ListActivity
         Bundle b = getIntent().getExtras();
         userId = b.getInt(USERID);
 
-        DBM = new DiaryDBM(this);
+        diaryDBM = new DiaryDBM(this);
         diary_lv = (ListView) this.getListView();
 
         setupButton();
@@ -64,7 +70,7 @@ public class DiaryList extends ListActivity
     {
         super.onPause();
         cursor.close();
-        DBM.close();
+        diaryDBM.close();
     }
 
     private void setupButton()
@@ -85,18 +91,26 @@ public class DiaryList extends ListActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         super.onCreateOptionsMenu(menu);
-        menu.add("Settings");
-        menu.add("Delete Multiple");
+        menu.add(SETTINGS);
 
         return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if (!(item.hasSubMenu()))
-            Toast.makeText(this, "Hi", Toast.LENGTH_LONG).show();
+        if (item.getTitle().equals(SETTINGS))
+        {
+            Intent myIntent = new Intent(this, SettingsMenu.class);
+            Bundle b = new Bundle();
+            b.putInt(USERID, userId);
 
-        return true;
+            myIntent.putExtras(b);
+            startActivity(myIntent);
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 
     // ///////////////////////////////////////////////
@@ -109,7 +123,7 @@ public class DiaryList extends ListActivity
         // Gets the cursor from the entry selected
         Cursor item = (Cursor) getListAdapter().getItem(position);
         // Gets the entry _id of the cursor
-        int item_id = item.getInt(0);
+        int itemId = item.getInt(item.getColumnIndex(ID));
 
         // the new activity being started
         Intent myIntent = new Intent(v.getContext(), DiaryView.class);
@@ -118,7 +132,7 @@ public class DiaryList extends ListActivity
 
         // Preparing the data
         bundle.putLong(USERID, userId);
-        bundle.putLong(DIARYID, item_id);
+        bundle.putLong(DIARYID, itemId);
 
         // Attaching info and starting new activity
         myIntent.putExtras(bundle);
@@ -131,6 +145,7 @@ public class DiaryList extends ListActivity
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo)
     {
+        // makes sure selection is from the list view
         if (v.getId() == getListView().getId())
         {
             // gets the menu selection
@@ -138,15 +153,15 @@ public class DiaryList extends ListActivity
             // gets the cursor for the item selected
             Cursor item = (Cursor) getListAdapter().getItem(info.position);
             // gets info from cursor
-            int item_id = item.getInt(0);
-            String item_name = item.getString(1);
+            int itemId = item.getInt(item.getColumnIndex(ID));
+            String itemName = item.getString(item.getColumnIndex(NAME));
             // sets dialog's header to name of selection
-            menu.setHeaderTitle(item_name);
+            menu.setHeaderTitle(itemName);
             // creates the buttons in the menu
             String[] menuItems = getResources().getStringArray(R.array.SDC_menu);
             for (int i = 0; i < menuItems.length; i++)
             {
-                menu.add(Menu.NONE, item_id, i, menuItems[i]);
+                menu.add(Menu.NONE, itemId, i, menuItems[i]);
             }
         }
     }
@@ -156,27 +171,27 @@ public class DiaryList extends ListActivity
     // ///////////////////////////////////////////
     public boolean onContextItemSelected(MenuItem item)
     {
-        int item_id = item.getItemId();
+        int itemId = item.getItemId();
         Bundle bundle = new Bundle();
 
-        if (item.getTitle().equals("Select"))
+        if (item.getTitle().equals(SELECT))
         {
             Intent myIntent = new Intent(this, DiaryView.class);
 
             bundle.putLong(USERID, userId);
-            bundle.putInt(DIARYID, item_id);
+            bundle.putInt(DIARYID, itemId);
 
             myIntent.putExtras(bundle);
             startActivity(myIntent);
-        } else if (item.getTitle().equals("Edit"))
+        } else if (item.getTitle().equals(EDIT))
         {
-            bundle.putInt(DIARYID, item_id);
+            bundle.putInt(DIARYID, itemId);
 
             showDialog(1, bundle);
 
-        } else if (item.getTitle().equals("Delete"))
+        } else if (item.getTitle().equals(DELETE))
         {
-            delete(item_id, userId);
+            delete(itemId, userId);
             Toast.makeText(this, "Entry Deleted", Toast.LENGTH_LONG).show();
         } else
         {
@@ -187,22 +202,22 @@ public class DiaryList extends ListActivity
 
     private void updateList()
     {
-        DBM.open();
-        cursor = DBM.getList(userId);
-        DBM.close();
+        diaryDBM.open();
+        cursor = diaryDBM.getList(userId);
+        diaryDBM.close();
 
         startManagingCursor(cursor);
-        adapter = new SimpleCursorAdapter(this, R.layout.diary_list_item, cursor, new String[] { "_id", "name" }, new int[] {
+        listAdapter = new SimpleCursorAdapter(this, R.layout.diary_list_item, cursor, new String[] { ID, NAME }, new int[] {
                 R.id.D_ID, R.id.D_Name });
-        setListAdapter(adapter);
+        setListAdapter(listAdapter);
 
     }
 
     private long insert(String _name, int _ht, int _wt, int _age, int _gender, String _note, long _usr)
     {
-        DBM.open();
-        long id = DBM.insert(_name, _ht, _wt, _age, _gender, _note, _usr);
-        DBM.close();
+        diaryDBM.open();
+        long id = diaryDBM.insert(_name, _ht, _wt, _age, _gender, _note, _usr);
+        diaryDBM.close();
         updateList();
 
         return id;
@@ -219,9 +234,9 @@ public class DiaryList extends ListActivity
 
     private void delete(int item_id, long _usr)
     {
-        DBM.open();
-        DBM.delete(item_id, _usr);
-        DBM.close();
+        diaryDBM.open();
+        diaryDBM.delete(item_id, _usr);
+        diaryDBM.close();
         updateList();
     }
 
