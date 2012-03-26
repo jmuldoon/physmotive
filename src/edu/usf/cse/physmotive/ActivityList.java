@@ -67,10 +67,11 @@ public class ActivityList extends ListActivity
         addActivityBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v)
             {
-                Intent myIntent = new Intent(v.getContext(), ActivityMenu.class);
+                Intent myIntent = new Intent(ActivityList.this, ActivityMenu.class);
                 Bundle b = new Bundle();
                 b.putInt(USERID, userId);
 
+                myIntent.putExtras(b);
                 startActivity(myIntent);
             }
         });
