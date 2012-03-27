@@ -125,6 +125,8 @@ public class DiaryView extends Activity
         }
     }
 
+    //TODO: GET Multi-select working properly.
+    //TODO: GET Vertical Scrolling for Activities that are bound to the diary. And have it link to Activity View.
     @Override
     protected Dialog onCreateDialog(int id){
         dbaManager.open();
