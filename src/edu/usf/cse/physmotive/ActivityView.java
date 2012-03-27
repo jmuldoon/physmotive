@@ -37,8 +37,7 @@ public class ActivityView extends Activity
         // TODO: Get Values
         // TODO: Make Jimmy do stats
         // TODO: Make sure buttons work properly
-        // TODO: Make Map WOrk
-        // TODO:
+        // TODO: Make Map Work, add geo from DB
     }
 
     private void setOnClickListeners()
