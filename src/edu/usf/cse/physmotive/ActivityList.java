@@ -61,6 +61,22 @@ public class ActivityList extends ListActivity
         updateList();
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        // Restore state here
+        updateList();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        cursor.close();
+        activityDBM.close();
+    }
+    
     private void setupButton()
     {
         addActivityBtn = (Button) findViewById(R.id.btnAddActivity);
@@ -121,7 +137,7 @@ public class ActivityList extends ListActivity
         Bundle bundle = new Bundle();
 
         // Preparing the data
-        bundle.putLong(USERID, userId);
+        bundle.putInt(USERID, userId);
         bundle.putInt(ACTIVITYID, item_id);
 
         // Attaching info and starting new activity

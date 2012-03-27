@@ -10,11 +10,12 @@ import android.widget.Button;
 public class ActivityView extends Activity
 {
     static final String USERID = "userId";
-
+    static final String ACTIVITYID = "activityId";
+    
     protected Button statisticsButton;
     protected Button diaryButton;
 
-    private int userId;
+    private int userId, activityId;
 
     // Called when the activity is first created.
     @Override
@@ -29,7 +30,8 @@ public class ActivityView extends Activity
 
         Bundle b = getIntent().getExtras();
         userId = b.getInt(USERID);
-
+        activityId = b.getInt(ACTIVITYID);
+        
         setOnClickListeners();
     }
 
@@ -52,15 +54,21 @@ public class ActivityView extends Activity
     private void onButtonClickStatistics(View w)
     {
         Intent myIntent = new Intent(w.getContext(), StatisticsMenu.class);
-        Bundle b = new Bundle();
-        b.putInt(USERID, userId);
-        // TODO: Insert new activity, with information from the screen
+        bundleUserInformation(myIntent);
         startActivity(myIntent);
     }
 
     private void onButtonClickDiary(View w)
     {
         Intent myIntent = new Intent(w.getContext(), DiaryView.class);
+        bundleUserInformation(myIntent);
         startActivity(myIntent);
+    }
+
+    private void bundleUserInformation(Intent mIntent){
+    	Bundle b = new Bundle();
+        b.putInt(USERID, userId);
+        b.putInt(ACTIVITYID ,activityId);
+        mIntent.putExtras(b);
     }
 }
