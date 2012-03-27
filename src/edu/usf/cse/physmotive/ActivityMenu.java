@@ -1,6 +1,5 @@
 package edu.usf.cse.physmotive;
 
-import edu.usf.cse.physmotive.ui.ImageAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.Toast;
+import edu.usf.cse.physmotive.ui.ImageAdapter;
 
 public class ActivityMenu extends Activity
 {
@@ -23,10 +23,10 @@ public class ActivityMenu extends Activity
     protected Button manualButton;
     protected Button automaticButton;
     protected Gallery gallery;
-    
-    // Called when the activity is first created.
+
     private int userId;
 
+    // Called when the activity is first created.
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -46,12 +46,17 @@ public class ActivityMenu extends Activity
         gallery.setAdapter(new ImageAdapter(this));
 
         gallery.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView parent, View v, int position, long id) {
+            public void onItemClick(AdapterView parent, View v, int position, long id)
+            {
                 Toast.makeText(ActivityMenu.this, "" + position, Toast.LENGTH_SHORT).show();
             }
         });
-        
+
         setOnClickListeners();
+
+        // TODO: Setup slider with numeric values
+        // TODO: Fix Pictures
+        // TODO: Setup user stats
     }
 
     private void invokeActiveActivity(View arg0, String type)
@@ -60,6 +65,9 @@ public class ActivityMenu extends Activity
         Bundle b = new Bundle();
         b.putInt(USERID, userId);
         b.putString(STARTTYPE, type);
+
+        // TODO: Insert New activity with activity details from screen
+
         myIntent.putExtras(b);
         startActivityForResult(myIntent, 0);
     }
