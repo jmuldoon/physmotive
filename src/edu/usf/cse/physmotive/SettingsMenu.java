@@ -42,7 +42,6 @@ public class SettingsMenu extends Activity
     protected Cursor userCur;
     protected Cursor loationCur;
     protected Cursor activityCur;
-    
 
     private int diaryId;
     private int userId;
@@ -51,7 +50,6 @@ public class SettingsMenu extends Activity
     private ActivityDBM dbmActivity;
     private DiaryDBM dbmDiary;
     private LocationDBM dbmLocation;
-    
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -75,19 +73,19 @@ public class SettingsMenu extends Activity
         orientationToggleButton = (ToggleButton) findViewById(R.id.orientationToggleButton);
         radioButtonCSV = (RadioButton) findViewById(R.id.radioButtonCSV);
         radioButtonTXT = (RadioButton) findViewById(R.id.radioButtonTXT);
-        
 
         dbmUser = new UserDBM(this);
         dbmActivity = new ActivityDBM(this);
         dbmDiary = new DiaryDBM(this);
         dbmLocation = new LocationDBM(this);
-        
-        dbmUser.open();
-        //userCur = dbmUser.getList(userId)
-        
-        
 
+        dbmUser.open();
+        // userCur = dbmUser.getList(userId)
         setOnClickListeners();
+        // TODO: Export Properly
+        // TODO: Get data
+        // TODO: save data
+        // TODO: import??
     }
 
     private void setOnClickListeners()
@@ -143,13 +141,14 @@ public class SettingsMenu extends Activity
             fileExtension = ".txt";
             cOrNl = "\n";
         }
-        fileName = "test" + fileExtension; //will take user name in future, for testing purposes currently
+        fileName = "test" + fileExtension; // will take user name in future, for
+                                           // testing purposes currently
 
         if (Environment.MEDIA_MOUNTED.equals(state))
         {
             File file = new File(Environment.getExternalStorageDirectory(), fileName);
             String unit;
-            //need to make function for this to be prettier
+            // need to make function for this to be prettier
             if (unitToggleButton.isChecked())
             {
                 unit = "Imperial";
@@ -184,13 +183,15 @@ public class SettingsMenu extends Activity
                 outFile.write(writeString.getBytes());
                 outFile.close();
                 Toast.makeText(this, "It worked " + fileName, Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException ex)
+            {
+            } catch (IOException ex)
+            {
             }
-            catch (FileNotFoundException ex) {}
-            catch (IOException ex) {}         
         }
 
     }
-    
+
     private String writeCSV()
     {
         String csvStr = unitToggleButton.getText().toString();
@@ -206,12 +207,10 @@ public class SettingsMenu extends Activity
         csvStr.concat(ageEditText.getText().toString());
         return csvStr;
     }
-    
+
     private String writeTXT()
     {
         String txtString = ".txt";
         return txtString;
     }
 }
-
-

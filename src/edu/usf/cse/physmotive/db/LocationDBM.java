@@ -47,6 +47,7 @@ public class LocationDBM
         return db;
     }
 
+    // TODO: add column for status text.
     public int insert(int raceID, String lat, String lng, int tmStmp, long usr)
     {
         String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();

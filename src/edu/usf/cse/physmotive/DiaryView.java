@@ -66,6 +66,14 @@ public class DiaryView extends Activity
         diaryId = b.getInt(DIARYID);
 
         setOnClickListeners();
+
+        // TODO: Get Data
+        // TODO: GET Multi-select working properly.
+        // TODO: GET Vertical Scrolling for Activities that are bound to the
+        // diary. And have it link to Activity View.
+        // TODO: Dialog on update fix
+        // TODO: save data
+
     }
 
     private void setOnClickListeners()
@@ -125,38 +133,37 @@ public class DiaryView extends Activity
         }
     }
 
-    //TODO: GET Multi-select working properly.
-    //TODO: GET Vertical Scrolling for Activities that are bound to the diary. And have it link to Activity View.
     @Override
-    protected Dialog onCreateDialog(int id){
+    protected Dialog onCreateDialog(int id)
+    {
         dbaManager.open();
         cur = dbaManager.getBindingList(userId, diaryId);
         dbaManager.close();
-        
+
         _selections = new boolean[cur.getCount()];
         return new AlertDialog.Builder(this).setTitle("Races")
                 .setMultiChoiceItems(cur, "checked", "entryDate", new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int clicked,
-                            boolean selected) {
-                    	_selections[clicked] = selected;                    	
-                        Log.d( "MultiSelect", cur.moveToPosition(clicked) + " selected: " + selected );
+                    public void onClick(DialogInterface dialog, int clicked, boolean selected)
+                    {
+                        _selections[clicked] = selected;
+                        Log.d("MultiSelect", cur.moveToPosition(clicked) + " selected: " + selected);
                     }
-                })
-                .setPositiveButton("OK", new DialogButtonClickHandler()).create();
+                }).setPositiveButton("OK", new DialogButtonClickHandler()).create();
     }
 
     public class DialogButtonClickHandler implements DialogInterface.OnClickListener
     {
-    	@Override
+        @Override
         public void onClick(DialogInterface dialog, int clicked)
         {
             switch (clicked) {
             case DialogInterface.BUTTON_POSITIVE:
-            	 for(int i = 0; i < cur.getCount(); i++){
-            		 Log.d( "MultiSelectOK", cur.moveToPosition(i) + " selected: " + _selections[i] );
-                 }
-            	 cur.close();
+                for (int i = 0; i < cur.getCount(); i++)
+                {
+                    Log.d("MultiSelectOK", cur.moveToPosition(i) + " selected: " + _selections[i]);
+                }
+                cur.close();
                 break;
             }
         }

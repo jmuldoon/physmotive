@@ -11,7 +11,7 @@ public class ActivityView extends Activity
 {
     static final String USERID = "userId";
     static final String ACTIVITYID = "activityId";
-    
+
     protected Button statisticsButton;
     protected Button diaryButton;
 
@@ -31,8 +31,14 @@ public class ActivityView extends Activity
         Bundle b = getIntent().getExtras();
         userId = b.getInt(USERID);
         activityId = b.getInt(ACTIVITYID);
-        
+
         setOnClickListeners();
+
+        // TODO: Get Values
+        // TODO: Make Jimmy do stats
+        // TODO: Make sure buttons work properly
+        // TODO: Make Map WOrk
+        // TODO:
     }
 
     private void setOnClickListeners()
@@ -65,10 +71,11 @@ public class ActivityView extends Activity
         startActivity(myIntent);
     }
 
-    private void bundleUserInformation(Intent mIntent){
-    	Bundle b = new Bundle();
+    private void bundleUserInformation(Intent mIntent)
+    {
+        Bundle b = new Bundle();
         b.putInt(USERID, userId);
-        b.putInt(ACTIVITYID ,activityId);
+        b.putInt(ACTIVITYID, activityId);
         mIntent.putExtras(b);
     }
 }

@@ -76,7 +76,7 @@ public class ActivityList extends ListActivity
         cursor.close();
         activityDBM.close();
     }
-    
+
     private void setupButton()
     {
         addActivityBtn = (Button) findViewById(R.id.btnAddActivity);
@@ -231,6 +231,7 @@ public class ActivityList extends ListActivity
     {
         activityDBM.open();
         activityDBM.delete(itemId, usr);
+        // TODO: FIx location crash on delete
         locationDBM.delete(itemId, usr);
         activityDBM.close();
         updateList();
