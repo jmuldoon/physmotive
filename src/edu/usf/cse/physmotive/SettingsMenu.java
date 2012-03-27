@@ -38,11 +38,12 @@ public class SettingsMenu extends Activity
     protected ToggleButton orientationToggleButton;
     protected RadioButton radioButtonCSV;
     protected RadioButton radioButtonTXT;
-    protected Cursor diaryCur;
-    protected Cursor userCur;
-    protected Cursor loationCur;
-    protected Cursor activityCur;
     
+    //Cursors for exporting databases
+    protected Cursor activityCur;
+    protected Cursor diaryCur; 
+    protected Cursor locationCur;
+    protected Cursor userCur;
 
     private int diaryId;
     private int userId;
@@ -76,13 +77,12 @@ public class SettingsMenu extends Activity
         radioButtonCSV = (RadioButton) findViewById(R.id.radioButtonCSV);
         radioButtonTXT = (RadioButton) findViewById(R.id.radioButtonTXT);
         
-
-        dbmUser = new UserDBM(this);
         dbmActivity = new ActivityDBM(this);
         dbmDiary = new DiaryDBM(this);
         dbmLocation = new LocationDBM(this);
+        dbmUser = new UserDBM(this); 
         
-        dbmUser.open();
+        //dbmUser.open();
         //userCur = dbmUser.getList(userId)
         
         
@@ -134,56 +134,44 @@ public class SettingsMenu extends Activity
         String fileName;
         String fileExtension;
         String cOrNl; // comma or new line, for CSV or TXT
-        if (radioButtonCSV.isChecked())
-        {
-            fileExtension = ".csv";
-            cOrNl = ",";
-        } else
-        {
-            fileExtension = ".txt";
-            cOrNl = "\n";
-        }
-        fileName = "test" + fileExtension; //will take user name in future, for testing purposes currently
+        
+        //Open databases, create cursors and close databases
+        dbmActivity.open();
+        dbmDiary.open();
+        dbmLocation.open();
+        dbmUser.open();
+        
+        //Get cursors
+        activityCur = dbmActivity.getForExport(userId);
+        diaryCur = dbmDiary.getForExport();
+        locationCur = dbmLocation.getForExport();
+        userCur = dbmUser.getForExport();
+        
+        //Close Databases
+        dbmActivity.close();
+        dbmDiary.close();
+        dbmLocation.close();
+        dbmUser.close();
+
+        if (radioButtonCSV.isChecked()) { fileExtension = ".csv"; } else { fileExtension = ".txt"; }
+        
+        fileName = userId + fileExtension; //will take user name in future, for testing purposes currently
 
         if (Environment.MEDIA_MOUNTED.equals(state))
         {
             File file = new File(Environment.getExternalStorageDirectory(), fileName);
-            String unit;
             //need to make function for this to be prettier
-            if (unitToggleButton.isChecked())
-            {
-                unit = "Imperial";
-            } else
-            {
-                unit = "Metric";
-            }
-            String orientation;
-            if (orientationToggleButton.isChecked())
-            {
-                orientation = "Portrait";
-            } else
-            {
-                orientation = "Landscape";
-            }
-            String gender;
-            if (genderToggleButton.isChecked())
-            {
-                gender = "Male";
-            } else
-            {
-                gender = "Female";
-            }
-            String height = heightEditText.getText().toString();
-            String weight = weightEditText.getText().toString();
-            String age = ageEditText.getText().toString();
-            String writeString = unit + cOrNl + orientation + cOrNl + gender + cOrNl + height + cOrNl + weight + cOrNl + age;
+            
+            String writeString;
+            if(radioButtonCSV.isChecked()) { writeString = writeCSV(); } else { writeString=writeTXT(); }
+            
             OutputStream outFile = null;
             try
             {
                 outFile = new FileOutputStream(file);
                 outFile.write(writeString.getBytes());
                 outFile.close();
-                Toast.makeText(this, "It worked " + fileName, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "It worked " + fileName, Toast.LENGTH_SHORT).show();
             }
             catch (FileNotFoundException ex) {}
             catch (IOException ex) {}         
@@ -191,8 +179,7 @@ public class SettingsMenu extends Activity
 
     }
     
-    private String writeCSV()
-    {
+    private String writeCSV() {
         String csvStr = unitToggleButton.getText().toString();
         csvStr.concat(",");
         csvStr.concat(orientationToggleButton.getText().toString());
@@ -207,10 +194,19 @@ public class SettingsMenu extends Activity
         return csvStr;
     }
     
-    private String writeTXT()
-    {
-        String txtString = ".txt";
-        return txtString;
+    private String writeTXT() {
+        String txtStr = unitToggleButton.getText().toString();
+        txtStr.concat("\t");
+        txtStr.concat(orientationToggleButton.getText().toString());
+        txtStr.concat("\t");
+        txtStr.concat(genderToggleButton.getText().toString());
+        txtStr.concat("\t");
+        txtStr.concat(heightEditText.getText().toString());
+        txtStr.concat("\t");
+        txtStr.concat(weightEditText.getText().toString());
+        txtStr.concat("\t");
+        txtStr.concat(ageEditText.getText().toString());
+        return txtStr;
     }
 }
 

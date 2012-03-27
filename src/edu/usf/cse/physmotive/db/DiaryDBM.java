@@ -123,5 +123,12 @@ public class DiaryDBM {
 
 		return c;
 	}
+	
+	public Cursor getForExport()
+	{
+	    Cursor c = db.query(TABLENAME, null, null, null, null, null, null);
+	    
+	    return c;
+	}
 
 }
