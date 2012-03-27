@@ -16,5 +16,15 @@
 		<item>Select</item>
 		<item>Cancel</item>
 	</string-array>
+	<string-array name="Activity_Gallery">
+		<item >sample_0</item>
+		<item >sample_1</item>
+		<item >sample_2</item>
+		<item >sample_3</item>
+		<item >sample_4</item>
+		<item >sample_5</item>
+		<item >sample_6</item>
+		<item >sample_7</item>
+	</string-array>
 
 </resources>

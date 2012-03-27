@@ -1,4 +1,3 @@
-//This is a test to see if I am commiting to the repo correctly
 package edu.usf.cse.physmotive;
 
 import android.app.ListActivity;
@@ -22,13 +21,24 @@ import edu.usf.cse.physmotive.db.LocationDBM;
 
 public class ActivityList extends ListActivity
 {
+    // Internal Strings
+    static final String SETTINGS = "Settings";
+    static final String USERID = "userId";
+    static final String ACTIVITYID = "activityId";
+    static final String ID = "_id";
+    static final String ENTRYDATE = "entryDate";
+    static final String UPDATEDATE = "updateDate";
+    static final String SELECT = "Select";
+    static final String EDIT = "Edit";
+    static final String DELETE = "Delete";
+
     private int userId;
-    protected Button addActivity;
+    protected Button addActivityBtn;
     protected ListView activity_lv;
-    private ActivityDBM DBM;
-    private LocationDBM dblManager;
+    private ActivityDBM activityDBM;
+    private LocationDBM locationDBM;
     private Cursor cursor;
-    private ListAdapter adapter;
+    private ListAdapter listAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -36,13 +46,13 @@ public class ActivityList extends ListActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        DBM = new ActivityDBM(this);
-        dblManager = new LocationDBM(this);
+        activityDBM = new ActivityDBM(this);
+        locationDBM = new LocationDBM(this);
         activity_lv = (ListView) this.getListView();
 
         // pulling in bundle information
         Bundle b = getIntent().getExtras();
-        userId = b.getInt("userId");
+        userId = b.getInt(USERID);
 
         setupButton();
         registerForContextMenu(activity_lv);
@@ -51,13 +61,34 @@ public class ActivityList extends ListActivity
         updateList();
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        // Restore state here
+        updateList();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        cursor.close();
+        activityDBM.close();
+    }
+
     private void setupButton()
     {
-        addActivity = (Button) findViewById(R.id.btnAddActivity);
-        addActivity.setOnClickListener(new OnClickListener() {
+        addActivityBtn = (Button) findViewById(R.id.btnAddActivity);
+        addActivityBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v)
             {
-                insert(userId);
+                Intent myIntent = new Intent(ActivityList.this, ActivityMenu.class);
+                Bundle b = new Bundle();
+                b.putInt(USERID, userId);
+
+                myIntent.putExtras(b);
+                startActivity(myIntent);
             }
         });
     }
@@ -69,17 +100,24 @@ public class ActivityList extends ListActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         super.onCreateOptionsMenu(menu);
-        menu.add("Settings");
+        menu.add(SETTINGS);
 
         return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        if (!(item.hasSubMenu()))
-            Toast.makeText(this, "Hi", Toast.LENGTH_LONG).show();
+        if (item.getTitle().equals(SETTINGS))
+        {
+            Intent myIntent = new Intent(this, SettingsMenu.class);
+            Bundle b = new Bundle();
+            b.putInt(USERID, userId);
 
-        return true;
+            myIntent.putExtras(b);
+            startActivity(myIntent);
+            return true;
+        } else
+            return false;
     }
 
     // ///////////////////////////////////////////////
@@ -91,7 +129,7 @@ public class ActivityList extends ListActivity
         // Gets the cursor from the entry selected
         Cursor item = (Cursor) getListAdapter().getItem(position);
         // Gets the entry _id of the cursor
-        int item_id = item.getInt(0);
+        int item_id = item.getInt(item.getColumnIndex(ID));
 
         // the new activity being started
         Intent myIntent = new Intent(v.getContext(), ActivityView.class);
@@ -99,8 +137,8 @@ public class ActivityList extends ListActivity
         Bundle bundle = new Bundle();
 
         // Preparing the data
-        bundle.putLong("userId", userId);
-        bundle.putInt("activityId", item_id);
+        bundle.putInt(USERID, userId);
+        bundle.putInt(ACTIVITYID, item_id);
 
         // Attaching info and starting new activity
         myIntent.putExtras(bundle);
@@ -120,10 +158,10 @@ public class ActivityList extends ListActivity
             // gets the cursor for the item selected
             Cursor item = (Cursor) getListAdapter().getItem(info.position);
             // gets info from cursor
-            int item_id = item.getInt(0);
-            String item_name = item.getString(1);
+            int item_id = item.getInt(item.getColumnIndex(ID));
+            String itemName = item.getString(item.getColumnIndex(ENTRYDATE));
             // sets dialog's header to name of selection
-            menu.setHeaderTitle(item_name);
+            menu.setHeaderTitle(itemName);
             // creates the buttons in the menu
             String[] menuItems = getResources().getStringArray(R.array.SDC_menu);
             for (int i = 0; i < menuItems.length; i++)
@@ -138,27 +176,19 @@ public class ActivityList extends ListActivity
     // ///////////////////////////////////////////
     public boolean onContextItemSelected(MenuItem item)
     {
-        int item_id = item.getItemId();
+        int itemId = item.getItemId();
         Bundle bundle = new Bundle();
+        bundle.putInt(USERID, userId);
+        bundle.putInt(ACTIVITYID, itemId);
 
-        if (item.getTitle().equals("Select"))
+        if (item.getTitle().equals(SELECT))
         {
             Intent myIntent = new Intent(this, ActivityView.class);
-
-            bundle.putLong("UserId", userId);
-            bundle.putInt("activityId", item_id);
-
             myIntent.putExtras(bundle);
             startActivity(myIntent);
-        } else if (item.getTitle().equals("Edit"))
+        } else if (item.getTitle().equals(DELETE))
         {
-            bundle.putInt("activityId", item_id);
-
-            showDialog(1, bundle);
-
-        } else if (item.getTitle().equals("Delete"))
-        {
-            delete(item_id, userId);
+            delete(itemId, userId);
             Toast.makeText(this, "Entry Deleted", Toast.LENGTH_LONG).show();
         } else
         {
@@ -169,24 +199,24 @@ public class ActivityList extends ListActivity
 
     private void updateList()
     {
-        DBM.open();
-        cursor = DBM.getList(userId);
+        activityDBM.open();
+        cursor = activityDBM.getList(userId);
 
         startManagingCursor(cursor);
-        adapter = new SimpleCursorAdapter(this, R.layout.activity_list_item, cursor, new String[] { "_id", "_id" },
+        listAdapter = new SimpleCursorAdapter(this, R.layout.activity_list_item, cursor, new String[] { ID, ENTRYDATE },
                 new int[] { R.id.A_ID, R.id.A_Name });
-        setListAdapter(adapter);
+        setListAdapter(listAdapter);
     }
 
-    private long insert(int _usr)
-    {
-        DBM.open();
-        long id = DBM.insert(_usr);
-        DBM.close();
-        updateList();
-
-        return id;
-    }
+    // private long insert(int usr)
+    // {
+    // activityDBM.open();
+    // long id = activityDBM.insert(usr);
+    // activityDBM.close();
+    // updateList();
+    //
+    // return id;
+    // }
 
     // private void update(DiaryDBM dbm, int item_id, String _name, int _ht, int
     // _wt, int _age, int _gender, String _note, int _usr)
@@ -197,12 +227,13 @@ public class ActivityList extends ListActivity
     // updateList();
     // }
 
-    private void delete(int item_id, int _usr)
+    private void delete(int itemId, int usr)
     {
-        DBM.open();
-        DBM.delete(item_id, _usr);
-        dblManager.delete(item_id, _usr);
-        DBM.close();
+        activityDBM.open();
+        activityDBM.delete(itemId, usr);
+        // TODO: FIx location crash on delete
+        locationDBM.delete(itemId, usr);
+        activityDBM.close();
         updateList();
     }
 

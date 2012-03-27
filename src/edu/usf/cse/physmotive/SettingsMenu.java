@@ -52,7 +52,6 @@ public class SettingsMenu extends Activity
     private ActivityDBM dbmActivity;
     private DiaryDBM dbmDiary;
     private LocationDBM dbmLocation;
-    
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -84,10 +83,14 @@ public class SettingsMenu extends Activity
         
         //dbmUser.open();
         //userCur = dbmUser.getList(userId)
-        
-        
 
+        dbmUser.open();
+        // userCur = dbmUser.getList(userId)
         setOnClickListeners();
+        // TODO: Export Properly
+        // TODO: Get data
+        // TODO: save data
+        // TODO: import??
     }
 
     private void setOnClickListeners()
@@ -171,15 +174,18 @@ public class SettingsMenu extends Activity
                 outFile = new FileOutputStream(file);
                 outFile.write(writeString.getBytes());
                 outFile.close();
-                //Toast.makeText(this, "It worked " + fileName, Toast.LENGTH_SHORT).show();
+
+            } catch (FileNotFoundException ex)
+            {
+            } catch (IOException ex)
+            {
             }
-            catch (FileNotFoundException ex) {}
-            catch (IOException ex) {}         
         }
 
     }
-    
-    private String writeCSV() {
+
+    private String writeCSV()
+    {
         String csvStr = unitToggleButton.getText().toString();
         csvStr.concat(",");
         csvStr.concat(orientationToggleButton.getText().toString());
@@ -209,5 +215,3 @@ public class SettingsMenu extends Activity
         return txtStr;
     }
 }
-
-
