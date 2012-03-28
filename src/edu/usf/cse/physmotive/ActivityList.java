@@ -56,16 +56,14 @@ public class ActivityList extends ListActivity
 
         setupButton();
         registerForContextMenu(activity_lv);
-
-        // Move DB info Into List View
-        updateList();
     }
 
+    // Also runs with onCreate
     @Override
     protected void onResume()
     {
         super.onResume();
-        // Restore state here
+        // Inserts info into listview
         updateList();
     }
 

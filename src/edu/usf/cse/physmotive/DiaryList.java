@@ -31,6 +31,7 @@ public class DiaryList extends ListActivity
     static final String DELETE = "Delete";
 
     private int userId;
+    private int diaryId;
     protected Button addDiary;
     protected ListView diary_lv;
     private DiaryDBM diaryDBM;
@@ -43,18 +44,13 @@ public class DiaryList extends ListActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_list);
 
-        // pulling in bundle information
-        Bundle b = getIntent().getExtras();
-        userId = b.getInt(USERID);
+        retrieveBundleInfo();
 
         diaryDBM = new DiaryDBM(this);
         diary_lv = (ListView) this.getListView();
 
         setupButton();
         registerForContextMenu(diary_lv);
-
-        // Move DB info Into List View
-        updateList();
     }
 
     @Override
@@ -62,6 +58,7 @@ public class DiaryList extends ListActivity
     {
         super.onResume();
         // Restore state here
+        // Move DB info Into List View
         updateList();
     }
 
@@ -101,10 +98,8 @@ public class DiaryList extends ListActivity
         if (item.getTitle().equals(SETTINGS))
         {
             Intent myIntent = new Intent(this, SettingsMenu.class);
-            Bundle b = new Bundle();
-            b.putInt(USERID, userId);
+            bundleUserInformation(myIntent);
 
-            myIntent.putExtras(b);
             startActivity(myIntent);
             return true;
         } else
@@ -123,19 +118,13 @@ public class DiaryList extends ListActivity
         // Gets the cursor from the entry selected
         Cursor item = (Cursor) getListAdapter().getItem(position);
         // Gets the entry _id of the cursor
-        int itemId = item.getInt(item.getColumnIndex(ID));
+        diaryId = item.getInt(item.getColumnIndex(ID));
 
         // the new activity being started
         Intent myIntent = new Intent(v.getContext(), DiaryView.class);
         // The information being passed to the new activity
-        Bundle bundle = new Bundle();
+        bundleUserInformation(myIntent);
 
-        // Preparing the data
-        bundle.putLong(USERID, userId);
-        bundle.putLong(DIARYID, itemId);
-
-        // Attaching info and starting new activity
-        myIntent.putExtras(bundle);
         startActivity(myIntent);
     }
 
@@ -153,7 +142,7 @@ public class DiaryList extends ListActivity
             // gets the cursor for the item selected
             Cursor item = (Cursor) getListAdapter().getItem(info.position);
             // gets info from cursor
-            int itemId = item.getInt(item.getColumnIndex(ID));
+            diaryId = item.getInt(item.getColumnIndex(ID));
             String itemName = item.getString(item.getColumnIndex(NAME));
             // sets dialog's header to name of selection
             menu.setHeaderTitle(itemName);
@@ -161,7 +150,7 @@ public class DiaryList extends ListActivity
             String[] menuItems = getResources().getStringArray(R.array.SDC_menu);
             for (int i = 0; i < menuItems.length; i++)
             {
-                menu.add(Menu.NONE, itemId, i, menuItems[i]);
+                menu.add(Menu.NONE, diaryId, i, menuItems[i]);
             }
         }
     }
@@ -171,27 +160,24 @@ public class DiaryList extends ListActivity
     // ///////////////////////////////////////////
     public boolean onContextItemSelected(MenuItem item)
     {
-        int itemId = item.getItemId();
-        Bundle bundle = new Bundle();
+        diaryId = item.getItemId();
 
         if (item.getTitle().equals(SELECT))
         {
             Intent myIntent = new Intent(this, DiaryView.class);
 
-            bundle.putLong(USERID, userId);
-            bundle.putInt(DIARYID, itemId);
-
-            myIntent.putExtras(bundle);
+            bundleUserInformation(myIntent);
             startActivity(myIntent);
         } else if (item.getTitle().equals(EDIT))
         {
-            bundle.putInt(DIARYID, itemId);
+            Bundle b = new Bundle();
+            b.putInt(DIARYID, diaryId);
 
-            showDialog(1, bundle);
+            showDialog(1, b);
 
         } else if (item.getTitle().equals(DELETE))
         {
-            delete(itemId, userId);
+            delete(diaryId, userId);
             Toast.makeText(this, "Entry Deleted", Toast.LENGTH_LONG).show();
         } else
         {
@@ -213,6 +199,23 @@ public class DiaryList extends ListActivity
 
     }
 
+    private void bundleUserInformation(Intent mIntent)
+    {
+        Bundle b = new Bundle();
+        b.putInt(USERID, userId);
+        b.putLong(DIARYID, diaryId);
+        mIntent.putExtras(b);
+    }
+
+    private void retrieveBundleInfo()
+    {
+        Bundle b = getIntent().getExtras();
+        userId = b.getInt(USERID);
+    }
+
+    // /////////////////////
+    // Database Functions //
+    // /////////////////////
     private long insert(String _name, int _ht, int _wt, int _age, int _gender, String _note, long _usr)
     {
         diaryDBM.open();
