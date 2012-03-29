@@ -24,12 +24,17 @@ import edu.usf.cse.physmotive.db.UserDBM;
 
 public class SettingsMenu extends Activity
 {
-    public static final String USERID = "userId";
+    static final String USERID = "userId";
+    static final String NAME = "name";
+    static final String HEIGHT = "height";
+    static final String WEIGHT = "weight";
+    static final String AGE = "age";
+    static final String GENDER = "gender";
+    static final String ORI = "orientation";
+    static final String UNITS = "units";
 
-    protected Button _updateButton;
-    protected Button _exportButton;
-
-    protected EditText diaryEntryEditText;
+    protected Button update_btn;
+    protected Button export_btn;
     protected EditText heightEditText;
     protected EditText weightEditText;
     protected EditText ageEditText;
@@ -38,14 +43,13 @@ public class SettingsMenu extends Activity
     protected ToggleButton orientationToggleButton;
     protected RadioButton radioButtonCSV;
     protected RadioButton radioButtonTXT;
-    
-    //Cursors for exporting databases
+
+    // Cursors for exporting databases
     protected Cursor activityCur;
-    protected Cursor diaryCur; 
+    protected Cursor diaryCur;
     protected Cursor locationCur;
     protected Cursor userCur;
 
-    private int diaryId;
     private int userId;
 
     private UserDBM dbmUser;
@@ -64,9 +68,8 @@ public class SettingsMenu extends Activity
         userId = b.getInt(USERID);
 
         // Connect interface elements to properties
-        _updateButton = (Button) findViewById(R.id.updateButton);
-        _exportButton = (Button) findViewById(R.id.exportButton);
-        diaryEntryEditText = (EditText) findViewById(R.id.diaryEntryEditText);
+        update_btn = (Button) findViewById(R.id.updateButton);
+        export_btn = (Button) findViewById(R.id.exportButton);
         heightEditText = (EditText) findViewById(R.id.heightEditText);
         weightEditText = (EditText) findViewById(R.id.weightEditText);
         ageEditText = (EditText) findViewById(R.id.ageEditText);
@@ -75,33 +78,60 @@ public class SettingsMenu extends Activity
         orientationToggleButton = (ToggleButton) findViewById(R.id.orientationToggleButton);
         radioButtonCSV = (RadioButton) findViewById(R.id.radioButtonCSV);
         radioButtonTXT = (RadioButton) findViewById(R.id.radioButtonTXT);
-        
+
         dbmActivity = new ActivityDBM(this);
         dbmDiary = new DiaryDBM(this);
         dbmLocation = new LocationDBM(this);
-        dbmUser = new UserDBM(this); 
-        
-        //dbmUser.open();
-        //userCur = dbmUser.getList(userId)
+        dbmUser = new UserDBM(this);
 
-        dbmUser.open();
+        // dbmUser.open();
         // userCur = dbmUser.getList(userId)
         setOnClickListeners();
         // TODO: Export Properly
-        // TODO: Get data
-        // TODO: save data
         // TODO: import??
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        setupEditTexts();
+        setupToggleButtons();
+    }
+
+    private void setupEditTexts()
+    {
+        dbmUser.open();
+        userCur = dbmUser.get(userId);
+        dbmUser.close();
+        startManagingCursor(userCur);
+
+        heightEditText.setText(userCur.getString(userCur.getColumnIndex(HEIGHT)));
+        weightEditText.setText(userCur.getString(userCur.getColumnIndex(WEIGHT)));
+        ageEditText.setText(userCur.getString(userCur.getColumnIndex(AGE)));
+    }
+
+    private void setupToggleButtons()
+    {
+        dbmUser.open();
+        userCur = dbmUser.get(userId);
+        dbmUser.close();
+        startManagingCursor(userCur);
+
+        genderToggleButton.setChecked(userCur.getInt(userCur.getColumnIndex(GENDER)) == 1);
+        unitToggleButton.setChecked(userCur.getInt(userCur.getColumnIndex(UNITS)) == 1);
+        orientationToggleButton.setChecked(userCur.getInt(userCur.getColumnIndex(ORI)) == 1);
     }
 
     private void setOnClickListeners()
     {
-        _updateButton.setOnClickListener(new OnClickListener() {
+        update_btn.setOnClickListener(new OnClickListener() {
             public void onClick(View v)
             {
                 onButtonClickUpdate(v);
             }
         });
-        _exportButton.setOnClickListener(new OnClickListener() {
+        export_btn.setOnClickListener(new OnClickListener() {
             public void onClick(View v)
             {
                 onButtonClickExport(v);
@@ -125,9 +155,10 @@ public class SettingsMenu extends Activity
         else
             ori = 0;
         dbmUser.open();
-        dbmUser.update(diaryId, Integer.valueOf(heightEditText.getText().toString()),
+        dbmUser.update(userId, Integer.valueOf(heightEditText.getText().toString()),
                 Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
                 gend, uni, ori, 0, userId);
+        Toast.makeText(this, Integer.toString(userId), Toast.LENGTH_SHORT).show();
         dbmUser.close();
     }
 
@@ -137,37 +168,50 @@ public class SettingsMenu extends Activity
         String fileName;
         String fileExtension;
         String cOrNl; // comma or new line, for CSV or TXT
-        
-        //Open databases, create cursors and close databases
+
+        // Open databases, create cursors and close databases
         dbmActivity.open();
         dbmDiary.open();
         dbmLocation.open();
         dbmUser.open();
-        
-        //Get cursors
+
+        // Get cursors
         activityCur = dbmActivity.getForExport(userId);
         diaryCur = dbmDiary.getForExport();
         locationCur = dbmLocation.getForExport();
         userCur = dbmUser.getForExport();
-        
-        //Close Databases
+
+        // Close Databases
         dbmActivity.close();
         dbmDiary.close();
         dbmLocation.close();
         dbmUser.close();
 
-        if (radioButtonCSV.isChecked()) { fileExtension = ".csv"; } else { fileExtension = ".txt"; }
-        
-        fileName = userId + fileExtension; //will take user name in future, for testing purposes currently
+        if (radioButtonCSV.isChecked())
+        {
+            fileExtension = ".csv";
+        } else
+        {
+            fileExtension = ".txt";
+        }
+
+        fileName = userId + fileExtension; // will take user name in future, for
+                                           // testing purposes currently
 
         if (Environment.MEDIA_MOUNTED.equals(state))
         {
             File file = new File(Environment.getExternalStorageDirectory(), fileName);
-            //need to make function for this to be prettier
-            
+            // need to make function for this to be prettier
+
             String writeString;
-            if(radioButtonCSV.isChecked()) { writeString = writeCSV(); } else { writeString=writeTXT(); }
-            
+            if (radioButtonCSV.isChecked())
+            {
+                writeString = writeCSV();
+            } else
+            {
+                writeString = writeTXT();
+            }
+
             OutputStream outFile = null;
             try
             {
@@ -199,8 +243,9 @@ public class SettingsMenu extends Activity
         csvStr.concat(ageEditText.getText().toString());
         return csvStr;
     }
-    
-    private String writeTXT() {
+
+    private String writeTXT()
+    {
         String txtStr = unitToggleButton.getText().toString();
         txtStr.concat("\t");
         txtStr.concat(orientationToggleButton.getText().toString());

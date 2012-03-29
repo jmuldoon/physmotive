@@ -50,7 +50,7 @@ public class MainMenu extends Activity implements LocationListener
 
     // Internal Variables
     private int userId = 1;
-    private UserDBM uDBM;
+    private UserDBM userDBM;
     private Cursor userCursor;
     private SimpleCursorAdapter adapter;
 
@@ -60,7 +60,7 @@ public class MainMenu extends Activity implements LocationListener
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        uDBM = new UserDBM(this);
+        userDBM = new UserDBM(this);
 
         // Connect interface elements to properties
         newActivityButton = (Button) findViewById(R.id.newActivityButton);
@@ -80,18 +80,20 @@ public class MainMenu extends Activity implements LocationListener
         this.getInitialLocation();
     }
 
-    private void initiateLocationServices(){
-    	// Use the LocationManager class to obtain GPS locations.
+    private void initiateLocationServices()
+    {
+        // Use the LocationManager class to obtain GPS locations.
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
     }
-    
+
     @Override
-    protected void onResume(){
+    protected void onResume()
+    {
         super.onResume();
         // Restore state here
-        updateSpinner(); 
+        updateSpinner();
         initiateLocationServices();
     }
 
@@ -100,7 +102,7 @@ public class MainMenu extends Activity implements LocationListener
     {
         super.onPause();
         userCursor.close();
-        uDBM.close();
+        userDBM.close();
     }
 
     @Override
@@ -140,7 +142,7 @@ public class MainMenu extends Activity implements LocationListener
 
     public void getInitialLocation()
     {
-    	initiateLocationServices();
+        initiateLocationServices();
         Location lastKnown = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (lastKnown != null)
         {
@@ -189,10 +191,10 @@ public class MainMenu extends Activity implements LocationListener
                             } else
                             {
                                 Toast.makeText(MainMenu.this, "The user is saving...", Toast.LENGTH_SHORT).show();
-                                uDBM.open();
-                                userId = uDBM.insert(firstName.getText().toString(), lastName.getText().toString(), 0, 0, 0,
-                                        1, 1, 1, 1, userId);
-                                uDBM.close();
+                                userDBM.open();
+                                userId = userDBM.insert(firstName.getText().toString(), lastName.getText().toString(), 0, 0, 0,
+                                        0, 0, 0, 0, userId);
+                                userDBM.close();
                                 firstName.setText("");
                                 lastName.setText("");
                                 updateSpinner();
@@ -221,9 +223,9 @@ public class MainMenu extends Activity implements LocationListener
     private void updateSpinner()
     {
         int user;
-        uDBM.open();
+        userDBM.open();
         // gets list of available users
-        userCursor = uDBM.getList(userId);
+        userCursor = userDBM.getList(userId);
         startManagingCursor(userCursor);
 
         String[] from = new String[] { ID, FNAME, LNAME };
@@ -246,7 +248,7 @@ public class MainMenu extends Activity implements LocationListener
             }
         }
         userSpinner.setOnItemSelectedListener(new MyOnItemSelectedListener());
-        uDBM.close();
+        userDBM.close();
     }
 
     public class MyOnItemSelectedListener implements OnItemSelectedListener
