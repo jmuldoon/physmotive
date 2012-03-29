@@ -43,7 +43,6 @@ public class DiaryList extends ListActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.diary_list);
-
         retrieveBundleInfo();
 
         diaryDBM = new DiaryDBM(this);
@@ -203,7 +202,7 @@ public class DiaryList extends ListActivity
     {
         Bundle b = new Bundle();
         b.putInt(USERID, userId);
-        b.putLong(DIARYID, diaryId);
+        b.putInt(DIARYID, diaryId);
         mIntent.putExtras(b);
     }
 
@@ -216,10 +215,10 @@ public class DiaryList extends ListActivity
     // /////////////////////
     // Database Functions //
     // /////////////////////
-    private long insert(String _name, int _ht, int _wt, int _age, int _gender, String _note, long _usr)
+    private int insert(String _name, int _ht, int _wt, int _age, int _gender, String _note, int _usr)
     {
         diaryDBM.open();
-        long id = diaryDBM.insert(_name, _ht, _wt, _age, _gender, _note, _usr);
+        int id = diaryDBM.insert(_name, _ht, _wt, _age, _gender, _note, _usr);
         diaryDBM.close();
         updateList();
 
@@ -235,7 +234,7 @@ public class DiaryList extends ListActivity
     // updateList();
     // }
 
-    private void delete(int item_id, long _usr)
+    private void delete(int item_id, int _usr)
     {
         diaryDBM.open();
         diaryDBM.delete(item_id, _usr);

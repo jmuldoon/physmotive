@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,14 +11,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.DiaryDBM;
+import edu.usf.cse.physmotive.db.UserDBM;
 
 public class DiaryView extends Activity
 {
-    public static final String DIARYID = "diaryId";
-    public static final String USERID = "userId";
+    static final String DIARYID = "diaryId";
+    static final String USERID = "userId";
+    static final String NAME = "name";
+    static final String HEIGHT = "height";
+    static final String WEIGHT = "weight";
+    static final String AGE = "age";
+    static final String EDATE = "entryDate";
+    static final String NOTE = "note";
+    static final String GENDER = "gender";
 
     protected EditText diaryEntryEditText;
     protected EditText heightEditText;
@@ -30,13 +38,16 @@ public class DiaryView extends Activity
     protected Button bindRacesButton;
     protected Button cancelButton;
     protected Button saveButton;
-    private DiaryDBM dbdManager;
-    private ActivityDBM dbaManager;
     private Cursor cur;
     protected boolean[] _selections;
 
     private int diaryId;
     private int userId;
+    private ActivityDBM activityDBM;
+    private DiaryDBM diaryDBM;
+    private UserDBM userDBM;
+    private Cursor diaryCur;
+    private Cursor userCur;
 
     // Called when the activity is first created.
     @Override
@@ -46,8 +57,9 @@ public class DiaryView extends Activity
         setContentView(R.layout.diary_view);
 
         // Creating DBM object
-        dbdManager = new DiaryDBM(this);
-        dbaManager = new ActivityDBM(this);
+        activityDBM = new ActivityDBM(this);
+        diaryDBM = new DiaryDBM(this);
+        userDBM = new UserDBM(this);
 
         // Connect interface elements to properties
         cancelButton = (Button) findViewById(R.id.cancelButton);
@@ -67,78 +79,35 @@ public class DiaryView extends Activity
 
         setOnClickListeners();
 
-        // TODO: Get Data
         // TODO: GET Multi-select working properly.
         // TODO: GET Vertical Scrolling for Activities that are bound to the
         // diary. And have it link to Activity View.
         // TODO: Dialog on update fix
-        // TODO: save data
 
     }
 
-    private void setOnClickListeners()
+    @Override
+    public void onResume()
     {
-        cancelButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v)
-            {
-                onButtonClickCancel(v);
-            }
-        });
-        saveButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v)
-            {
-                onButtonClickSave(v);
-            }
-        });
-
-        bindRacesButton.setOnClickListener(new ButtonClickHandler());
+        super.onResume();
+        setupTextEdits();
+        setupToggleButtons();
+        updateBindList();
     }
 
-    private void onButtonClickCancel(View w)
+    @Override
+    public void onPause()
     {
-        this.finish();
-    }
+        super.onPause();
 
-    private void onButtonClickSave(View w)
-    {
-        long gend;
-        if (genderToggleButton.isChecked())
-            gend = 1;
-        else
-            gend = 0;
-
-        if (((Integer) diaryId).intValue() == 0)
-            dbdManager.insert(diaryEntryEditText.getText().toString(), Long.valueOf(heightEditText.getText().toString()),
-                    Long.valueOf(weightEditText.getText().toString()), Long.valueOf(ageEditText.getText().toString()), gend,
-                    notesEditText.getText().toString(), 0);
-        else
-            dbdManager.update(diaryId, diaryEntryEditText.getText().toString(),
-                    Long.valueOf(heightEditText.getText().toString()), Long.valueOf(weightEditText.getText().toString()),
-                    Long.valueOf(ageEditText.getText().toString()), gend, notesEditText.getText().toString(), userId);
-        cur.close();
-        invokeActivityDiaryList(w);
-    }
-
-    private void invokeActivityDiaryList(View w)
-    {
-        Intent myIntent = new Intent(w.getContext(), DiaryList.class);
-        startActivityForResult(myIntent, 0);
-    }
-
-    public class ButtonClickHandler implements View.OnClickListener
-    {
-        public void onClick(View view)
-        {
-            showDialog(0);
-        }
     }
 
     @Override
     protected Dialog onCreateDialog(int id)
     {
-        dbaManager.open();
-        cur = dbaManager.getBindingList(userId, diaryId);
-        dbaManager.close();
+        activityDBM.open();
+        cur = activityDBM.getBindingList(userId, diaryId);
+        activityDBM.close();
 
         _selections = new boolean[cur.getCount()];
         return new AlertDialog.Builder(this).setTitle("Races")
@@ -166,6 +135,98 @@ public class DiaryView extends Activity
                 cur.close();
                 break;
             }
+        }
+    }
+
+    private void setupTextEdits()
+    {
+        diaryDBM.open();
+        diaryCur = diaryDBM.get(diaryId);
+        diaryDBM.close();
+        startManagingCursor(diaryCur);
+
+        Toast.makeText(this, diaryCur.getString(diaryCur.getColumnIndex(NAME)), Toast.LENGTH_SHORT).show();
+
+        diaryEntryEditText.setText(diaryCur.getString(diaryCur.getColumnIndex(NAME)));
+        notesEditText.setText(diaryCur.getString(diaryCur.getColumnIndex(NOTE)));
+        heightEditText.setText(diaryCur.getString(diaryCur.getColumnIndex(HEIGHT)));
+        weightEditText.setText(diaryCur.getString(diaryCur.getColumnIndex(WEIGHT)));
+        ageEditText.setText(diaryCur.getString(diaryCur.getColumnIndex(AGE)));
+    }
+
+    private void setupToggleButtons()
+    {
+        diaryDBM.open();
+        diaryCur = diaryDBM.get(diaryId);
+        diaryDBM.close();
+        startManagingCursor(diaryCur);
+
+        genderToggleButton.setChecked(diaryCur.getInt(diaryCur.getColumnIndex(GENDER)) == 1);
+    }
+
+    private void updateBindList()
+    {
+        // TODO: Setup List View
+    }
+
+    private void setOnClickListeners()
+    {
+        cancelButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v)
+            {
+                onButtonClickCancel(v);
+            }
+        });
+        saveButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v)
+            {
+                onButtonClickSave(v);
+            }
+        });
+
+        bindRacesButton.setOnClickListener(new ButtonClickHandler());
+    }
+
+    private void onButtonClickCancel(View w)
+    {
+        this.finish();
+    }
+
+    private void onButtonClickSave(View w)
+    {
+        int gend;
+        if (genderToggleButton.isChecked())
+            // male
+            gend = 1;
+        else
+            // female
+            gend = 0;
+        diaryDBM.open();
+        if (((Integer) diaryId).intValue() == 0)
+        {
+            diaryDBM.insert(diaryEntryEditText.getText().toString(), Integer.valueOf(heightEditText.getText().toString()),
+                    Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
+                    gend, notesEditText.getText().toString(), 0);
+            Log.d("insert", "insert");
+        } else
+        {
+            diaryDBM.update(diaryId, diaryEntryEditText.getText().toString(),
+                    Integer.valueOf(heightEditText.getText().toString()),
+                    Integer.valueOf(weightEditText.getText().toString()), Integer.valueOf(ageEditText.getText().toString()),
+                    gend, notesEditText.getText().toString(), userId);
+            Log.d("update", "update");
+        }
+        diaryDBM.close();
+
+        // Exits the activity and goes back
+        finish();
+    }
+
+    public class ButtonClickHandler implements View.OnClickListener
+    {
+        public void onClick(View view)
+        {
+            showDialog(0);
         }
     }
 }

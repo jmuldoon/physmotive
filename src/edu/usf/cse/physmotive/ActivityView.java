@@ -55,7 +55,6 @@ public class ActivityView extends Activity
 
         setOnClickListeners();
 
-        // TODO: Get Values
         // TODO: Make Jimmy do stats
         // TODO: Make sure buttons work properly
         // TODO: Make Map Work, add geo from DB

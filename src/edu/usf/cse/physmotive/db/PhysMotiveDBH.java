@@ -68,9 +68,9 @@ public class PhysMotiveDBH extends SQLiteOpenHelper
         values.put("weight", 0);
         values.put("age", 0);
 
-        values.put("gender", 0);
-        values.put("units", 0);
-        values.put("orientation", 0);
+        values.put("gender", 1);
+        values.put("units", 1);
+        values.put("orientation", 1);
         values.put("dateFormat", 0);
         values.put("entryUsr", 1);
         values.put("entryDate", timeStamp);
