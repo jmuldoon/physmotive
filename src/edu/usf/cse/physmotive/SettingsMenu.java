@@ -85,7 +85,7 @@ public class SettingsMenu extends Activity
         dbmUser = new UserDBM(this);
 
         setOnClickListeners();
-        // TODO: Export Properly
+
         // TODO: import??
     }
 
@@ -201,6 +201,7 @@ public class SettingsMenu extends Activity
         writeString.concat(weightEditText.getText().toString());
         writeString.concat(",");
         writeString.concat(ageEditText.getText().toString());
+        writeString.concat("\n");
         try {outFile.write(writeString.getBytes()); } catch ( IOException ex ) {}
 
         //Write Activity table
@@ -330,6 +331,7 @@ public class SettingsMenu extends Activity
         writeString.concat(weightEditText.getText().toString());
         writeString.concat("\t");
         writeString.concat(ageEditText.getText().toString());
+        writeString.concat("\n");
         try {outFile.write(writeString.getBytes()); } catch ( IOException ex ) {}
 
         //Write Activity table
