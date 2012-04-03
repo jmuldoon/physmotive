@@ -17,6 +17,7 @@ public class LocationDBM
     static final String FKEY = "race_id";
     static final String LATITUDE = "lat";
     static final String LONGITUDE = "lng";
+    static final String SPEED = "speed";
     static final String LTS = "locationTimeStamp";
     static final String NOTES = "notes";
     static final String EUSR = "entryUsr";
@@ -50,7 +51,7 @@ public class LocationDBM
     }
 
     // TODO: add column for status text.
-    public int insert(int raceID, String lat, String lng, int tmStmp, String notes, int usr)
+    public int insert(int raceID, String lat, String lng, String spd, int tmStmp, String notes, int usr)
     {
         String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
         ContentValues values = new ContentValues();
@@ -58,6 +59,7 @@ public class LocationDBM
         values.put(FKEY, raceID);
         values.put(LATITUDE, lat);
         values.put(LONGITUDE, lng);
+        values.put(SPEED, spd);
         values.put(LTS, Integer.toString(tmStmp));
         values.put(NOTES, notes);
         values.put(EUSR, usr);
@@ -88,7 +90,7 @@ public class LocationDBM
 
     public Cursor getList(int raceID, int time)
     {
-        String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS };
+        String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, SPEED, LTS };
         Date cDate = new Date(), date = new Date();
         Calendar cal = Calendar.getInstance();
 
@@ -122,7 +124,7 @@ public class LocationDBM
 
     public Cursor getAllList(int userID, int time)
     {
-        String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS };
+        String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, SPEED, LTS };
         Date cDate = new Date(), date = new Date();
         Calendar cal = Calendar.getInstance();
 

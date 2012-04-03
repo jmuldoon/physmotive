@@ -43,15 +43,18 @@ public class ActiveActivity extends MapActivity implements LocationListener
     protected MapView mapView;
     protected MapController mapController;
     protected MapItemizedOverlay itemizedOverlay;
-    protected GeoPoint point;
+    protected GeoPoint point, curr, prev;
     protected LocationManager locationManager;
     protected List<Overlay> mapOverlays;
     protected Button endActivityButton;
-
+    protected TextView currentDistanceTextView;
+    protected TextView currentSpeedTextView;
+    
+    
     private LocationDBM dblManager;
     private ActivityDBM dbaManager;
     private int userId, raceId, unitType, unitValue;
-    private long sTime = 0, cTime = 0, eTime = 0, tTime = 0, tDistance = 0;
+    private long tTime = 0, tDistance = 0;
     private String startType;
 
     @Override
@@ -77,6 +80,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
         mapView.setBuiltInZoomControls(true);
         mapView.setStreetView(true);
 
+        
+        currentSpeedTextView = (TextView) findViewById(R.id.currentSpeedTextView);
+        currentDistanceTextView = (TextView) findViewById(R.id.currentDistanceTextView);
         endActivityButton = (Button) findViewById(R.id.endActivityButton);
         afterInit();
 
@@ -119,7 +125,10 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
         // if Complete:
         // TODO: Get Final GPS pull save with Finished note.
-        // dblManager.insert(raceId, lat, lng, lts, "finished", userId);
+        // dblManager.insert(raceId, lat, lng, spd, lts, "finished", userId);
+        // TODO: get tTime to insert int seconds for total time.
+        dbaManager.update(raceId, userId, (int)tTime, (int)tDistance);
+        
 
         // If ended early
         // TODO: make sure it saves current info
@@ -159,7 +168,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 3, this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 3, this);
         dblManager.open();
-        dblManager.insert(raceId, "0", "0", 0, "start", userId);
+        dblManager.insert(raceId, "0", "0", "0", 0, "start", userId);
         dblManager.close();
 
         // TODO: Intitiate Timer. Set sTime (startTime)
@@ -201,14 +210,37 @@ public class ActiveActivity extends MapActivity implements LocationListener
     {
         return false;
     }
-
+    
+    private void updateGeoPoints(GeoPoint p){
+    	prev = curr;
+    	curr = p;
+    }
+    
+    private void updateStatistics(Location loc){
+    	currentSpeedTextView.setText(String.valueOf(loc.getSpeed()));
+    	currentDistanceTextView.setText(String.valueOf(tDistance));
+    }
+    
     @Override
     public void onLocationChanged(Location loc)
     {
+    	float[] result = new float[3];
         mapController = mapView.getController();
-
+        
         point = new GeoPoint((int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6));
-
+        
+        
+        // TODO: Make sure this logic works.
+        // Update GeoPoints to keep current Stats
+        updateGeoPoints(point);
+        
+        // Update the distance for total Distance
+        Location.distanceBetween(prev.getLatitudeE6()/1E6, prev.getLongitudeE6()/1E6, curr.getLatitudeE6()/1E6, curr.getLongitudeE6()/1E6, result);
+		tDistance += result[0];
+		
+        // Update Stats on Page
+		updateStatistics(loc);
+        
         mapController.animateTo(point);
         mapController.setZoom(20);
         mapView.invalidate();
@@ -217,7 +249,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
 
         dblManager.open();
-        dblManager.insert(raceId, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()),
+        dblManager.insert(raceId, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()), String.valueOf(loc.getSpeed()),
                 (int) loc.getTime(), "", userId);
         dblManager.close();
     }
