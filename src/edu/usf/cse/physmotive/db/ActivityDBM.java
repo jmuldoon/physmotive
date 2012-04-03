@@ -2,7 +2,6 @@ package edu.usf.cse.physmotive.db;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -71,7 +70,7 @@ public class ActivityDBM
         String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
         String whereClause;
         ContentValues values = new ContentValues();
-        
+
         values.put(TTIME, time);
         values.put(TDISTANCE, distance);
         values.put(UUSR, usr);
@@ -134,20 +133,11 @@ public class ActivityDBM
     public Cursor getStatisticsList(int userID, int activityID, int day, int month, int year)
     {
         String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
-        Date cDate = new Date(), date = new Date();
-        Calendar cal = Calendar.getInstance();
 
-        // initiates the setting of calendar to the current date
-        cal.setTime(date);
-        
-        // just sets the date for date chosen with the filter.
-        date.setDate(day);
-        date.setMonth(month);
-        date.setYear(year);
-        
+        // this is for past week.
+        String whereClause = EUSR + " = " + userID + " and " + ID + " = " + activityID + " and strftime('%s', " + EDATE
+                + ") >= strftime('%s', date('now', '-7 day'))";
 
-        String whereClause = EUSR + " = " + userID + " and " + ID + " = " + activityID + " and " + date + " <= " + cDate;
-        ;
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
 
