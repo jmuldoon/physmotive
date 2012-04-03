@@ -10,9 +10,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Gallery;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.ui.ImageAdapter;
 
 public class ActivityMenu extends Activity
@@ -32,8 +32,10 @@ public class ActivityMenu extends Activity
     protected EditText minuteEditText;
     protected EditText secondEditText;
     protected ToggleButton distanceOrTimeToggleButton;
-    
-    private int userId;
+
+    private ActivityDBM activityDBM;
+
+    private int userId, activityId;
 
     // Called when the activity is first created.
     @Override
@@ -62,40 +64,40 @@ public class ActivityMenu extends Activity
         // TODO: Fix Pictures
         // TODO: Setup user stats
     }
-    
-    private void bundleUserInformation(Intent mIntent){
+
+    private void bundleUserInformation(Intent mIntent)
+    {
         int unitValue = 0;
         int unitType = 0;
-    	
-    	Bundle b = new Bundle();
+
+        Bundle b = new Bundle();
         b.putInt(USERID, userId);
-        
-        if (distanceOrTimeToggleButton.isChecked()){
-        	unitValue = Integer.valueOf(minuteEditText.getText().toString())*60;
-        	unitType = 1;
+
+        if (distanceOrTimeToggleButton.isChecked())
+        {
+            unitValue = Integer.valueOf(minuteEditText.getText().toString()) * 60;
+            unitType = 1;
+        } else
+        {
+            unitValue = Integer.valueOf(minuteEditText.getText().toString()) * 60;
+            unitValue += Integer.valueOf(secondEditText.getText().toString());
+            unitType = 0;
         }
-        else{
-        	unitValue = Integer.valueOf(minuteEditText.getText().toString())*60;
-        	unitValue += Integer.valueOf(secondEditText.getText().toString());
-        	unitType = 0;
-        }
-        
+
         b.putInt(UNITTYPE, unitType);
         b.putInt(UNITVALUE, unitValue);
         b.putInt(ACTIVITYID, activityId);
         mIntent.putExtras(b);
     }
-    
+
     private void invokeActiveActivity(View arg0, String type)
     {
         Intent myIntent = new Intent(arg0.getContext(), ActiveActivity.class);
-        Bundle b = new Bundle();
-        b.putInt(USERID, userId);
-        b.putString(STARTTYPE, type);
-
         // TODO: Insert New activity with activity details from screen
+        activityId = activityDBM.insert(userId);
 
-        myIntent.putExtras(b);
+        bundleUserInformation(myIntent);
+        myIntent.getExtras().putString(STARTTYPE, type);
         startActivityForResult(myIntent, 0);
     }
 
@@ -127,26 +129,27 @@ public class ActivityMenu extends Activity
         });
     }
 
-    private void onButtonClickDistanceOrTimeToggleButton(View v){
-    	if (distanceOrTimeToggleButton.isChecked()){
-    		secondEditText.setVisibility(View.GONE);
-    		minuteEditText.setHint("meters");
-    	}
-    	else
-    		secondEditText.setVisibility(View.VISIBLE);
+    private void onButtonClickDistanceOrTimeToggleButton(View v)
+    {
+        if (distanceOrTimeToggleButton.isChecked())
+        {
+            secondEditText.setVisibility(View.GONE);
+            minuteEditText.setHint("meters");
+        } else
+            secondEditText.setVisibility(View.VISIBLE);
     }
-    
+
     private void onButtonClickManualStart(View w)
     {
-    	Intent myIntent = new Intent(w.getContext(), ActiveActivity.class);
-    	bundleUserInformation(myIntent);
+        Intent myIntent = new Intent(w.getContext(), ActiveActivity.class);
+        bundleUserInformation(myIntent);
         invokeActiveActivity(w, STARTTYPE_MAN);
     }
 
     private void onButtonClickAutomaticStart(View w)
     {
-    	Intent myIntent = new Intent(w.getContext(), ActiveActivity.class);
-    	bundleUserInformation(myIntent);
+        Intent myIntent = new Intent(w.getContext(), ActiveActivity.class);
+        bundleUserInformation(myIntent);
         invokeActiveActivity(w, STARTTYPE_AUTO);
     }
 }
