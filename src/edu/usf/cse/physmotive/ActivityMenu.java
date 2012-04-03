@@ -62,7 +62,6 @@ public class ActivityMenu extends Activity
         setOnClickListeners();
 
         // TODO: Fix Pictures
-        // TODO: Setup user stats
     }
 
     private void bundleUserInformation(Intent mIntent)
@@ -128,6 +127,27 @@ public class ActivityMenu extends Activity
             }
         });
     }
+    
+    private boolean validateData(){
+    	// Verifies the fields have information in them
+    	if(!distanceOrTimeToggleButton.isChecked()){
+	        if (minuteEditText.getText().toString().equals("") || minuteEditText.getText().toString().trim().equals("")
+	                || secondEditText.getText().toString().equals("") || secondEditText.getText().toString().trim().equals("")){
+	            Toast.makeText(ActivityMenu.this, "User must have first and last name.", Toast.LENGTH_LONG).show();
+	            minuteEditText.setText("");
+	            secondEditText.setText("");
+	            return false;
+	        }
+	    }
+    	else{
+    		if (minuteEditText.getText().toString().equals("") || minuteEditText.getText().toString().trim().equals("")){
+	            Toast.makeText(ActivityMenu.this, "User must have first and last name.", Toast.LENGTH_LONG).show();
+	            minuteEditText.setText("");
+	            return false;
+	        }
+    	}
+    	return true;
+    }
 
     private void onButtonClickDistanceOrTimeToggleButton(View v)
     {
@@ -141,15 +161,19 @@ public class ActivityMenu extends Activity
 
     private void onButtonClickManualStart(View w)
     {
-        Intent myIntent = new Intent(w.getContext(), ActiveActivity.class);
-        bundleUserInformation(myIntent);
-        invokeActiveActivity(w, STARTTYPE_MAN);
+    	if(validateData()){
+	        Intent myIntent = new Intent(w.getContext(), ActiveActivity.class);
+	        bundleUserInformation(myIntent);
+	        invokeActiveActivity(w, STARTTYPE_MAN);
+    	}
     }
 
     private void onButtonClickAutomaticStart(View w)
     {
-        Intent myIntent = new Intent(w.getContext(), ActiveActivity.class);
-        bundleUserInformation(myIntent);
-        invokeActiveActivity(w, STARTTYPE_AUTO);
+    	if (validateData()){
+	        Intent myIntent = new Intent(w.getContext(), ActiveActivity.class);
+	        bundleUserInformation(myIntent);
+	        invokeActiveActivity(w, STARTTYPE_AUTO);
+    	}
     }
 }
