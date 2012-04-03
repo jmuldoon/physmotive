@@ -49,8 +49,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
     protected Button endActivityButton;
     protected TextView currentDistanceTextView;
     protected TextView currentSpeedTextView;
-    
-    
+
     private LocationDBM dblManager;
     private ActivityDBM dbaManager;
     private int userId, raceId, unitType, unitValue;
@@ -80,7 +79,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
         mapView.setBuiltInZoomControls(true);
         mapView.setStreetView(true);
 
-        
         currentSpeedTextView = (TextView) findViewById(R.id.currentSpeedTextView);
         currentDistanceTextView = (TextView) findViewById(R.id.currentDistanceTextView);
         endActivityButton = (Button) findViewById(R.id.endActivityButton);
@@ -127,8 +125,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // TODO: Get Final GPS pull save with Finished note.
         // dblManager.insert(raceId, lat, lng, spd, lts, "finished", userId);
         // TODO: get tTime to insert int seconds for total time.
-        dbaManager.update(raceId, userId, (int)tTime, (int)tDistance);
-        
+        dbaManager.open();
+        dbaManager.update(raceId, userId, (int) tTime, (int) tDistance);
+        dbaManager.close();
 
         // If ended early
         // TODO: make sure it saves current info
@@ -210,39 +209,42 @@ public class ActiveActivity extends MapActivity implements LocationListener
     {
         return false;
     }
-    
-    private void updateGeoPoints(GeoPoint p){
-    	prev = curr;
-    	curr = p;
+
+    private void updateGeoPoints(GeoPoint p)
+    {
+        prev = curr;
+        curr = p;
     }
-    
-    private void updateStatistics(Location loc){
-    	currentSpeedTextView.setText(String.valueOf(loc.getSpeed()));
-    	currentDistanceTextView.setText(String.valueOf(tDistance));
+
+    private void updateStatistics(Location loc)
+    {
+        currentSpeedTextView.setText(String.valueOf(loc.getSpeed()));
+        currentDistanceTextView.setText(String.valueOf(tDistance));
     }
-    
+
     @Override
     public void onLocationChanged(Location loc)
     {
-    	float[] result = new float[3];
+        float[] result = new float[3];
         mapController = mapView.getController();
-        
+
         point = new GeoPoint((int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6));
-        
-        
+
         // TODO: Make sure this logic works.
         // Update GeoPoints to keep current Stats
         updateGeoPoints(point);
-        
+
         // Update the distance for total Distance
-        if(prev != null){
-        	Location.distanceBetween(prev.getLatitudeE6()/1E6, prev.getLongitudeE6()/1E6, curr.getLatitudeE6()/1E6, curr.getLongitudeE6()/1E6, result);
-			tDistance += result[0];
+        if (prev != null)
+        {
+            Location.distanceBetween(prev.getLatitudeE6() / 1E6, prev.getLongitudeE6() / 1E6, curr.getLatitudeE6() / 1E6,
+                    curr.getLongitudeE6() / 1E6, result);
+            tDistance += result[0];
         }
-        
+
         // Update Stats on Page
-		updateStatistics(loc);
-        
+        updateStatistics(loc);
+
         mapController.animateTo(point);
         mapController.setZoom(20);
         mapView.invalidate();
@@ -251,8 +253,8 @@ public class ActiveActivity extends MapActivity implements LocationListener
         Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
 
         dblManager.open();
-        dblManager.insert(raceId, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()), String.valueOf(loc.getSpeed()),
-                (int) loc.getTime(), "", userId);
+        dblManager.insert(raceId, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()),
+                String.valueOf(loc.getSpeed()), (int) loc.getTime(), "", userId);
         dblManager.close();
     }
 
@@ -311,12 +313,12 @@ public class ActiveActivity extends MapActivity implements LocationListener
     public String currentTimeString()
     {
         long interval = System.nanoTime() - startTimePoint;
-        int seconds = (int) (interval / 1000000000);
-        int minutes = seconds / 60;
+        tTime = (int) (interval / 1000000000);
+        int minutes = ((int) tTime) / 60;
         int hours = minutes / 60;
 
         return String.format("%02d", hours) + ":" + String.format("%02d", minutes % 60) + ":"
-                + String.format("%02d", seconds % 60);
+                + String.format("%02d", tTime % 60);
     }
 
     public void setLabelText(String string)
@@ -335,17 +337,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
             }
         }
     };
-
-    public void stopButtonClick(View button)
-    {
-        if (applicationState == StopWatchStates.IN_COUNTING)
-        {
-            stopCounting();
-        } else if (applicationState == StopWatchStates.IN_WAITING)
-        {
-            startCounting();
-        }
-    }
 
     public class StopWatchStates
     {
