@@ -27,7 +27,7 @@
         android:layout_height="250dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/secondEditText"
+        android:layout_below="@+id/minuteEditText"
         android:contentDescription="@string/activityMenuGraph"
         android:src="@drawable/ic_launcher" />
 

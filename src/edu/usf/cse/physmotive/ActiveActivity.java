@@ -46,10 +46,10 @@ public class ActiveActivity extends MapActivity implements LocationListener
     protected GeoPoint point;
     protected LocationManager locationManager;
     protected List<Overlay> mapOverlays;
-    private LocationDBM dblManager;
-    private ActivityDBM dbaManager;
     protected Button endActivityButton;
 
+    private LocationDBM dblManager;
+    private ActivityDBM dbaManager;
     private int userId, raceId, unitType, unitValue;
     private long sTime = 0, cTime = 0, eTime = 0, tTime = 0, tDistance = 0;
     private String startType;
@@ -120,6 +120,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // if Complete:
         // TODO: Get Final GPS pull save with Finished note.
         // dblManager.insert(raceId, lat, lng, lts, "finished", userId);
+
+        // If ended early
+        // TODO: make sure it saves current info
     }
 
     private void setOnClickListeners()
@@ -176,6 +179,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
     public void onDestroy()
     {
         super.onDestroy();
+        onFinish();
     }
 
     @Override
