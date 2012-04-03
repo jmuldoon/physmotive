@@ -94,8 +94,7 @@ public class ActivityMenu extends Activity
     {
         Intent myIntent = new Intent(arg0.getContext(), ActiveActivity.class);
         // TODO: Insert New activity with activity details from screen
-        // TODO: activitySelection is the chosen activity
-        activityId = activityDBM.insert(userId);
+        activityId = activityDBM.insert(userId, activitySelection);
 
         bundleUserInformation(myIntent);
         myIntent.getExtras().putString(STARTTYPE, type);

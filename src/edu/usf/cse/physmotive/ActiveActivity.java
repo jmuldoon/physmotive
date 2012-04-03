@@ -6,12 +6,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.google.android.maps.GeoPoint;
@@ -43,9 +46,10 @@ public class ActiveActivity extends MapActivity implements LocationListener
     protected List<Overlay> mapOverlays;
     private LocationDBM dblManager;
     private ActivityDBM dbaManager;
-    protected Button manualStartButton;
-
+    protected Button endActivityButton;
+    
     private int userId, raceId, unitType, unitValue;
+    private long sTime = 0, cTime = 0, eTime = 0, tTime = 0, tDistance = 0;
     private String startType;
 
     @Override
@@ -68,7 +72,13 @@ public class ActiveActivity extends MapActivity implements LocationListener
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mapView.setStreetView(true);
-
+        
+        endActivityButton = (Button) findViewById(R.id.endActivityButton);
+        
+        
+        // On Clicks
+        setOnClickListeners();
+        
         // TODO: also give me time info etc!!
         // TODO: on update put the totalTime and totalDistance with the
         // activity.
@@ -106,6 +116,21 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // TODO: Get Final GPS pull save with Finished note.
         // dblManager.insert(raceId, lat, lng, lts, "finished", userId);
     }
+    
+    private void setOnClickListeners()
+    {
+    	endActivityButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v)
+            {
+                onButtonClickEndActivityButton(v);
+            }
+        });
+    }
+    
+    private void onButtonClickEndActivityButton(View v)
+    {
+    	finish();
+    }
 
     public class DialogButtonClickHandler implements DialogInterface.OnClickListener
     {
@@ -128,6 +153,8 @@ public class ActiveActivity extends MapActivity implements LocationListener
         dblManager.open();
         dblManager.insert(raceId, "0", "0", 0, "start", userId);
         dblManager.close();
+        
+        //TODO: Intitiate Timer. Set sTime (startTime)
     }
 
     public void addGeoPoint(GeoPoint p, String greeting, String message)
@@ -199,6 +226,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras)
     {
-        // TODO: Something
+        // DO Nothing
     }
 }

@@ -45,6 +45,15 @@
 	        android:layout_marginRight="20dp"
 	        android:text="@string/currentPaceValue"
 	        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	    <Button
+	        android:id="@+id/endActivityButton"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentRight="true"
+	        android:text="@string/endActivityButton" />
 	    
 	</RelativeLayout>  
 </RelativeLayout>

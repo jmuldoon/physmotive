@@ -16,6 +16,7 @@ public class ActivityDBM
     static final String TABLENAME = "activity";
     static final String ID = "_id";
     static final String DID = "diaryId";
+    static final String AID = "activityId";
     static final String TTIME = "totalTime";
     static final String TDISTANCE = "totalDistance";
     static final String CHECK = "checked";
@@ -50,11 +51,12 @@ public class ActivityDBM
         return db;
     }
 
-    public int insert(int usr)
+    public int insert(int usr, int activitySelection)
     {
         String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
         ContentValues values = new ContentValues();
 
+        values.put(AID, activitySelection);
         values.put(EUSR, usr);
         values.put(EDATE, timeStamp);
         values.put(UUSR, usr);

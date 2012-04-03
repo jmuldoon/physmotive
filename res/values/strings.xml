@@ -65,4 +65,5 @@
     <string name="raceDate">Race Date</string>
     <string name="minuteEditTextHint">min</string>
     <string name="secondEditTextHint">sec</string>
+    <string name="endActivityButton">End Activity</string>
 </resources>
