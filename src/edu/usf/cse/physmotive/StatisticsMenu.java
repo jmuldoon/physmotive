@@ -107,9 +107,7 @@ public class StatisticsMenu extends Activity
     
     private void updateStatistics(){
     	dbaManager.open();
-    	
     	statsActivity = new Statistics(dbaManager.getStatisticsList(userId, activityID, filterDatePicker.getDayOfMonth(), filterDatePicker.getMonth(), filterDatePicker.getYear()));
-    	
     	dbaManager.close();
     	
     	NumberOfRacesTextView.setText("Total Activities Completed: " + statsActivity.getTotalNumberActivities());
@@ -121,6 +119,7 @@ public class StatisticsMenu extends Activity
     	dbuManager.open();
     	statsUser = new Statistics(dbuManager.getList(userId));
     	dbuManager.close();
+    	
     	bmiTextView.setText("Body Mass Index: " + statsUser.getBMI());
     }
     
