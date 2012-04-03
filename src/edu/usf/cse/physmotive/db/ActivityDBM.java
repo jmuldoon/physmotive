@@ -78,17 +78,12 @@ public class ActivityDBM
         return db.update(TABLENAME, values, whereClause, null) > 0;
     }
 
-    public boolean delete(int id, int Usr)
+    public boolean delete(int id)
     {
-        ContentValues values = new ContentValues();
-        String whereClause = ID + "=" + id;
-        String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+        String whereClause = "race_id=" + id;
 
-        values.put(DEL, 1);
-        values.put(UUSR, Usr);
-        values.put(UDATE, timeStamp);
-
-        return db.update(TABLENAME, values, whereClause, null) > 0;
+        db.delete("locations", "race_id = " + id, null);
+        return db.delete(TABLENAME, whereClause, null) > 0;
     }
 
     public Cursor get(int id)
@@ -131,36 +126,42 @@ public class ActivityDBM
 
         return c;
     }
-    
-    public Cursor getStatisticsList(int userID, int activityID, int time){
-    	String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
-    	Date cDate = new Date(), date = new Date();
-    	Calendar cal = Calendar.getInstance();
-        
+
+    public Cursor getStatisticsList(int userID, int activityID, int time)
+    {
+        String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
+        Date cDate = new Date(), date = new Date();
+        Calendar cal = Calendar.getInstance();
+
         cal.setTime(date);
-        
-        switch(time){
-        	case 0: cal.add(Calendar.DAY_OF_MONTH, -1);
-        		break;
-        	case 1: cal.add(Calendar.WEEK_OF_YEAR, -1); 
-    			break;
-        	case 2: cal.add(Calendar.MONTH, -1); 
-    			break;
-        	case 3: cal.add(Calendar.YEAR, -1); 
-    			break;
-    		default: //NOP pull all dates
-    			break;
+
+        switch (time) {
+        case 0:
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            break;
+        case 1:
+            cal.add(Calendar.WEEK_OF_YEAR, -1);
+            break;
+        case 2:
+            cal.add(Calendar.MONTH, -1);
+            break;
+        case 3:
+            cal.add(Calendar.YEAR, -1);
+            break;
+        default: // NOP pull all dates
+            break;
         }
-        
+
         date.setTime(cal.getTime().getTime());
-    	
-        String whereClause = EUSR + " = " + userID + " and " + ID + " = " + activityID + " and " + date + " <= " + cDate;;
+
+        String whereClause = EUSR + " = " + userID + " and " + ID + " = " + activityID + " and " + date + " <= " + cDate;
+        ;
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
-    	
-    	return c;
+
+        return c;
     }
-    
+
     public Cursor getForExport(int id)
     {
         String whereClause = EUSR + "=" + id;
