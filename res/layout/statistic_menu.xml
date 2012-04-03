@@ -112,4 +112,13 @@
             android:text="Day" />
     </RadioGroup>
 
+    <TextView
+        android:id="@+id/BMITextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/progressChartImageView"
+        android:layout_below="@+id/NumberOfRacesTextView"
+        android:layout_marginTop="28dp"
+        android:text="#NAN" />
+
 </RelativeLayout>
