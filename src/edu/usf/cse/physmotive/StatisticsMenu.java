@@ -10,6 +10,7 @@ import android.widget.Gallery;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import edu.usf.cse.physmotive.db.ActivityDBM;
+import edu.usf.cse.physmotive.db.UserDBM;
 import edu.usf.cse.physmotive.logic.Statistics;
 import edu.usf.cse.physmotive.ui.ImageAdapter;
 
@@ -28,10 +29,13 @@ public class StatisticsMenu extends Activity
     protected TextView averageDistanceTextView;
     protected TextView totalTimeTextView;
     protected TextView totalDistanceTextView;
+    protected TextView bmiTextView;
     protected Statistics statsLocationAll;
-    protected Statistics statsLocation;
+    protected Statistics statsUser;
     protected Statistics statsActivity;
+    
     protected ActivityDBM dbaManager;
+    protected UserDBM dbuManager;
     
     
     private int userId;
@@ -59,6 +63,7 @@ public class StatisticsMenu extends Activity
         averageDistanceTextView = (TextView) findViewById(R.id.averageDistanceTextView);
         totalTimeTextView = (TextView) findViewById(R.id.totalTimeTextView);
         totalDistanceTextView = (TextView) findViewById(R.id.totalDistanceTextView);
+        bmiTextView = (TextView) findViewById(R.id.BMITextView);
         
         // Setting up Radio Buttons
         filterAllRadio= (RadioButton) findViewById(R.id.filterAllRadio);
@@ -68,6 +73,7 @@ public class StatisticsMenu extends Activity
         
         // Database Managers
         dbaManager = new ActivityDBM(this);
+        dbuManager = new UserDBM(this);
         
         // Update the Stats for All
         updateStatistics();
@@ -148,6 +154,11 @@ public class StatisticsMenu extends Activity
     	averageDistanceTextView.setText("Average Distance: " + statsActivity.getAverageDistance());
     	totalTimeTextView.setText("Total Time: " + statsActivity.getActivityTotalTime());
     	totalDistanceTextView.setText("Total Distance: " + statsActivity.getActivityTotalDistance());
+    	
+    	dbuManager.open();
+    	statsUser = new Statistics(dbuManager.getList(userId));
+    	dbuManager.close();
+    	bmiTextView.setText("Body Mass Index: " + statsUser.getBMI());
     }
     
     

@@ -150,7 +150,7 @@ public class UserDBM
 
     public Cursor getList(int userId)
     {
-        String[] columns = new String[] { ID, FIRSTNAME, LASTNAME, UDATE };
+        String[] columns = new String[] { ID, FIRSTNAME, LASTNAME, HEIGHT, WEIGHT, UDATE };
         String whereClause = DEL + " <> 1";
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();

@@ -11,8 +11,6 @@ import com.google.android.maps.GeoPoint;
 import android.database.Cursor;
 import android.location.Location;
 import android.util.Log;
-import edu.usf.cse.physmotive.db.LocationDBM;
-import edu.usf.cse.physmotive.db.UserDBM;
 
 public class Statistics {
 	static final String TABLENAME = "locations";
