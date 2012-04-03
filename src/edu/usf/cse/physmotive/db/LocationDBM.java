@@ -148,7 +148,7 @@ public class LocationDBM
 
         return c;
     }
-    
+       
     public Cursor getForExport(int id)
     {
         String whereClause = EUSR + "=" + id;

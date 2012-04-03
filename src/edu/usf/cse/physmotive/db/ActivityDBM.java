@@ -93,7 +93,7 @@ public class ActivityDBM
 
     public Cursor get(int id)
     {
-        String[] columns = new String[] { ID, EUSR, EDATE, UUSR, UDATE, DEL };
+        String[] columns = new String[] { ID, DID, EUSR, EDATE, UUSR, UDATE, DEL };
         String whereClause = ID + "=" + id;
         Cursor mCursor = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         if (mCursor != null)
