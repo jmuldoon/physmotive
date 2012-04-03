@@ -118,14 +118,29 @@ public class ActivityDBM
 
         return c;
     }
-    
+
     public Cursor getForExport(int id)
     {
         String whereClause = EUSR + "=" + id;
         Cursor c = db.query(TABLENAME, null, whereClause, null, null, null, null);
         c.moveToFirst();
-        
+
         return c;
     }
 
+    public boolean setChecked(int raceId, int diaryId, int userId, int value)
+    {
+        String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+        String whereClause;
+        ContentValues values = new ContentValues();
+
+        values.put(UUSR, userId);
+        values.put(UDATE, timeStamp);
+        values.put(DID, diaryId);
+        values.put(CHECK, value);
+
+        whereClause = ID + "=" + raceId;
+
+        return db.update(TABLENAME, values, whereClause, null) > 0;
+    }
 }

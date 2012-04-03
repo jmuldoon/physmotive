@@ -19,6 +19,7 @@ import edu.usf.cse.physmotive.db.UserDBM;
 
 public class DiaryView extends Activity
 {
+    static final String ID = "_id";
     static final String DIARYID = "diaryId";
     static final String USERID = "userId";
     static final String NAME = "name";
@@ -39,6 +40,7 @@ public class DiaryView extends Activity
     protected Button cancelButton;
     protected Button saveButton;
     private Cursor cur;
+    private Cursor checkCur;
     protected boolean[] _selections;
 
     private int diaryId;
@@ -115,11 +117,47 @@ public class DiaryView extends Activity
                     @Override
                     public void onClick(DialogInterface dialog, int clicked, boolean selected)
                     {
-                        _selections[clicked] = selected;
-                        Log.d("MultiSelect", cur.moveToPosition(clicked) + " selected: " + selected);
+                        // activityDBM.open();
+                        // AlertDialog AD = (AlertDialog) dialog;
+                        // checkCur = (Cursor)
+                        // AD.getListView().getItemAtPosition(clicked);
+                        // Toast.makeText(DiaryView.this,
+                        // Integer.toString(checkCur.getInt(checkCur.getColumnIndex(ID))),
+                        // Toast.LENGTH_SHORT).show();
+                        // activityDBM.setChecked(checkCur.getInt(checkCur.getColumnIndex(ID)),
+                        // diaryId, userId, 1);
+                        // activityDBM.close();
+                        // // _selections[clicked] = selected;
+                        // Log.d("MultiSelect", cur.moveToPosition(clicked) +
+                        // " selected: " + selected);
                     }
                 }).setPositiveButton("OK", new DialogButtonClickHandler()).create();
     }
+
+    // @Override
+    // protected void onPrepareDialog(int id, Dialog dialog)
+    // {
+    // dialog = new AlertDialog.Builder(this).setTitle("Races")
+    // .setMultiChoiceItems(cur, "checked", "entryDate", new
+    // DialogInterface.OnMultiChoiceClickListener() {
+    // @Override
+    // public void onClick(DialogInterface dialog, int clicked, boolean
+    // selected)
+    // {
+    // AlertDialog AD = (AlertDialog) dialog;
+    // checkCur = (Cursor) AD.getListView().getItemAtPosition(clicked);
+    // Toast.makeText(DiaryView.this,
+    // Integer.toString(checkCur.getInt(checkCur.getColumnIndex(ID))),
+    // Toast.LENGTH_SHORT).show();
+    // activityDBM.open();
+    // activityDBM.setChecked(clicked, diaryId, userId, 1);
+    // activityDBM.close();
+    // // _selections[clicked] = selected;
+    // Log.d("MultiSelect", cur.moveToPosition(clicked) + " selected: " +
+    // selected);
+    // }
+    // }).setPositiveButton("OK", new DialogButtonClickHandler()).create();
+    // }
 
     public class DialogButtonClickHandler implements DialogInterface.OnClickListener
     {
@@ -132,7 +170,6 @@ public class DiaryView extends Activity
                 {
                     Log.d("MultiSelectOK", cur.moveToPosition(i) + " selected: " + _selections[i]);
                 }
-                cur.close();
                 break;
             }
         }
