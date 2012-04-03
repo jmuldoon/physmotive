@@ -235,9 +235,11 @@ public class ActiveActivity extends MapActivity implements LocationListener
         updateGeoPoints(point);
         
         // Update the distance for total Distance
-        Location.distanceBetween(prev.getLatitudeE6()/1E6, prev.getLongitudeE6()/1E6, curr.getLatitudeE6()/1E6, curr.getLongitudeE6()/1E6, result);
-		tDistance += result[0];
-		
+        if(prev != null){
+        	Location.distanceBetween(prev.getLatitudeE6()/1E6, prev.getLongitudeE6()/1E6, curr.getLatitudeE6()/1E6, curr.getLongitudeE6()/1E6, result);
+			tDistance += result[0];
+        }
+        
         // Update Stats on Page
 		updateStatistics(loc);
         
