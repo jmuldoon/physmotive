@@ -228,9 +228,7 @@ public class ActivityList extends ListActivity
     private void delete(int itemId, int usr)
     {
         activityDBM.open();
-        activityDBM.delete(itemId, usr);
-        // TODO: FIx location crash on delete
-        locationDBM.delete(itemId, usr);
+        activityDBM.delete(itemId);
         activityDBM.close();
         updateList();
     }

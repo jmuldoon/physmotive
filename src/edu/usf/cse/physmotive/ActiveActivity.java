@@ -32,6 +32,8 @@ public class ActiveActivity extends MapActivity implements LocationListener
     public static final String USERID = "userId";
     public static final String STARTTYPE_MAN = "manual";
     public static final String STARTTYPE_AUTO = "automatic";
+    public static final int UNITTYPE_TIME = 0;
+    public static final int UNITYPE_DIST = 1;
 
     protected MapView mapView;
     protected MapController mapController;
@@ -42,8 +44,8 @@ public class ActiveActivity extends MapActivity implements LocationListener
     private LocationDBM dblManager;
     private ActivityDBM dbaManager;
     protected Button manualStartButton;
-    
-    private int userID, raceID;
+
+    private int userId, raceId, unitType, unitValue;
     private String startType;
 
     @Override
@@ -54,42 +56,55 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
         // pulling in bundle information
         Bundle b = getIntent().getExtras();
-        userID = b.getInt(USERID);
+        userId = b.getInt(USERID);
+        raceId = b.getInt("activityId");
         startType = b.getString("startType");
+        unitType = b.getInt("unitType");
+        unitValue = b.getInt("unitValue");
 
         dblManager = new LocationDBM(this);
         dbaManager = new ActivityDBM(this);
-
-        dbaManager.open();
-        raceID = dbaManager.insert(userID);
-        dbaManager.close();
 
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mapView.setStreetView(true);
 
         // TODO: also give me time info etc!!
-        // TODO: on update put the totalTime and totalDistance with the activity.
+        // TODO: on update put the totalTime and totalDistance with the
+        // activity.
 
-        //Checks from previous screen if it starts manually or automatically.
-        //if automatic it will just call for location services, otherwise
-        //a dialog box will pop-up and wait till ready before starting them.
-        if (startType.equals(STARTTYPE_MAN)){
-        	showDialog(0);
-        } 
-        else {
-        	initiateLocationServices();
+        // Checks from previous screen if it starts manually or automatically.
+        // if automatic it will just call for location services, otherwise
+        // a dialog box will pop-up and wait till ready before starting them.
+        if (startType.equals(STARTTYPE_MAN))
+        {
+            showDialog(0);
+        } else
+        {
+            initiateLocationServices();
         }
 
         mapOverlays = mapView.getOverlays();
         Drawable drawable = this.getResources().getDrawable(R.drawable.androidmarker);
         itemizedOverlay = new MapItemizedOverlay(drawable, this);
     }
-    
+
     @Override
-    protected Dialog onCreateDialog(int id){
-    	return new AlertDialog.Builder(this).setTitle("Manual Start")
+    protected Dialog onCreateDialog(int id)
+    {
+        return new AlertDialog.Builder(this).setTitle("Manual Start")
                 .setPositiveButton("Ready!", new DialogButtonClickHandler()).create();
+    }
+
+    private void onFinish()
+    {
+        // If not complete
+        // TODO: delete race.
+        // Only delete(raceId) needs be called.
+
+        // if Complete:
+        // TODO: Get Final GPS pull save with Finished note.
+        // dblManager.insert(raceId, lat, lng, lts, "finished", userId);
     }
 
     public class DialogButtonClickHandler implements DialogInterface.OnClickListener
@@ -103,15 +118,19 @@ public class ActiveActivity extends MapActivity implements LocationListener
             }
         }
     }
-    
-    private void initiateLocationServices(){
-    	// Use the LocationManager class to obtain GPS locations.
+
+    private void initiateLocationServices()
+    {
+        // Use the LocationManager class to obtain GPS locations.
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 3, this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 3, this);
+        dblManager.open();
+        dblManager.insert(raceId, "0", "0", 0, "start", userId);
+        dblManager.close();
     }
 
-	public void addGeoPoint(GeoPoint p, String greeting, String message)
+    public void addGeoPoint(GeoPoint p, String greeting, String message)
     {
         OverlayItem overlayitem = new OverlayItem(p, greeting, message);
 
@@ -123,9 +142,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
     public void onDestroy()
     {
         super.onDestroy();
-        dblManager.open();
-        dblManager.delete(raceID, userID);
-        dblManager.close();
     }
 
     @Override
@@ -163,8 +179,8 @@ public class ActiveActivity extends MapActivity implements LocationListener
         Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
 
         dblManager.open();
-        dblManager.insert(raceID, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()),
-                (int) loc.getTime(), userID);
+        dblManager.insert(raceId, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()),
+                (int) loc.getTime(), "", userId);
         dblManager.close();
     }
 

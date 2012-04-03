@@ -18,6 +18,7 @@ public class LocationDBM
     static final String LATITUDE = "lat";
     static final String LONGITUDE = "lng";
     static final String LTS = "locationTimeStamp";
+    static final String NOTES = "notes";
     static final String EUSR = "entryUsr";
     static final String EDATE = "entryDate";
     static final String UUSR = "updateUsr";
@@ -49,7 +50,7 @@ public class LocationDBM
     }
 
     // TODO: add column for status text.
-    public int insert(int raceID, String lat, String lng, int tmStmp, long usr)
+    public int insert(int raceID, String lat, String lng, int tmStmp, String notes, int usr)
     {
         String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
         ContentValues values = new ContentValues();
@@ -58,6 +59,7 @@ public class LocationDBM
         values.put(LATITUDE, lat);
         values.put(LONGITUDE, lng);
         values.put(LTS, Integer.toString(tmStmp));
+        values.put(NOTES, notes);
         values.put(EUSR, usr);
         values.put(EDATE, timeStamp);
         values.put(UUSR, usr);
@@ -66,19 +68,14 @@ public class LocationDBM
         return (int) db.insert(TABLENAME, null, values);
     }
 
-    public boolean delete(long raceID, long usr)
+    public int delete(int raceID)
     {
-        ContentValues values = new ContentValues();
         String whereClause = FKEY + "=" + raceID;
-        String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 
-        values.put(UUSR, usr);
-        values.put(UDATE, timeStamp);
-
-        return db.update(TABLENAME, values, whereClause, null) > 0;
+        return db.delete(TABLENAME, whereClause, null);
     }
 
-    public Cursor get(long id)
+    public Cursor get(int id)
     {
         String[] columns = new String[] { ID, EUSR, EDATE, UUSR, UDATE };
         String whereClause = ID + "=" + id;
@@ -89,72 +86,80 @@ public class LocationDBM
         return mCursor;
     }
 
-    public Cursor getList(long raceID, int time)
+    public Cursor getList(int raceID, int time)
     {
-    	String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS };
-    	Date cDate = new Date(), date = new Date();
-    	Calendar cal = Calendar.getInstance();
-        
+        String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS };
+        Date cDate = new Date(), date = new Date();
+        Calendar cal = Calendar.getInstance();
+
         cal.setTime(date);
-        
-        switch(time){
-        	case 0: cal.add(Calendar.DAY_OF_MONTH, -1);
-        		break;
-        	case 1: cal.add(Calendar.WEEK_OF_YEAR, -1); 
-    			break;
-        	case 2: cal.add(Calendar.MONTH, -1); 
-    			break;
-        	case 3: cal.add(Calendar.YEAR, -1); 
-    			break;
-    		default: //NOP pull all dates
-    			break;
+
+        switch (time) {
+        case 0:
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            break;
+        case 1:
+            cal.add(Calendar.WEEK_OF_YEAR, -1);
+            break;
+        case 2:
+            cal.add(Calendar.MONTH, -1);
+            break;
+        case 3:
+            cal.add(Calendar.YEAR, -1);
+            break;
+        default: // NOP pull all dates
+            break;
         }
-        
+
         date.setTime(cal.getTime().getTime());
-        
+
         String whereClause = FKEY + "=" + raceID + " and " + date + " <= " + cDate;
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
 
         return c;
     }
-    
-    public Cursor getAllList(long userID, int time)
+
+    public Cursor getAllList(int userID, int time)
     {
-    	String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS };
-    	Date cDate = new Date(), date = new Date();
-    	Calendar cal = Calendar.getInstance();
-        
+        String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS };
+        Date cDate = new Date(), date = new Date();
+        Calendar cal = Calendar.getInstance();
+
         cal.setTime(date);
-        
-        switch(time){
-        	case 0: cal.add(Calendar.DAY_OF_MONTH, -1);
-        		break;
-        	case 1: cal.add(Calendar.WEEK_OF_YEAR, -1); 
-    			break;
-        	case 2: cal.add(Calendar.MONTH, -1); 
-    			break;
-        	case 3: cal.add(Calendar.YEAR, -1); 
-    			break;
-    		default: //NOP pull all dates
-    			break;
+
+        switch (time) {
+        case 0:
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+            break;
+        case 1:
+            cal.add(Calendar.WEEK_OF_YEAR, -1);
+            break;
+        case 2:
+            cal.add(Calendar.MONTH, -1);
+            break;
+        case 3:
+            cal.add(Calendar.YEAR, -1);
+            break;
+        default: // NOP pull all dates
+            break;
         }
-        
+
         date.setTime(cal.getTime().getTime());
-        
+
         String whereClause = EUSR + "=" + userID + " and " + date + " <= " + cDate;
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
 
         return c;
     }
-    
+
     public Cursor getForExport(int id)
     {
         String whereClause = EUSR + "=" + id;
         Cursor c = db.query(TABLENAME, null, whereClause, null, null, null, null);
         c.moveToFirst();
-        
+
         return c;
     }
 }
