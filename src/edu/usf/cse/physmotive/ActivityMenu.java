@@ -10,7 +10,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Gallery;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.ui.ImageAdapter;
@@ -36,6 +35,7 @@ public class ActivityMenu extends Activity
     private ActivityDBM activityDBM;
 
     private int userId, activityId, activitySelection = 0;
+    private String startType;
 
     // Called when the activity is first created.
     @Override
@@ -47,6 +47,8 @@ public class ActivityMenu extends Activity
         // pulling in bundle information
         Bundle b = getIntent().getExtras();
         userId = b.getInt(USERID);
+
+        activityDBM = new ActivityDBM(this);
 
         // Connect interface elements to properties
         manualButton = (Button) findViewById(R.id.manualButton);
@@ -87,18 +89,20 @@ public class ActivityMenu extends Activity
         b.putInt(UNITTYPE, unitType);
         b.putInt(UNITVALUE, unitValue);
         b.putInt(ACTIVITYID, activityId);
+        b.putString(STARTTYPE, startType);
         mIntent.putExtras(b);
     }
 
-    private void invokeActiveActivity(View arg0, String type)
+    private void invokeActiveActivity(View arg0)
     {
         Intent myIntent = new Intent(arg0.getContext(), ActiveActivity.class);
         // TODO: Insert New activity with activity details from screen
+        activityDBM.open();
         activityId = activityDBM.insert(userId, activitySelection);
+        activityDBM.close();
 
         bundleUserInformation(myIntent);
-        myIntent.getExtras().putString(STARTTYPE, type);
-        startActivityForResult(myIntent, 0);
+        startActivity(myIntent);
     }
 
     private void setOnClickListeners()
@@ -118,7 +122,7 @@ public class ActivityMenu extends Activity
         gallery.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v, int position, long id)
             {
-            	activitySelection = position;
+                activitySelection = position;
             }
         });
         distanceOrTimeToggleButton.setOnClickListener(new OnClickListener() {
@@ -143,13 +147,15 @@ public class ActivityMenu extends Activity
     {
         Intent myIntent = new Intent(w.getContext(), ActiveActivity.class);
         bundleUserInformation(myIntent);
-        invokeActiveActivity(w, STARTTYPE_MAN);
+        startType = STARTTYPE_MAN;
+        invokeActiveActivity(w);
     }
 
     private void onButtonClickAutomaticStart(View w)
     {
         Intent myIntent = new Intent(w.getContext(), ActiveActivity.class);
         bundleUserInformation(myIntent);
-        invokeActiveActivity(w, STARTTYPE_AUTO);
+        startType = STARTTYPE_AUTO;
+        invokeActiveActivity(w);
     }
 }

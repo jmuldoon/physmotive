@@ -1,59 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
-    android:layout_width="fill_parent" 
-    android:layout_height="fill_parent">
-	
-	<com.google.android.maps.MapView
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/mapview"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:clickable="true"
-	    android:apiKey="0QzhC0GfhE7GwK_DHgz8ugNdC8OETQ8ej_tL7bg"
-	/>
-	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/relativeLayout1"
-	    android:layout_width="match_parent"
-		android:layout_height="match_parent" >
-	
-	    <ProgressBar
-	        android:id="@+id/acitvityProgressBar"
-	        style="?android:attr/progressBarStyleHorizontal"
-	        android:layout_width="wrap_content"
-	        android:layout_height="50dp"
-	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentRight="true"
-	        android:layout_alignParentTop="true" />
-	
-	    <TextView
-	        android:id="@+id/currentSpeedTextView"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_below="@+id/acitvityProgressBar"
-	        android:layout_marginTop="22dp"
-	        android:text="@string/currentSpeedValue"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	    <TextView
-	        android:id="@+id/currentPaceTextView"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignBaseline="@+id/currentSpeedTextView"
-	        android:layout_alignBottom="@+id/currentSpeedTextView"
-	        android:layout_alignParentRight="true"
-	        android:layout_marginRight="20dp"
-	        android:text="@string/currentPaceValue"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-	    <Button
-	        android:id="@+id/endActivityButton"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentBottom="true"
-	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentRight="true"
-	        android:text="@string/endActivityButton" />
-	    
-	</RelativeLayout>  
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <com.google.android.maps.MapView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:apiKey="0QzhC0GfhE7GwK_DHgz8ugNdC8OETQ8ej_tL7bg"
+        android:clickable="true" />
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ProgressBar
+            android:id="@+id/acitvityProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
+
+        <TextView
+            android:id="@+id/currentSpeedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/acitvityProgressBar"
+            android:layout_marginTop="22dp"
+            android:text="@string/currentSpeedValue"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/timeTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@+id/currentSpeedTextView"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/currentPaceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/currentSpeedTextView"
+            android:layout_alignBottom="@+id/currentSpeedTextView"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:text="@string/currentPaceValue"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/endActivityButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/endActivityButton" />
+    </RelativeLayout>
+
 </RelativeLayout>

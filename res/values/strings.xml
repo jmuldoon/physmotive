@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">PhysMotive</string>
     <string name="btnAddDiary">Add Diary Entry</string>
     <string name="btnAddActivity">Add Activity</string>
@@ -66,4 +67,6 @@
     <string name="minuteEditTextHint">min</string>
     <string name="secondEditTextHint">sec</string>
     <string name="endActivityButton">End Activity</string>
+    <string name="time">00 : 00 : 00</string>
+
 </resources>

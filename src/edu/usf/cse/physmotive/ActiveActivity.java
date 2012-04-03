@@ -6,16 +6,18 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -47,7 +49,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
     private LocationDBM dblManager;
     private ActivityDBM dbaManager;
     protected Button endActivityButton;
-    
+
     private int userId, raceId, unitType, unitValue;
     private long sTime = 0, cTime = 0, eTime = 0, tTime = 0, tDistance = 0;
     private String startType;
@@ -66,19 +68,21 @@ public class ActiveActivity extends MapActivity implements LocationListener
         unitType = b.getInt("unitType");
         unitValue = b.getInt("unitValue");
 
+        Toast.makeText(this, startType, Toast.LENGTH_SHORT).show();
+
         dblManager = new LocationDBM(this);
         dbaManager = new ActivityDBM(this);
 
         mapView = (MapView) findViewById(R.id.mapview);
         mapView.setBuiltInZoomControls(true);
         mapView.setStreetView(true);
-        
+
         endActivityButton = (Button) findViewById(R.id.endActivityButton);
-        
-        
+        afterInit();
+
         // On Clicks
         setOnClickListeners();
-        
+
         // TODO: also give me time info etc!!
         // TODO: on update put the totalTime and totalDistance with the
         // activity.
@@ -108,6 +112,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
     private void onFinish()
     {
+        stopCounting();
         // If not complete
         // TODO: delete race.
         // Only delete(raceId) needs be called.
@@ -116,20 +121,20 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // TODO: Get Final GPS pull save with Finished note.
         // dblManager.insert(raceId, lat, lng, lts, "finished", userId);
     }
-    
+
     private void setOnClickListeners()
     {
-    	endActivityButton.setOnClickListener(new OnClickListener() {
+        endActivityButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v)
             {
                 onButtonClickEndActivityButton(v);
             }
         });
     }
-    
+
     private void onButtonClickEndActivityButton(View v)
     {
-    	finish();
+        finish();
     }
 
     public class DialogButtonClickHandler implements DialogInterface.OnClickListener
@@ -153,8 +158,10 @@ public class ActiveActivity extends MapActivity implements LocationListener
         dblManager.open();
         dblManager.insert(raceId, "0", "0", 0, "start", userId);
         dblManager.close();
-        
-        //TODO: Intitiate Timer. Set sTime (startTime)
+
+        // TODO: Intitiate Timer. Set sTime (startTime)
+        startCounting();
+
     }
 
     public void addGeoPoint(GeoPoint p, String greeting, String message)
@@ -228,4 +235,86 @@ public class ActiveActivity extends MapActivity implements LocationListener
     {
         // DO Nothing
     }
+
+    // //////////////////////////////////
+    // This is about to be really ugly //
+    // This is the start of the timer. //
+    // //////////////////////////////////
+    protected TextView time_tv;
+    private long startTimePoint;
+    private static long DELAY = 100;
+    private String applicationState;
+
+    private void afterInit()
+    {
+        time_tv = (TextView) findViewById(R.id.timeTextView);
+        setLabelText("00:00:00");
+        startTimePoint = Long.valueOf(0);
+        stopCounting();
+    }
+
+    private Handler tasksHandler = new Handler();
+
+    public void startCounting()
+    {
+        applicationState = StopWatchStates.IN_COUNTING;
+
+        tasksHandler.removeCallbacks(timeTickRunnable);
+        tasksHandler.postDelayed(timeTickRunnable, DELAY);
+
+        startTimePoint = System.nanoTime();
+    }
+
+    public void stopCounting()
+    {
+        applicationState = StopWatchStates.IN_WAITING;
+    }
+
+    public String currentTimeString()
+    {
+        long interval = System.nanoTime() - startTimePoint;
+        int seconds = (int) (interval / 1000000000);
+        int minutes = seconds / 60;
+        int hours = minutes / 60;
+
+        return String.format("%02d", hours) + " : " + String.format("%02d", minutes % 60) + " : "
+                + String.format("%02d", seconds % 60);
+    }
+
+    public void setLabelText(String string)
+    {
+        // Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
+        time_tv.setText(string);
+    }
+
+    private Runnable timeTickRunnable = new Runnable() {
+        public void run()
+        {
+            if (applicationState == StopWatchStates.IN_COUNTING)
+            {
+                setLabelText(currentTimeString());
+                tasksHandler.postDelayed(timeTickRunnable, DELAY);
+            }
+        }
+    };
+
+    public void stopButtonClick(View button)
+    {
+        if (applicationState == StopWatchStates.IN_COUNTING)
+        {
+            stopCounting();
+        } else if (applicationState == StopWatchStates.IN_WAITING)
+        {
+            startCounting();
+        }
+    }
+
+    public class StopWatchStates
+    {
+        public static final String IN_COUNTING = "StopWatchStates.IN_COUNTING";
+        public static final String IN_WAITING = "StopWatchStates.IN_WAITING";
+    }
+    // ///////////////////////////////
+    // this is the end of the timer //
+    // ///////////////////////////////
 }
