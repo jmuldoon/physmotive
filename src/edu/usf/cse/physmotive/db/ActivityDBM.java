@@ -136,7 +136,8 @@ public class ActivityDBM
 
         // this is for past week.
         String whereClause = EUSR + " = " + userID + " and " + ID + " = " + activityID + " and strftime('%s', " + EDATE
-                + ") >= strftime('%s', date('now', '-7 day'))";
+                + ") >= strftime('%s', date('" + Integer.toString(month) + "/" + Integer.toString(day) + "/"
+                + Integer.toString(year) + "'))";
 
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
