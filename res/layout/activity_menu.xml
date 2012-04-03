@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
-
+
     <ToggleButton
         android:id="@+id/distanceOrTimeToggleButton"
         android:layout_width="50dp"
@@ -20,33 +20,16 @@
         android:layout_below="@+id/activityGallery"
         android:textOff="@string/distanceOrTimeToggleButtonOff"
         android:textOn="@string/distanceOrTimeToggleButtonOn" />
-
-    <SeekBar
-        android:id="@+id/distanceOrTimeSeekBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/activityGallery"
-        android:layout_toRightOf="@+id/distanceOrTimeToggleButton" />
-
+
     <ImageView
         android:id="@+id/distanceOrTimeChartImageView"
         android:layout_width="wrap_content"
         android:layout_height="250dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/distanceOrTimeToggleButton"
+        android:layout_below="@+id/secondEditText"
         android:contentDescription="@string/activityMenuGraph"
         android:src="@drawable/ic_launcher" />
-
-    <TextView
-        android:id="@+id/selectedDistanceOrTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/distanceOrTimeSeekBar"
-        android:layout_marginRight="78dp"
-        android:text="@string/selectedDistanceOrTimeValue" />
 
     <Button
         android:id="@+id/manualButton"
@@ -54,16 +37,38 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/distanceOrTimeChartImageView"
-        android:layout_marginTop="24dp"
         android:text="@string/manualButtonText" />
 
     <Button
         android:id="@+id/automaticButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/manualButton"
-        android:layout_alignBottom="@+id/manualButton"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/distanceOrTimeChartImageView"
         android:text="@string/automaticButtonText" />
+
+    <EditText
+        android:id="@+id/minuteEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/distanceOrTimeToggleButton"
+        android:layout_toLeftOf="@+id/automaticButton"
+        android:layout_toRightOf="@+id/distanceOrTimeToggleButton"
+        android:layout_below="@+id/activityGallery"
+        android:hint="@string/minuteEditTextHint"
+        android:ems="10"
+        android:inputType="number" />
+    <EditText
+        android:id="@+id/secondEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/minuteEditText"
+        android:layout_alignBottom="@+id/minuteEditText"
+        android:layout_below="@+id/activityGallery"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/minuteEditText"
+        android:hint="@string/secondEditTextHint"
+        android:ems="10"
+        android:inputType="number" />
 
 </RelativeLayout>

@@ -66,6 +66,9 @@ public class StatisticsMenu extends Activity
         filterWeekRadio= (RadioButton) findViewById(R.id.filterWeekRadio);
         filterDayRadio= (RadioButton) findViewById(R.id.filterDayRadio);
         
+        // Database Managers
+        dbaManager = new ActivityDBM(this);
+        
         // Update the Stats for All
         updateStatistics();
         

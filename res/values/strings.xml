@@ -63,4 +63,6 @@
     <string name="unitToggleButtonValueOff">Metric</string>
     <string name="dateFilterTextViewValue">#DATE</string>
     <string name="raceDate">Race Date</string>
+    <string name="minuteEditTextHint">min</string>
+    <string name="secondEditTextHint">sec</string>
 </resources>
