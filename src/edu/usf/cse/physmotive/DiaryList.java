@@ -1,22 +1,28 @@
 package edu.usf.cse.physmotive;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 import edu.usf.cse.physmotive.db.DiaryDBM;
+import edu.usf.cse.physmotive.db.UserDBM;
 
 public class DiaryList extends ListActivity
 {
@@ -29,13 +35,18 @@ public class DiaryList extends ListActivity
     static final String SELECT = "Select";
     static final String EDIT = "Edit";
     static final String DELETE = "Delete";
+    static final String WEIGHT = "weight";
+    static final String HEIGHT = "height";
+    static final String AGE = "age";
+    static final String GENDER = "gender";
 
     private int userId;
     private int diaryId;
     protected Button addDiary;
     protected ListView diary_lv;
     private DiaryDBM diaryDBM;
-    private Cursor cursor;
+    private UserDBM userDBM;
+    private Cursor cursor, userCur;
     private ListAdapter listAdapter;
 
     @Override
@@ -46,6 +57,7 @@ public class DiaryList extends ListActivity
         retrieveBundleInfo();
 
         diaryDBM = new DiaryDBM(this);
+        userDBM = new UserDBM(this);
         diary_lv = (ListView) this.getListView();
 
         setupButton();
@@ -75,9 +87,72 @@ public class DiaryList extends ListActivity
         addDiary.setOnClickListener(new OnClickListener() {
             public void onClick(View v)
             {
-                insert("Temp Entry", 120, 185, 25, 1, "This is a note.", userId);
+                showDialog(0);
             }
         });
+    }
+
+    // //////////////////////////////////////////////
+    // This is the beginning of the dialog windows //
+    // //////////////////////////////////////////////
+    @Override
+    protected Dialog onCreateDialog(int i, Bundle args)
+    {
+        LayoutInflater factory = LayoutInflater.from(this);
+        switch (i) {
+        // This case is for the New User Dialog
+        case 0:
+            // Setup of the view for the dialog
+            final View textEntryView = factory.inflate(R.layout.new_diary, null);
+
+            return new AlertDialog.Builder(DiaryList.this)
+                    // .setIconAttribute(android.R.attr.alertDialogIcon)
+                    .setTitle(R.string.newUserTitle).setView(textEntryView)
+                    .setPositiveButton(R.string.btnSave, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton)
+                        {
+                            // Gets text fields from dialog
+                            EditText diaryName = (EditText) textEntryView.findViewById(R.id.diaryName);
+                            diaryName.requestFocus();
+
+                            // Verifies the fields have information in
+                            // them
+                            if (diaryName.getText().toString().equals("")
+                                    || diaryName.getText().toString().trim().equals(""))
+                            {
+                                Toast.makeText(DiaryList.this, "Diary must have a name.", Toast.LENGTH_LONG).show();
+                                diaryName.setText("");
+                            } else
+                            {
+                                Toast.makeText(DiaryList.this, "The diary is saving...", Toast.LENGTH_SHORT).show();
+                                diaryDBM.open();
+                                userDBM.open();
+                                userCur = userDBM.get(userId);
+                                userDBM.close();
+                                startManagingCursor(userCur);
+                                diaryDBM.insert(diaryName.getText().toString(),
+                                        userCur.getInt(userCur.getColumnIndex(HEIGHT)),
+                                        userCur.getInt(userCur.getColumnIndex(WEIGHT)),
+                                        userCur.getInt(userCur.getColumnIndex(AGE)),
+                                        userCur.getInt(userCur.getColumnIndex(GENDER)), "", userId);
+                                diaryDBM.close();
+                                diaryName.setText("");
+                                updateList();
+                            }
+                        }
+                    }).setNegativeButton(R.string.btnCancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton)
+                        {
+                            // clears the fields and closes the dialog
+                            EditText diaryName = (EditText) textEntryView.findViewById(R.id.diaryName);
+                            diaryName.requestFocus();
+                            diaryName.setText("");
+                        }
+                    }).create();
+        default:
+            break;
+        }
+        return null;
     }
 
     // ////////////////////////////////////////
