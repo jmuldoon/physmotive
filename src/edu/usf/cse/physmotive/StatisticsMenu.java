@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.DatePicker;
 import android.widget.Gallery;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -20,10 +21,7 @@ public class StatisticsMenu extends Activity
     
     
     protected Gallery gallery;
-    protected RadioButton filterAllRadio;
-    protected RadioButton  filterMonthRadio;
-    protected RadioButton  filterWeekRadio;
-    protected RadioButton  filterDayRadio;
+    protected DatePicker filterDatePicker;
     protected TextView NumberOfRacesTextView;
     protected TextView averageTimeTextView;
     protected TextView averageDistanceTextView;
@@ -66,10 +64,7 @@ public class StatisticsMenu extends Activity
         bmiTextView = (TextView) findViewById(R.id.BMITextView);
         
         // Setting up Radio Buttons
-        filterAllRadio= (RadioButton) findViewById(R.id.filterAllRadio);
-        filterMonthRadio= (RadioButton) findViewById(R.id.filterMonthRadio);
-        filterWeekRadio= (RadioButton) findViewById(R.id.filterWeekRadio);
-        filterDayRadio= (RadioButton) findViewById(R.id.filterDayRadio);
+        filterDatePicker= (DatePicker) findViewById(R.id.filterDatePicker);
         
         // Database Managers
         dbaManager = new ActivityDBM(this);
@@ -95,25 +90,7 @@ public class StatisticsMenu extends Activity
     
     private void setOnClickListeners()
     {
-    	filterAllRadio.setOnClickListener(new OnClickListener() {
-            public void onClick(View v)
-            {
-            	updateStatistics();
-            }
-        });
-    	filterMonthRadio.setOnClickListener(new OnClickListener() {
-            public void onClick(View v)
-            {
-            	updateStatistics();
-            }
-        });
-    	filterWeekRadio.setOnClickListener(new OnClickListener() {
-            public void onClick(View v)
-            {
-            	updateStatistics();
-            }
-        });
-    	filterDayRadio.setOnClickListener(new OnClickListener() {
+    	filterDatePicker.setOnClickListener(new OnClickListener() {
             public void onClick(View v)
             {
             	updateStatistics();
@@ -129,23 +106,9 @@ public class StatisticsMenu extends Activity
     }
     
     private void updateStatistics(){
-    	int time = -1;
-    	
     	dbaManager.open();
     	
-    	if (filterDayRadio.isChecked()){
-    		time = 0;
-    	}
-    	else if(filterWeekRadio.isChecked()){
-    		time = 1;
-    	}
-    	else if(filterMonthRadio.isChecked()){
-    		time = 2;
-    	}
-    	else
-    		time = -1;
-    	
-    	statsActivity = new Statistics(dbaManager.getStatisticsList(userId, activityID, time));
+    	statsActivity = new Statistics(dbaManager.getStatisticsList(userId, activityID, filterDatePicker.getDayOfMonth(), filterDatePicker.getMonth(), filterDatePicker.getYear()));
     	
     	dbaManager.close();
     	

@@ -125,10 +125,10 @@ public class ActivityView extends MapActivity implements LocationListener
 
     private void updateStatistics()
     {
-        int time = -1; // -1 defaults for all
+        int day = -1, month = -1, year = -1; // -1 defaults for all
         locationDBM.open();
 
-        locationCursor = locationDBM.getList(activityId, time);
+        locationCursor = locationDBM.getList(activityId, day, month, year);
         statsLocation = new Statistics(locationCursor);
 
         locationDBM.close();

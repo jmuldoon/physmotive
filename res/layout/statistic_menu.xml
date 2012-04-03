@@ -78,40 +78,6 @@
         android:layout_marginTop="27dp"
         android:text="Date Filter" />
 
-    <RadioGroup
-        android:id="@+id/filterRadioGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/filterTextView"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/filterAllRadio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="All" />
-
-        <RadioButton
-            android:id="@+id/filterMonthRadio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Month" />
-
-        <RadioButton
-            android:id="@+id/filterWeekRadio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Week" />
-
-        <RadioButton
-            android:id="@+id/filterDayRadio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Day" />
-    </RadioGroup>
-
     <TextView
         android:id="@+id/BMITextView"
         android:layout_width="wrap_content"
@@ -120,5 +86,13 @@
         android:layout_below="@+id/NumberOfRacesTextView"
         android:layout_marginTop="28dp"
         android:text="#NAN" />
+
+    <DatePicker
+        android:id="@+id/filterDatePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/filterTextView" />
 
 </RelativeLayout>

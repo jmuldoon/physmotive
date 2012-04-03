@@ -88,68 +88,52 @@ public class LocationDBM
         return mCursor;
     }
 
-    public Cursor getList(int raceID, int time)
+    public Cursor getList(int raceID, int day, int month, int year)
     {
         String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, SPEED, LTS };
+        String whereClause;
         Date cDate = new Date(), date = new Date();
         Calendar cal = Calendar.getInstance();
 
+        // initiates the setting of calendar to the current date
         cal.setTime(date);
-
-        switch (time) {
-        case 0:
-            cal.add(Calendar.DAY_OF_MONTH, -1);
-            break;
-        case 1:
-            cal.add(Calendar.WEEK_OF_YEAR, -1);
-            break;
-        case 2:
-            cal.add(Calendar.MONTH, -1);
-            break;
-        case 3:
-            cal.add(Calendar.YEAR, -1);
-            break;
-        default: // NOP pull all dates
-            break;
+        
+        // just sets the date for date chosen with the filter.
+        date.setDate(day);
+        date.setMonth(month);
+        date.setYear(year);
+        if(day < 0 || month < 0 || year < 0){
+        	whereClause = FKEY + "=" + raceID;
         }
-
-        date.setTime(cal.getTime().getTime());
-
-        String whereClause = FKEY + "=" + raceID + " and " + date + " <= " + cDate;
+        else{
+        	whereClause = FKEY + "=" + raceID + " and " + date + " <= " + cDate;
+        }
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
 
         return c;
     }
 
-    public Cursor getAllList(int userID, int time)
+    public Cursor getAllList(int userID, int day, int month, int year)
     {
         String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, SPEED, LTS };
+        String whereClause;
         Date cDate = new Date(), date = new Date();
         Calendar cal = Calendar.getInstance();
 
+        // initiates the setting of calendar to the current date
         cal.setTime(date);
-
-        switch (time) {
-        case 0:
-            cal.add(Calendar.DAY_OF_MONTH, -1);
-            break;
-        case 1:
-            cal.add(Calendar.WEEK_OF_YEAR, -1);
-            break;
-        case 2:
-            cal.add(Calendar.MONTH, -1);
-            break;
-        case 3:
-            cal.add(Calendar.YEAR, -1);
-            break;
-        default: // NOP pull all dates
-            break;
+        
+        // just sets the date for date chosen with the filter.
+        date.setDate(day);
+        date.setMonth(month);
+        date.setYear(year);
+        if(day < 0 || month < 0 || year < 0){
+        	whereClause = EUSR + "=" + userID;
         }
-
-        date.setTime(cal.getTime().getTime());
-
-        String whereClause = EUSR + "=" + userID + " and " + date + " <= " + cDate;
+        else{
+        	whereClause = EUSR + "=" + userID + " and " + date + " <= " + cDate;
+        }
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
 
