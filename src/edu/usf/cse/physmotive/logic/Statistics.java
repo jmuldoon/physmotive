@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.location.Location;
 import android.util.Log;
 import edu.usf.cse.physmotive.db.LocationDBM;
+import edu.usf.cse.physmotive.db.UserDBM;
 
 public class Statistics {
 	static final String TABLENAME = "locations";
@@ -24,13 +25,28 @@ public class Statistics {
     static final String EDATE = "entryDate";
     static final String TTIME = "totalTime";
     static final String TDISTANCE = "totalDistance";
+    
+    static final String HEIGHT = "height";
+    static final String WEIGHT = "weight";
 	
-	protected LocationDBM dblManager;
 	protected Cursor cursor;
 	
 	public Statistics(Cursor cur){
 		cursor = cur;
 	}
+	
+	public double getBMI(){
+		double weight = 0, height = 0;
+		
+		// Assuming standard Metric units
+		cursor.moveToFirst();
+		height = cursor.getInt(cursor.getColumnIndex(HEIGHT));
+		weight = cursor.getInt(cursor.getColumnIndex(WEIGHT));
+		
+		// Height is divided by 100 to convert from cm to m
+		return weight/Math.pow((height/100), 2);
+	}
+	
 	
 	public float getRaceTotalTime(){
 		float diff;
