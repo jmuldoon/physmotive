@@ -35,7 +35,7 @@ public class ActivityMenu extends Activity
 
     private ActivityDBM activityDBM;
 
-    private int userId, activityId;
+    private int userId, activityId, activitySelection = 0;
 
     // Called when the activity is first created.
     @Override
@@ -94,6 +94,7 @@ public class ActivityMenu extends Activity
     {
         Intent myIntent = new Intent(arg0.getContext(), ActiveActivity.class);
         // TODO: Insert New activity with activity details from screen
+        // TODO: activitySelection is the chosen activity
         activityId = activityDBM.insert(userId);
 
         bundleUserInformation(myIntent);
@@ -118,7 +119,7 @@ public class ActivityMenu extends Activity
         gallery.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v, int position, long id)
             {
-                Toast.makeText(ActivityMenu.this, "" + position, Toast.LENGTH_SHORT).show();
+            	activitySelection = position;
             }
         });
         distanceOrTimeToggleButton.setOnClickListener(new OnClickListener() {
