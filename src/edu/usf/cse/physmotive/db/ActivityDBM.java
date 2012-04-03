@@ -109,10 +109,20 @@ public class ActivityDBM
         return c;
     }
 
-    public Cursor getBindingList(int userId, int diaryId)
+    public Cursor getBindingList(int diaryId)
     {
         String[] columns = new String[] { ID, DID, EDATE, CHECK };
-        String whereClause = DID + " = " + diaryId + " or " + DID + " is null";
+        String whereClause = DID + " = " + diaryId + " or " + DID + " < 1";
+        Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        c.moveToFirst();
+
+        return c;
+    }
+
+    public Cursor getBoundList(int diaryId)
+    {
+        String[] columns = new String[] { ID, DID, EDATE, CHECK };
+        String whereClause = DID + " = " + diaryId;
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
 
@@ -128,7 +138,7 @@ public class ActivityDBM
         return c;
     }
 
-    public boolean setChecked(int raceId, int diaryId, int userId, int value)
+    public boolean setChecked(int raceId, int diaryId, int userId)
     {
         String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
         String whereClause;
@@ -137,7 +147,23 @@ public class ActivityDBM
         values.put(UUSR, userId);
         values.put(UDATE, timeStamp);
         values.put(DID, diaryId);
-        values.put(CHECK, value);
+        values.put(CHECK, 1);
+
+        whereClause = ID + "=" + raceId;
+
+        return db.update(TABLENAME, values, whereClause, null) > 0;
+    }
+
+    public boolean setUnChecked(int raceId, int userId)
+    {
+        String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+        String whereClause;
+        ContentValues values = new ContentValues();
+
+        values.put(UUSR, userId);
+        values.put(UDATE, timeStamp);
+        values.put(DID, 0);
+        values.put(CHECK, 0);
 
         whereClause = ID + "=" + raceId;
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import edu.usf.cse.physmotive.db.ActivityDBM;
@@ -29,18 +33,19 @@ public class DiaryView extends Activity
     static final String EDATE = "entryDate";
     static final String NOTE = "note";
     static final String GENDER = "gender";
+    static final String CHECK = "checked";
 
     protected EditText diaryEntryEditText;
     protected EditText heightEditText;
     protected EditText weightEditText;
     protected EditText ageEditText;
-    protected ToggleButton genderToggleButton;
     protected EditText notesEditText;
+    protected ToggleButton genderToggleButton;
+    protected ListView boundListView;
     protected Button bindRacesButton;
     protected Button cancelButton;
     protected Button saveButton;
-    private Cursor cur;
-    private Cursor checkCur;
+
     protected boolean[] _selections;
 
     private int diaryId;
@@ -48,8 +53,9 @@ public class DiaryView extends Activity
     private ActivityDBM activityDBM;
     private DiaryDBM diaryDBM;
     private UserDBM userDBM;
-    private Cursor diaryCur;
-    private Cursor userCur;
+    private Cursor cur, checkCur, raceCur, diaryCur, userCur;
+
+    private ListAdapter adapter;
 
     // Called when the activity is first created.
     @Override
@@ -66,13 +72,14 @@ public class DiaryView extends Activity
         // Connect interface elements to properties
         cancelButton = (Button) findViewById(R.id.cancelButton);
         saveButton = (Button) findViewById(R.id.saveButton);
+        bindRacesButton = (Button) findViewById(R.id.bindRacesButton);
         diaryEntryEditText = (EditText) findViewById(R.id.diaryEntryEditText);
         heightEditText = (EditText) findViewById(R.id.heightEditText);
         weightEditText = (EditText) findViewById(R.id.weightEditText);
         ageEditText = (EditText) findViewById(R.id.ageEditText);
         notesEditText = (EditText) findViewById(R.id.notesEditText);
+        boundListView = (ListView) findViewById(R.id.racesListView);
         genderToggleButton = (ToggleButton) findViewById(R.id.genderToggleButton);
-        bindRacesButton = (Button) findViewById(R.id.bindRacesButton);
 
         // pulling in bundle information
         Bundle b = getIntent().getExtras();
@@ -81,11 +88,7 @@ public class DiaryView extends Activity
 
         setOnClickListeners();
 
-        // TODO: GET Multi-select working properly.
-        // TODO: GET Vertical Scrolling for Activities that are bound to the
-        // diary. And have it link to Activity View.
-        // TODO: Dialog on update fix
-
+        // TODO: Get Check boxes to update properly.
     }
 
     @Override
@@ -108,70 +111,58 @@ public class DiaryView extends Activity
     protected Dialog onCreateDialog(int id)
     {
         activityDBM.open();
-        cur = activityDBM.getBindingList(userId, diaryId);
+        cur = activityDBM.getBindingList(diaryId);
         activityDBM.close();
 
-        _selections = new boolean[cur.getCount()];
         return new AlertDialog.Builder(this).setTitle("Races")
-                .setMultiChoiceItems(cur, "checked", "entryDate", new DialogInterface.OnMultiChoiceClickListener() {
+        // set list of races
+                .setMultiChoiceItems(cur, CHECK, EDATE, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int clicked, boolean selected)
+                    public void onClick(DialogInterface dialog, int position, boolean checked)
                     {
-                        // activityDBM.open();
-                        // AlertDialog AD = (AlertDialog) dialog;
-                        // checkCur = (Cursor)
-                        // AD.getListView().getItemAtPosition(clicked);
-                        // Toast.makeText(DiaryView.this,
-                        // Integer.toString(checkCur.getInt(checkCur.getColumnIndex(ID))),
-                        // Toast.LENGTH_SHORT).show();
-                        // activityDBM.setChecked(checkCur.getInt(checkCur.getColumnIndex(ID)),
-                        // diaryId, userId, 1);
-                        // activityDBM.close();
-                        // // _selections[clicked] = selected;
-                        // Log.d("MultiSelect", cur.moveToPosition(clicked) +
-                        // " selected: " + selected);
-                    }
-                }).setPositiveButton("OK", new DialogButtonClickHandler()).create();
-    }
+                        activityDBM.open();
+                        AlertDialog AD = (AlertDialog) dialog;
+                        ListView list = AD.getListView();
+                        list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
-    // @Override
-    // protected void onPrepareDialog(int id, Dialog dialog)
-    // {
-    // dialog = new AlertDialog.Builder(this).setTitle("Races")
-    // .setMultiChoiceItems(cur, "checked", "entryDate", new
-    // DialogInterface.OnMultiChoiceClickListener() {
-    // @Override
-    // public void onClick(DialogInterface dialog, int clicked, boolean
-    // selected)
-    // {
-    // AlertDialog AD = (AlertDialog) dialog;
-    // checkCur = (Cursor) AD.getListView().getItemAtPosition(clicked);
-    // Toast.makeText(DiaryView.this,
-    // Integer.toString(checkCur.getInt(checkCur.getColumnIndex(ID))),
-    // Toast.LENGTH_SHORT).show();
-    // activityDBM.open();
-    // activityDBM.setChecked(clicked, diaryId, userId, 1);
-    // activityDBM.close();
-    // // _selections[clicked] = selected;
-    // Log.d("MultiSelect", cur.moveToPosition(clicked) + " selected: " +
-    // selected);
-    // }
-    // }).setPositiveButton("OK", new DialogButtonClickHandler()).create();
-    // }
+                        // gets the cursor of the selected row
+                        checkCur = (Cursor) list.getItemAtPosition(position);
+
+                        Toast.makeText(DiaryView.this, Integer.toString(position), Toast.LENGTH_SHORT).show();
+                        if (checked)
+                        {
+                            // Set checked(bound)
+                            // updates the database with selection
+                            activityDBM.setChecked(checkCur.getInt(checkCur.getColumnIndex(ID)), diaryId, userId);
+
+                            // this is SUPPOSED to check the check box
+                            list.setItemChecked(position, true);
+                        } else
+                        {
+                            // Uncheck (unbind)
+                            activityDBM.setUnChecked(checkCur.getInt(checkCur.getColumnIndex(ID)), userId);
+                            list.setItemChecked(position, false);
+                        }
+                        activityDBM.close();
+                    }
+                }).setPositiveButton("OK", new DialogButtonClickHandler()).setOnCancelListener(new OnCancelListener() {
+
+                    @Override
+                    public void onCancel(DialogInterface dialog)
+                    {
+                        // TODO Auto-generated method stub
+                        updateBindList();
+                    }
+                }).create();
+    }
 
     public class DialogButtonClickHandler implements DialogInterface.OnClickListener
     {
         @Override
         public void onClick(DialogInterface dialog, int clicked)
         {
-            switch (clicked) {
-            case DialogInterface.BUTTON_POSITIVE:
-                for (int i = 0; i < cur.getCount(); i++)
-                {
-                    Log.d("MultiSelectOK", cur.moveToPosition(i) + " selected: " + _selections[i]);
-                }
-                break;
-            }
+            // updates bind list on diary_view
+            updateBindList();
         }
     }
 
@@ -204,6 +195,14 @@ public class DiaryView extends Activity
     private void updateBindList()
     {
         // TODO: Setup List View
+        activityDBM.open();
+        raceCur = activityDBM.getBoundList(diaryId);
+        activityDBM.close();
+        startManagingCursor(raceCur);
+        adapter = new SimpleCursorAdapter(this, R.layout.activity_list_item, raceCur, new String[] { ID, EDATE }, new int[] {
+                R.id.A_ID, R.id.A_Name });
+
+        boundListView.setAdapter(adapter);
     }
 
     private void setOnClickListeners()
