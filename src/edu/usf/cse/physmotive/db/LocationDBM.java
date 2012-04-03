@@ -152,7 +152,7 @@ public class LocationDBM
     public Cursor getForExport(int id)
     {
         String whereClause = EUSR + "=" + id;
-        Cursor c = db.query(TABLENAME, null, null, null, null, null, null);
+        Cursor c = db.query(TABLENAME, null, whereClause, null, null, null, null);
         c.moveToFirst();
         
         return c;

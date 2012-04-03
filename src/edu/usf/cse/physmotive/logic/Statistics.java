@@ -28,11 +28,11 @@ public class Statistics {
 	protected LocationDBM dblManager;
 	protected Cursor cursor;
 	
-	Statistics(Cursor cur){
+	public Statistics(Cursor cur){
 		cursor = cur;
 	}
 	
-	public float getTotalTime(){
+	public float getRaceTotalTime(){
 		float diff;
 		long endTime = 0, startTime = 0;
 		Date date;
@@ -55,7 +55,7 @@ public class Statistics {
 		return diff;
 	}
 	
-	public float getTotalDistance(){
+	public float getRaceTotalDistance(){
 		float[] result = new float[3];
 		float sum = 0;
 		GeoPoint curr, prev;
@@ -71,6 +71,39 @@ public class Statistics {
 		}
 		
 		return sum;
+	}
+	
+	
+	public float getActivityTotalTime(){
+		long total = 0;
+		Date date;
+		DateFormat dateFormat  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);	
+		
+		cursor.moveToFirst();
+		
+		for(;cursor.moveToNext();cursor.moveToNext()){
+			try{
+				date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
+				total += date.getTime();
+			}
+			catch(ParseException ex){
+				Log.e("Date", ex.getMessage(), ex);
+			}
+		}
+		
+		return total;
+	}
+	
+	public float getActivityTotalDistance(){
+		long total = 0;
+		
+		cursor.moveToFirst();
+		
+		for(;cursor.moveToNext();cursor.moveToNext()){
+			total += cursor.getLong(cursor.getColumnIndex(TDISTANCE));
+		}
+		
+		return total;
 	}
 	
 	public float getAverageTime(){
