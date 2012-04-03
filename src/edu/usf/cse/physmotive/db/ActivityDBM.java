@@ -66,12 +66,14 @@ public class ActivityDBM
         return (int) db.insert(TABLENAME, null, values);
     }
 
-    public boolean update(int id, int usr)
+    public boolean update(int id, int usr, int time, int distance)
     {
         String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
         String whereClause;
         ContentValues values = new ContentValues();
-
+        
+        values.put(TTIME, time);
+        values.put(TDISTANCE, distance);
         values.put(UUSR, usr);
         values.put(UDATE, timeStamp);
 
