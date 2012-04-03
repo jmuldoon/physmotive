@@ -281,7 +281,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         int minutes = seconds / 60;
         int hours = minutes / 60;
 
-        return String.format("%02d", hours) + " : " + String.format("%02d", minutes % 60) + " : "
+        return String.format("%02d", hours) + ":" + String.format("%02d", minutes % 60) + ":"
                 + String.format("%02d", seconds % 60);
     }
 

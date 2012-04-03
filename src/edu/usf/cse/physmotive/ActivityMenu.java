@@ -142,7 +142,7 @@ public class ActivityMenu extends Activity
                     || secondEditText.getText().toString().equals("")
                     || secondEditText.getText().toString().trim().equals(""))
             {
-                Toast.makeText(ActivityMenu.this, "User must have first and last name.", Toast.LENGTH_LONG).show();
+                Toast.makeText(ActivityMenu.this, "Please enter minutes and seconds.", Toast.LENGTH_LONG).show();
                 minuteEditText.setText("");
                 secondEditText.setText("");
                 return false;
@@ -151,7 +151,7 @@ public class ActivityMenu extends Activity
         {
             if (minuteEditText.getText().toString().equals("") || minuteEditText.getText().toString().trim().equals(""))
             {
-                Toast.makeText(ActivityMenu.this, "User must have first and last name.", Toast.LENGTH_LONG).show();
+                Toast.makeText(ActivityMenu.this, "Please enter a distance.", Toast.LENGTH_LONG).show();
                 minuteEditText.setText("");
                 return false;
             }
