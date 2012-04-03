@@ -2,6 +2,7 @@ package edu.usf.cse.physmotive.db;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,6 +16,8 @@ public class ActivityDBM
     static final String TABLENAME = "activity";
     static final String ID = "_id";
     static final String DID = "diaryId";
+    static final String TTIME = "totalTime";
+    static final String TDISTANCE = "totalDistance";
     static final String CHECK = "checked";
     static final String EUSR = "entryUsr";
     static final String EDATE = "entryDate";
@@ -128,7 +131,36 @@ public class ActivityDBM
 
         return c;
     }
-
+    
+    public Cursor getStatisticsList(int userID, int activityID, int time){
+    	String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
+    	Date cDate = new Date(), date = new Date();
+    	Calendar cal = Calendar.getInstance();
+        
+        cal.setTime(date);
+        
+        switch(time){
+        	case 0: cal.add(Calendar.DAY_OF_MONTH, -1);
+        		break;
+        	case 1: cal.add(Calendar.WEEK_OF_YEAR, -1); 
+    			break;
+        	case 2: cal.add(Calendar.MONTH, -1); 
+    			break;
+        	case 3: cal.add(Calendar.YEAR, -1); 
+    			break;
+    		default: //NOP pull all dates
+    			break;
+        }
+        
+        date.setTime(cal.getTime().getTime());
+    	
+        String whereClause = EUSR + " = " + userID + " and " + ID + " = " + activityID + " and " + date + " <= " + cDate;;
+        Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        c.moveToFirst();
+    	
+    	return c;
+    }
+    
     public Cursor getForExport(int id)
     {
         String whereClause = EUSR + "=" + id;

@@ -4,39 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent" >
 
-	<Gallery
+    <Gallery
         android:id="@+id/activityGallery"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" />
-
-    <SeekBar
-        android:id="@+id/filterSeekBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/activityGallery"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:id="@+id/progressChartImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/filterSeekBar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="73dp"
-        android:contentDescription="@string/statisticsProgressGraph"
-        android:src="@drawable/ic_launcher" />
-
-    <TextView
-        android:id="@+id/NumberOfRacesTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/progressChartImageView"
-        android:layout_below="@+id/progressChartImageView"
-        android:layout_marginTop="116dp"
-        android:text="@string/numberOfRacesValue"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/totalDistanceTextView"
@@ -49,17 +22,6 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/averageDistanceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/totalDistanceTextView"
-        android:layout_alignBottom="@+id/totalDistanceTextView"
-        android:layout_marginLeft="28dp"
-        android:layout_toRightOf="@+id/NumberOfRacesTextView"
-        android:text="@string/averageDistanceValue"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
         android:id="@+id/totalTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,22 +31,85 @@
         android:text="@string/totalTimeValue"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <ImageView
+        android:id="@+id/progressChartImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/statisticsProgressGraph"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:id="@+id/NumberOfRacesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/progressChartImageView"
+        android:layout_below="@+id/progressChartImageView"
+        android:layout_marginTop="22dp"
+        android:text="@string/numberOfRacesValue"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/averageDistanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/totalTimeTextView"
+        android:layout_toRightOf="@+id/NumberOfRacesTextView"
+        android:text="@string/averageDistanceValue"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <TextView
         android:id="@+id/averageTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/totalTimeTextView"
         android:layout_alignBottom="@+id/totalTimeTextView"
-        android:layout_alignLeft="@+id/averageDistanceTextView"
+        android:layout_toRightOf="@+id/NumberOfRacesTextView"
         android:text="@string/averageTimeValue"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/dateFilterTextView"
+        android:id="@+id/filterTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/progressChartImageView"
-        android:layout_below="@+id/filterSeekBar"
-        android:text="@string/dateFilterTextViewValue" />
+        android:layout_below="@+id/activityGallery"
+        android:layout_marginTop="27dp"
+        android:text="Date Filter" />
+
+    <RadioGroup
+        android:id="@+id/filterRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/filterTextView"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/filterAllRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="All" />
+
+        <RadioButton
+            android:id="@+id/filterMonthRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Month" />
+
+        <RadioButton
+            android:id="@+id/filterWeekRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Week" />
+
+        <RadioButton
+            android:id="@+id/filterDayRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Day" />
+    </RadioGroup>
 
 </RelativeLayout>

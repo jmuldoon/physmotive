@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -52,9 +53,9 @@ public class ActivityView extends Activity
         raceTotDist_tv = (TextView) findViewById(R.id.distanceTextView);
 
         activityDBM = new ActivityDBM(this);
-
+       
         setOnClickListeners();
-
+   
         // TODO: Make Jimmy do stats
         // TODO: Make sure buttons work properly
         // TODO: Make Map Work, add geo from DB
@@ -75,6 +76,8 @@ public class ActivityView extends Activity
         activityDBM.open();
         activityInfo = activityDBM.get(activityId);
         activityDBM.close();
+        
+        Log.d("TotalTime", String.valueOf(activityInfo.getString(activityInfo.getColumnIndex(EDATE))));//TESTING REMOVE
 
         raceId_tv.setText("Race Id #" + activityInfo.getString(activityInfo.getColumnIndex(ID)));
         raceDate_tv.setText(activityInfo.getString(activityInfo.getColumnIndex(EDATE)));

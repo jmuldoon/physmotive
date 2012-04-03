@@ -69,6 +69,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         mapView.setStreetView(true);
 
         // TODO: also give me time info etc!!
+        // TODO: on update put the totalTime and totalDistance with the activity.
 
         //Checks from previous screen if it starts manually or automatically.
         //if automatic it will just call for location services, otherwise

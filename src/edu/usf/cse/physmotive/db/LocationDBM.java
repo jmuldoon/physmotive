@@ -2,6 +2,7 @@ package edu.usf.cse.physmotive.db;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -88,10 +89,60 @@ public class LocationDBM
         return mCursor;
     }
 
-    public Cursor getList(long userId, long raceID)
+    public Cursor getList(long raceID, int time)
     {
-        String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS, UDATE };
-        String whereClause = FKEY + "=" + raceID;
+    	String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS };
+    	Date cDate = new Date(), date = new Date();
+    	Calendar cal = Calendar.getInstance();
+        
+        cal.setTime(date);
+        
+        switch(time){
+        	case 0: cal.add(Calendar.DAY_OF_MONTH, -1);
+        		break;
+        	case 1: cal.add(Calendar.WEEK_OF_YEAR, -1); 
+    			break;
+        	case 2: cal.add(Calendar.MONTH, -1); 
+    			break;
+        	case 3: cal.add(Calendar.YEAR, -1); 
+    			break;
+    		default: //NOP pull all dates
+    			break;
+        }
+        
+        date.setTime(cal.getTime().getTime());
+        
+        String whereClause = FKEY + "=" + raceID + " and " + date + " <= " + cDate;
+        Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        c.moveToFirst();
+
+        return c;
+    }
+    
+    public Cursor getAllList(long userID, int time)
+    {
+    	String[] columns = new String[] { ID, FKEY, LATITUDE, LONGITUDE, LTS };
+    	Date cDate = new Date(), date = new Date();
+    	Calendar cal = Calendar.getInstance();
+        
+        cal.setTime(date);
+        
+        switch(time){
+        	case 0: cal.add(Calendar.DAY_OF_MONTH, -1);
+        		break;
+        	case 1: cal.add(Calendar.WEEK_OF_YEAR, -1); 
+    			break;
+        	case 2: cal.add(Calendar.MONTH, -1); 
+    			break;
+        	case 3: cal.add(Calendar.YEAR, -1); 
+    			break;
+    		default: //NOP pull all dates
+    			break;
+        }
+        
+        date.setTime(cal.getTime().getTime());
+        
+        String whereClause = EUSR + "=" + userID + " and " + date + " <= " + cDate;
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
 
