@@ -135,11 +135,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
 //    }
     
     private void updateProgressBar(){
-    	while (progressStatus < 100) {
-	    	progressStatus = progressWork();
-	       	activityProgressBar.setProgress(progressStatus);
-	    }
-    }
+    	progressStatus = progressWork();
+	    activityProgressBar.setProgress(progressStatus);
+	}
     
     private int progressWork(){
     	float progress = 0;
@@ -154,7 +152,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
     }
     
     private boolean activityComplete(){
-    	if (activityProgressBar.getProgress() < 100)
+    	if (activityProgressBar.getProgress() >= 100)
     		return true;
     	else if(progressStatus >= 100){
     		return true;
@@ -240,7 +238,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
         // TODO: Intitiate Timer. Set sTime (startTime)
         startCounting();
-
     }
 
     public void addGeoPoint(GeoPoint p, String greeting, String message)
@@ -326,8 +323,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         dblManager.close();
         
         //Checks to see if the activity is done. if so will call onFinish();
-        //updateProgressBar();
-        progressWork();
+        updateProgressBar();
         
         if(activityComplete())
         	onFinish();
