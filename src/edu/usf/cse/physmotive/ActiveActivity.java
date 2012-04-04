@@ -18,7 +18,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -74,8 +73,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
         unitType = b.getInt("unitType");
         unitValue = b.getInt("unitValue");
 
-        Toast.makeText(this, startType, Toast.LENGTH_SHORT).show();
-
         dblManager = new LocationDBM(this);
         dbaManager = new ActivityDBM(this);
 
@@ -87,9 +84,10 @@ public class ActiveActivity extends MapActivity implements LocationListener
         currentDistanceTextView = (TextView) findViewById(R.id.currentDistanceTextView);
         endActivityButton = (Button) findViewById(R.id.endActivityButton);
         activityProgressBar = (ProgressBar) findViewById(R.id.acitvityProgressBar);
-        afterInit();
         activityProgressBar.setMax(100);
-        activityProgressBar.setProgress(10);
+
+        // Sets up Timer
+        afterInit();
 
         // On Clicks
         setOnClickListeners();
