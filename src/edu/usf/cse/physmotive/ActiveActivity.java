@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,12 +50,15 @@ public class ActiveActivity extends MapActivity implements LocationListener
     protected Button endActivityButton;
     protected TextView currentDistanceTextView;
     protected TextView currentSpeedTextView;
+    protected ProgressBar activityProgressBar;
 
     private LocationDBM dblManager;
     private ActivityDBM dbaManager;
-    private int userId, raceId, unitType, unitValue;
+    private int userId, raceId, unitType, unitValue, progressStatus = 0, endFlag = 0;
     private long tTime = 0, tDistance = 0;
     private String startType;
+    
+    private Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -82,6 +86,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         currentSpeedTextView = (TextView) findViewById(R.id.currentSpeedTextView);
         currentDistanceTextView = (TextView) findViewById(R.id.currentDistanceTextView);
         endActivityButton = (Button) findViewById(R.id.endActivityButton);
+        activityProgressBar = (ProgressBar) findViewById(R.id.acitvityProgressBar);
         afterInit();
 
         // On Clicks
@@ -90,6 +95,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // TODO: also give me time info etc!!
         // TODO: on update put the totalTime and totalDistance with the
         // activity.
+        
+        // Setup for the progress bar thread
+        initializeProgressBar();
 
         // Checks from previous screen if it starts manually or automatically.
         // if automatic it will just call for location services, otherwise
@@ -106,6 +114,43 @@ public class ActiveActivity extends MapActivity implements LocationListener
         Drawable drawable = this.getResources().getDrawable(R.drawable.androidmarker);
         itemizedOverlay = new MapItemizedOverlay(drawable, this);
     }
+    
+    private void initializeProgressBar(){
+    	// Start lengthy operation in a background thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (progressStatus < 100) {
+                	progressStatus = progressWork();
+
+                    // Update the progress bar
+                	handler.post(new Runnable() {
+                        public void run() {
+                        	activityProgressBar.setProgress(progressStatus);
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+    
+    private int progressWork(){
+    	float progress = 0;
+    	// unitType == 0 is time in sec,  unitType == 1 is distance in meters
+    	if (unitType == 0){
+    		progress = (tTime/unitValue)*100;
+    	}
+    	else{
+    		progress = (tDistance/unitValue)*100;
+    	}
+    	return Math.round(progress);
+    }
+    
+    private boolean activityComplete(){
+    	if (activityProgressBar.getProgress() == 100)
+    		return true;
+    	
+    	return false;
+    }
 
     @Override
     protected Dialog onCreateDialog(int id)
@@ -120,17 +165,28 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // If not complete
         // TODO: delete race.
         // Only delete(raceId) needs be called.
-
+        if(!activityComplete() && endFlag == 0){
+        	dbaManager.open();
+	        dbaManager.delete(raceId);
+	        dbaManager.close();
+        }
+        
         // if Complete:
         // TODO: Get Final GPS pull save with Finished note.
         // dblManager.insert(raceId, lat, lng, spd, lts, "finished", userId);
         // TODO: get tTime to insert int seconds for total time.
-        dbaManager.open();
-        dbaManager.update(raceId, userId, (int) tTime, (int) tDistance);
-        dbaManager.close();
+        else if(activityComplete()){
+	        dbaManager.open();
+	        dbaManager.update(raceId, userId, (int) tTime, (int) tDistance);
+	        dbaManager.close();
+        }
 
         // If ended early
         // TODO: make sure it saves current info
+        else if(!activityComplete() && endFlag ==1){
+        	//Do nothing since it should have already saved the information as is.
+        	//TODO: make sure the last entered data has a finished tag on it. maybe Finished Early?
+        }
     }
 
     private void setOnClickListeners()
@@ -145,6 +201,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
     private void onButtonClickEndActivityButton(View v)
     {
+    	endFlag = 1;
         finish();
     }
 
@@ -256,6 +313,10 @@ public class ActiveActivity extends MapActivity implements LocationListener
         dblManager.insert(raceId, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()),
                 String.valueOf(loc.getSpeed()), (int) loc.getTime(), "", userId);
         dblManager.close();
+        
+        //Checks to see if the activity is done. if so will call onFinish();
+        if(activityComplete())
+        	onFinish();
     }
 
     @Override
