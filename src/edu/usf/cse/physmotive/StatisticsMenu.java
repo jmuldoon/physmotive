@@ -10,6 +10,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.DatePicker;
 import android.widget.Gallery;
 import android.widget.TextView;
+import android.widget.Toast;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.UserDBM;
 import edu.usf.cse.physmotive.logic.Statistics;
@@ -35,7 +36,7 @@ public class StatisticsMenu extends Activity
     protected UserDBM dbuManager;
 
     private int userId;
-    private int activityID;
+    private int activityId;
 
     // Called when the activity is first created.
     @Override
@@ -47,6 +48,7 @@ public class StatisticsMenu extends Activity
         // Pulling in bundle information
         Bundle b = getIntent().getExtras();
         userId = b.getInt(USERID);
+        activityId = 0;
 
         // Setting up gallery information.
         gallery = (Gallery) findViewById(R.id.activityGallery);
@@ -96,7 +98,7 @@ public class StatisticsMenu extends Activity
         gallery.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView parent, View v, int position, long id)
             {
-                activityID = position;
+                activityId = position;
                 updateStatistics();
             }
         });
@@ -106,12 +108,14 @@ public class StatisticsMenu extends Activity
     {
         dbaManager.open();
 
-        Cursor cur1 = dbaManager.getStatisticsList(userId, activityID, filterDatePicker.getDayOfMonth(),
-                filterDatePicker.getMonth(), filterDatePicker.getYear());
+        Cursor cur1 = dbaManager.getStatisticsList(userId, activityId, filterDatePicker.getDayOfMonth(),
+                filterDatePicker.getMonth() + 1, filterDatePicker.getYear());
         startManagingCursor(cur1);
         statsActivity = new Statistics(cur1);
 
         dbaManager.close();
+
+        Toast.makeText(this, Integer.toString(cur1.getCount()), Toast.LENGTH_SHORT).show();
 
         NumberOfRacesTextView.setText("Total Activities Completed: " + statsActivity.getTotalNumberActivities());
         averageTimeTextView.setText("Average Time: " + statsActivity.getAverageTime());

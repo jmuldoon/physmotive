@@ -135,9 +135,9 @@ public class ActivityDBM
         String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
 
         // this is for past week.
-        String whereClause = EUSR + " = " + userID + " and " + ID + " = " + activityID + " and strftime('%s', " + EDATE
-                + ") >= strftime('%s', date('" + Integer.toString(month) + "/" + Integer.toString(day) + "/"
-                + Integer.toString(year) + "'))";
+        String whereClause = EUSR + " = " + userID + " and " + AID + " = " + activityID + " and strftime('%s', " + EDATE
+                + ") >= strftime('%s', date('" + Integer.toString(year) + "-" + String.format("%02d", month) + "-"
+                + String.format("%02d", day) + "'))";
 
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
