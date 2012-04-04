@@ -154,8 +154,11 @@ public class ActiveActivity extends MapActivity implements LocationListener
     }
     
     private boolean activityComplete(){
-    	if (activityProgressBar.getProgress() == 100)
+    	if (activityProgressBar.getProgress() < 100)
     		return true;
+    	else if(progressStatus >= 100){
+    		return true;
+    	}
     	
     	return false;
     }
@@ -323,7 +326,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
         dblManager.close();
         
         //Checks to see if the activity is done. if so will call onFinish();
-        updateProgressBar();
+        //updateProgressBar();
+        progressWork();
+        
         if(activityComplete())
         	onFinish();
     }
