@@ -57,8 +57,8 @@ public class ActiveActivity extends MapActivity implements LocationListener
     private int userId, raceId, unitType, unitValue, progressStatus = 0, endFlag = 0;
     private long tTime = 0, tDistance = 0;
     private String startType;
-    
-    //private Handler handler = new Handler();
+
+    // private Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -88,6 +88,8 @@ public class ActiveActivity extends MapActivity implements LocationListener
         endActivityButton = (Button) findViewById(R.id.endActivityButton);
         activityProgressBar = (ProgressBar) findViewById(R.id.acitvityProgressBar);
         afterInit();
+        activityProgressBar.setMax(100);
+        activityProgressBar.setProgress(10);
 
         // On Clicks
         setOnClickListeners();
@@ -95,9 +97,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // TODO: also give me time info etc!!
         // TODO: on update put the totalTime and totalDistance with the
         // activity.
-        
+
         // Setup for the progress bar thread
-        //initializeProgressBar();
+        // initializeProgressBar();
 
         // Checks from previous screen if it starts manually or automatically.
         // if automatic it will just call for location services, otherwise
@@ -115,50 +117,53 @@ public class ActiveActivity extends MapActivity implements LocationListener
         itemizedOverlay = new MapItemizedOverlay(drawable, this);
     }
 
-//	  // Normally this would be the way to do it in a background thread. We will not do it this way for a couple reasons I will explain on vent.
-//    private void initializeProgressBar(){
-//    	// Start lengthy operation in a background thread
-//        new Thread(new Runnable() {
-//            public void run() {
-//                while (progressStatus < 100) {
-//                	progressStatus = progressWork();
-//
-//                    // Update the progress bar
-//                	handler.post(new Runnable() {
-//                        public void run() {
-//                        	activityProgressBar.setProgress(progressStatus);
-//                        }
-//                    });
-//                }
-//            }
-//        }).start();
-//    }
-    
-    private void updateProgressBar(){
-    	progressStatus = progressWork();
-	    activityProgressBar.setProgress(progressStatus);
-	}
-    
-    private int progressWork(){
-    	float progress = 0;
-    	// unitType == 0 is time in sec,  unitType == 1 is distance in meters
-    	if (unitType == 0){
-    		progress = (tTime/unitValue)*100;
-    	}
-    	else{
-    		progress = (tDistance/unitValue)*100;
-    	}
-    	return Math.round(progress);
+    // // Normally this would be the way to do it in a background thread. We
+    // will not do it this way for a couple reasons I will explain on vent.
+    // private void initializeProgressBar(){
+    // // Start lengthy operation in a background thread
+    // new Thread(new Runnable() {
+    // public void run() {
+    // while (progressStatus < 100) {
+    // progressStatus = progressWork();
+    //
+    // // Update the progress bar
+    // handler.post(new Runnable() {
+    // public void run() {
+    // activityProgressBar.setProgress(progressStatus);
+    // }
+    // });
+    // }
+    // }
+    // }).start();
+    // }
+
+    private void updateProgressBar()
+    {
+        progressStatus = progressWork();
+        activityProgressBar.setProgress(progressStatus);
     }
-    
-    private boolean activityComplete(){
-    	if (activityProgressBar.getProgress() >= 100)
-    		return true;
-    	else if(progressStatus >= 100){
-    		return true;
-    	}
-    	
-    	return false;
+
+    private int progressWork()
+    {
+        float progress = 0;
+        // unitType == 0 is time in sec, unitType == 1 is distance in meters
+        if (unitType == 0)
+        {
+            progress = (int) (((double) tTime / (double) unitValue) * 100);
+        } else
+        {
+            progress = (int) (((double) tDistance / (double) unitValue) * 100);
+        }
+        return Math.round(progress);
+    }
+
+    private boolean activityComplete()
+    {
+        if (activityProgressBar.getProgress() >= 100)
+            return true;
+        else if (progressStatus >= 100) { return true; }
+
+        return false;
     }
 
     @Override
@@ -174,27 +179,32 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // If not complete
         // TODO: delete race.
         // Only delete(raceId) needs be called.
-        if(!activityComplete() && endFlag == 0){
-        	dbaManager.open();
-	        dbaManager.delete(raceId);
-	        dbaManager.close();
+        if (!activityComplete() && endFlag == 0)
+        {
+            dbaManager.open();
+            dbaManager.delete(raceId);
+            dbaManager.close();
         }
-        
+
         // if Complete:
         // TODO: Get Final GPS pull save with Finished note.
         // dblManager.insert(raceId, lat, lng, spd, lts, "finished", userId);
         // TODO: get tTime to insert int seconds for total time.
-        else if(activityComplete()){
-	        dbaManager.open();
-	        dbaManager.update(raceId, userId, (int) tTime, (int) tDistance);
-	        dbaManager.close();
+        else if (activityComplete())
+        {
+            dbaManager.open();
+            dbaManager.update(raceId, userId, (int) tTime, (int) tDistance);
+            dbaManager.close();
         }
 
         // If ended early
         // TODO: make sure it saves current info
-        else if(!activityComplete() && endFlag ==1){
-        	//Do nothing since it should have already saved the information as is.
-        	//TODO: make sure the last entered data has a finished tag on it. maybe Finished Early?
+        else if (!activityComplete() && endFlag == 1)
+        {
+            // Do nothing since it should have already saved the information as
+            // is.
+            // TODO: make sure the last entered data has a finished tag on it.
+            // maybe Finished Early?
         }
     }
 
@@ -210,7 +220,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
     private void onButtonClickEndActivityButton(View v)
     {
-    	endFlag = 1;
+        endFlag = 1;
         finish();
     }
 
@@ -321,12 +331,12 @@ public class ActiveActivity extends MapActivity implements LocationListener
         dblManager.insert(raceId, (int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6), loc.getSpeed(),
                 (int) loc.getTime(), "", userId);
         dblManager.close();
-        
-        //Checks to see if the activity is done. if so will call onFinish();
+
+        // Checks to see if the activity is done. if so will call onFinish();
         updateProgressBar();
-        
-        if(activityComplete())
-        	onFinish();
+
+        if (activityComplete())
+            onFinish();
     }
 
     @Override

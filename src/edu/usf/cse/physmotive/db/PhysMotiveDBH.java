@@ -15,28 +15,27 @@ public class PhysMotiveDBH extends SQLiteOpenHelper
     static final int DATABASE_VERSION = 1;
 
     static final String CREATE_DIARY = "create table diary (_id integer primary key autoincrement,"
-            + " name text not null, height float, weight float, age integer, gender integer,"
+            + " name text not null, height float DEFAULT 0, weight float DEFAULT 0, age integer DEFAULT 0, gender integer DEFAULT 0,"
             + " note text, entryUsr integer not null, entryDate integer not null,"
             + " updateUsr integer, updateDate integer, deleted integer);";
 
     // Only created so I can make a list of activities, Please update as
     // necessary. I will be using EntryDate as the name of the activity.
     static final String CREATE_ACTIVITY = "create table activity (_id integer primary key autoincrement,"
-            + " diaryId integer, activityId integer not null, totalTime integer, totalDistance float, checked integer,"
+            + " diaryId integer DEFAULT 0, activityId integer not null, totalTime integer DEFAULT 0, "
+            + " totalDistance float DEFAULT 0, checked integer DEFAULT 0,"
             + " entryUsr integer not null, entryDate integer not null,"
             + " updateUsr integer, updateDate integer, deleted integer);";
 
     static final String CREATE_USER = "create table users (_id integer primary key autoincrement,"
-            + " firstName text not null, lastName text not null, height float, weight float,"
-            + " age integer, gender integer, units integer, orientation integer, dateFormat integer,"
-            + " entryUsr integer not null, entryDate integer not null, updateUsr integer,"
-            + " updateDate integer, deleted integer);";
+            + " firstName text not null, lastName text not null, height float DEFAULT 0, weight float DEFAULT 0,"
+            + " age integer DEFAULT 0, gender integer DEFAULT 0, units integer DEFAULT 0, "
+            + " orientation integer DEFAULT 0, dateFormat integer DEFAULT 0, entryUsr integer not null,"
+            + " entryDate integer not null, updateUsr integer, updateDate integer, deleted integer);";
 
     static final String CREATE_LOCATION = "create table locations (_id integer primary key autoincrement,"
             + " race_id integer not null, lat integer not null, lng integer not null, speed float not null, locationTimeStamp integer not null, notes text, entryUsr integer not null,"
             + " entryDate integer not null, updateUsr integer, updateDate integer);";
-
-    static final String DEFAULT_USER = "Insert into users ()";
 
     PhysMotiveDBH(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

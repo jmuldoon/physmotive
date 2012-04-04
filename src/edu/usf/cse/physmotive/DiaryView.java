@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.DiaryDBM;
@@ -128,7 +127,6 @@ public class DiaryView extends Activity
                         // gets the cursor of the selected row
                         checkCur = (Cursor) list.getItemAtPosition(position);
 
-                        Toast.makeText(DiaryView.this, Integer.toString(position), Toast.LENGTH_SHORT).show();
                         if (checked)
                         {
                             // Set checked(bound)
@@ -172,8 +170,6 @@ public class DiaryView extends Activity
         diaryCur = diaryDBM.get(diaryId);
         diaryDBM.close();
         startManagingCursor(diaryCur);
-
-        Toast.makeText(this, diaryCur.getString(diaryCur.getColumnIndex(NAME)), Toast.LENGTH_SHORT).show();
 
         diaryEntryEditText.setText(diaryCur.getString(diaryCur.getColumnIndex(NAME)));
         notesEditText.setText(diaryCur.getString(diaryCur.getColumnIndex(NOTE)));

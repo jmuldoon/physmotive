@@ -56,6 +56,8 @@ public class ActivityDBM
         ContentValues values = new ContentValues();
 
         values.put(AID, activitySelection);
+        values.put(DID, 0);
+        values.put(CHECK, 0);
         values.put(EUSR, usr);
         values.put(EDATE, timeStamp);
         values.put(UUSR, usr);
@@ -83,7 +85,7 @@ public class ActivityDBM
 
     public boolean delete(int id)
     {
-        String whereClause = "race_id=" + id;
+        String whereClause = ID + " = " + id;
 
         db.delete("locations", "race_id = " + id, null);
         return db.delete(TABLENAME, whereClause, null) > 0;

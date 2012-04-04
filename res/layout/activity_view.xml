@@ -2,16 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
+
     <com.google.android.maps.MapView
-	    xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/mapview"
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:clickable="true"
-	    android:apiKey="0QzhC0GfhE7GwK_DHgz8ugNdC8OETQ8ej_tL7bg"
-	    />
-    
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:apiKey="0QzhC0GfhE7GwK_DHgz8ugNdC8OETQ8ej_tL7bg"
+        android:clickable="true" />
+    <!-- DEBUGKEYSTORE -->
+    <!-- android:apiKey="0QzhC0GfhE7GwK_DHgz8ugNdC8OETQ8ej_tL7bg" -->
+    <!-- DEBUG KEYSTORE -->
+    <!-- PUBLISHKEYSTORE -->
+    <!-- android:apiKey="0k9XilLp5UyGN5kqJl9VbiRTATyxPoqSmRDMuOA" -->
+    <!-- PUBLISHKEYSTORE -->
+
     <Button
         android:id="@+id/toDiaryButton"
         android:layout_width="100dp"
@@ -19,6 +24,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:text="@string/toDiaryButtonName" />
+
     <Button
         android:id="@+id/toStatisticsButton"
         android:layout_width="100dp"
@@ -36,6 +42,7 @@
         android:layout_alignParentTop="true"
         android:text="@string/raceIDName"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+
     <TextView
         android:id="@+id/raceDateTextView"
         android:layout_width="wrap_content"
@@ -43,6 +50,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/raceIdTextView"
         android:text="@string/raceDate" />
+
     <TextView
         android:id="@+id/paceTextView"
         android:layout_width="wrap_content"
@@ -51,6 +59,7 @@
         android:layout_below="@+id/toStatisticsButton"
         android:text="@string/avPaceValue"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <TextView
         android:id="@+id/timeTextView"
         android:layout_width="wrap_content"
@@ -60,6 +69,7 @@
         android:layout_alignParentLeft="true"
         android:text="@string/avTimeValue"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
     <TextView
         android:id="@+id/distanceTextView"
         android:layout_width="wrap_content"
@@ -68,4 +78,5 @@
         android:layout_below="@+id/toDiaryButton"
         android:text="@string/avDistanceValue"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
 </RelativeLayout>
