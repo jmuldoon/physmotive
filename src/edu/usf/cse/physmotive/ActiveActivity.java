@@ -58,7 +58,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
     private long tTime = 0, tDistance = 0;
     private String startType;
     
-    private Handler handler = new Handler();
+    //private Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -97,7 +97,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // activity.
         
         // Setup for the progress bar thread
-        initializeProgressBar();
+        //initializeProgressBar();
 
         // Checks from previous screen if it starts manually or automatically.
         // if automatic it will just call for location services, otherwise
@@ -114,23 +114,31 @@ public class ActiveActivity extends MapActivity implements LocationListener
         Drawable drawable = this.getResources().getDrawable(R.drawable.androidmarker);
         itemizedOverlay = new MapItemizedOverlay(drawable, this);
     }
-    
-    private void initializeProgressBar(){
-    	// Start lengthy operation in a background thread
-        new Thread(new Runnable() {
-            public void run() {
-                while (progressStatus < 100) {
-                	progressStatus = progressWork();
 
-                    // Update the progress bar
-                	handler.post(new Runnable() {
-                        public void run() {
-                        	activityProgressBar.setProgress(progressStatus);
-                        }
-                    });
-                }
-            }
-        }).start();
+//	  // Normally this would be the way to do it in a background thread. We will not do it this way for a couple reasons I will explain on vent.
+//    private void initializeProgressBar(){
+//    	// Start lengthy operation in a background thread
+//        new Thread(new Runnable() {
+//            public void run() {
+//                while (progressStatus < 100) {
+//                	progressStatus = progressWork();
+//
+//                    // Update the progress bar
+//                	handler.post(new Runnable() {
+//                        public void run() {
+//                        	activityProgressBar.setProgress(progressStatus);
+//                        }
+//                    });
+//                }
+//            }
+//        }).start();
+//    }
+    
+    private void updateProgressBar(){
+    	while (progressStatus < 100) {
+	    	progressStatus = progressWork();
+	       	activityProgressBar.setProgress(progressStatus);
+	    }
     }
     
     private int progressWork(){
@@ -315,6 +323,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         dblManager.close();
         
         //Checks to see if the activity is done. if so will call onFinish();
+        updateProgressBar();
         if(activityComplete())
         	onFinish();
     }
