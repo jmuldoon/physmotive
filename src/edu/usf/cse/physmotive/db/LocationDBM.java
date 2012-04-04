@@ -51,7 +51,7 @@ public class LocationDBM
     }
 
     // TODO: add column for status text.
-    public int insert(int raceID, String lat, String lng, String spd, int tmStmp, String notes, int usr)
+    public int insert(int raceID, int lat, int lng, double spd, int tmStmp, String notes, int usr)
     {
         String timeStamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
         ContentValues values = new ContentValues();
@@ -97,16 +97,17 @@ public class LocationDBM
 
         // initiates the setting of calendar to the current date
         cal.setTime(date);
-        
+
         // just sets the date for date chosen with the filter.
         date.setDate(day);
         date.setMonth(month);
         date.setYear(year);
-        if(day < 0 || month < 0 || year < 0){
-        	whereClause = FKEY + "=" + raceID;
-        }
-        else{
-        	whereClause = FKEY + "=" + raceID + " and " + date + " <= " + cDate;
+        if (day < 0 || month < 0 || year < 0)
+        {
+            whereClause = FKEY + "=" + raceID;
+        } else
+        {
+            whereClause = FKEY + "=" + raceID + " and " + date + " <= " + cDate;
         }
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
@@ -123,23 +124,24 @@ public class LocationDBM
 
         // initiates the setting of calendar to the current date
         cal.setTime(date);
-        
+
         // just sets the date for date chosen with the filter.
         date.setDate(day);
         date.setMonth(month);
         date.setYear(year);
-        if(day < 0 || month < 0 || year < 0){
-        	whereClause = EUSR + "=" + userID;
-        }
-        else{
-        	whereClause = EUSR + "=" + userID + " and " + date + " <= " + cDate;
+        if (day < 0 || month < 0 || year < 0)
+        {
+            whereClause = EUSR + "=" + userID;
+        } else
+        {
+            whereClause = EUSR + "=" + userID + " and " + date + " <= " + cDate;
         }
         Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
         c.moveToFirst();
 
         return c;
     }
-    
+
     public Cursor getForExport(int id)
     {
         String whereClause = EUSR + "=" + id;

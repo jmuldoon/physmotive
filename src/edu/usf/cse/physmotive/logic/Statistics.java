@@ -1,19 +1,20 @@
 package edu.usf.cse.physmotive.logic;
 
-import java.util.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
-
-import com.google.android.maps.GeoPoint;
 
 import android.database.Cursor;
 import android.location.Location;
 import android.util.Log;
 
-public class Statistics {
-	static final String TABLENAME = "locations";
+import com.google.android.maps.GeoPoint;
+
+public class Statistics
+{
+    static final String TABLENAME = "locations";
     static final String ID = "_id";
     static final String FKEY = "race_id";
     static final String LATITUDE = "lat";
@@ -23,157 +24,182 @@ public class Statistics {
     static final String EDATE = "entryDate";
     static final String TTIME = "totalTime";
     static final String TDISTANCE = "totalDistance";
-    
+
     static final String HEIGHT = "height";
     static final String WEIGHT = "weight";
-	
-	protected Cursor cursor;
-	
-	public Statistics(Cursor cur){
-		cursor = cur;
-	}
-	
-	public double getBMI(){
-		double bmi = 0, weight = 0, height = 0;
-		
-		if(cursor.getCount() > 0){
-			// Assuming standard Metric units
-			cursor.moveToFirst();
-			height = cursor.getInt(cursor.getColumnIndex(HEIGHT));
-			weight = cursor.getInt(cursor.getColumnIndex(WEIGHT));
-			
-			// Height is divided by 100 to convert from cm to m
-			bmi = weight/Math.pow((height/100), 2);
-		}
-		
-		return bmi;
-	}
-	
-	
-	public float getRaceTotalTime(){
-		float diff = 0;
-		long endTime = 0, startTime = 0;
-		Date date;
-		DateFormat dateFormat  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);		
-		
-		if(cursor.getCount() > 0){
-			try{
-				cursor.moveToFirst();
-				date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(LTS)));
-				startTime = date.getTime();
-				cursor.moveToLast();
-				date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(LTS)));
-				endTime = date.getTime();
-			}
-			catch(ParseException ex){
-				Log.e("Date", ex.getMessage(), ex);
-			}
-			
-			diff = endTime - startTime;
-		}
-		return diff;
-	}
-	
-	public float getRaceTotalDistance(){
-		float[] result = new float[3];
-		float sum = 0;
-		GeoPoint curr, prev;
-		
-		if(cursor.getCount() > 0){
-			cursor.moveToFirst();
-			curr = new GeoPoint(Integer.valueOf(cursor.getString(cursor.getColumnIndex(LATITUDE))), Integer.valueOf(cursor.getString(cursor.getColumnIndex(LONGITUDE))));
-			
-			for(;cursor.moveToNext();cursor.moveToNext()){
-				prev = curr;
-				curr =  new GeoPoint(Integer.valueOf(cursor.getString(cursor.getColumnIndex(LATITUDE))), Integer.valueOf(cursor.getString(cursor.getColumnIndex(LONGITUDE))));
-				Location.distanceBetween(prev.getLatitudeE6()/1E6, prev.getLongitudeE6()/1E6, curr.getLatitudeE6()/1E6, curr.getLongitudeE6()/1E6, result);
-				sum += result[0];
-			}
-		}
-		
-		return sum;
-	}
-	
-	
-	public float getActivityTotalTime(){
-		long total = 0;
-		Date date;
-		DateFormat dateFormat  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);	
-		
-		if(cursor.getCount() > 0){
-			cursor.moveToFirst();
-			
-			for(;cursor.moveToNext();cursor.moveToNext()){
-				try{
-					date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
-					total += date.getTime();
-				}
-				catch(ParseException ex){
-					Log.e("Date", ex.getMessage(), ex);
-				}
-			}
-		}
-		
-		return total;
-	}
-	
-	public float getActivityTotalDistance(){
-		long total = 0;
-		
-		if(cursor.getCount() > 0){
-			cursor.moveToFirst();
-			
-			for(;cursor.moveToNext();cursor.moveToNext()){
-				total += cursor.getLong(cursor.getColumnIndex(TDISTANCE));
-			}
-		}
-		
-		return total;
-	}
-	
-	public float getAverageTime(){
-		float avg = 0;
-		long total = 0;
-		Date date;
-		DateFormat dateFormat  = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);	
-		
-		if(cursor.getCount() > 0){
-			cursor.moveToFirst();
-			
-			for(;cursor.moveToNext();cursor.moveToNext()){
-				try{
-					date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
-					total += date.getTime();
-				}
-				catch(ParseException ex){
-					Log.e("Date", ex.getMessage(), ex);
-				}
-			}
-			
-			avg = total/cursor.getCount();
-		}
-		
-		return avg;
-	}
-	
-	public float getAverageDistance(){
-		float avg = 0;
-		long total = 0;
-		
-		if(cursor.getCount() > 0){
-			cursor.moveToFirst();
-			
-			for(;cursor.moveToNext();cursor.moveToNext()){
-				total += cursor.getLong(cursor.getColumnIndex(TDISTANCE));
-			}
-			
-			if (cursor.getCount() > 0)
-				avg = total/cursor.getCount();
-		}
-		return avg;
-	}
-	
-	public int getTotalNumberActivities(){
-		return cursor.getCount();
-	}
+
+    protected Cursor cursor;
+
+    public Statistics(Cursor cur) {
+        cursor = cur;
+    }
+
+    public double getBMI()
+    {
+        double bmi = 0, weight = 0, height = 0;
+
+        if (cursor.getCount() > 0)
+        {
+            // Assuming standard Metric units
+            cursor.moveToFirst();
+            height = cursor.getInt(cursor.getColumnIndex(HEIGHT));
+            weight = cursor.getInt(cursor.getColumnIndex(WEIGHT));
+
+            // Height is divided by 100 to convert from cm to m
+            bmi = weight / Math.pow((height / 100), 2);
+        }
+
+        return bmi;
+    }
+
+    public float getRaceTotalTime()
+    {
+        float diff = 0;
+        long endTime = 0, startTime = 0;
+        Date date;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+
+        if (cursor.getCount() > 0)
+        {
+            try
+            {
+                cursor.moveToFirst();
+                date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(LTS)));
+                startTime = date.getTime();
+                cursor.moveToLast();
+                date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(LTS)));
+                endTime = date.getTime();
+            } catch (ParseException ex)
+            {
+                Log.e("Date", ex.getMessage(), ex);
+            }
+
+            diff = endTime - startTime;
+        }
+        return diff;
+    }
+
+    public float getRaceTotalDistance()
+    {
+        float[] result = new float[3];
+        float sum = 0;
+        GeoPoint curr, prev;
+
+        if (cursor.getCount() > 0)
+        {
+            cursor.moveToFirst();
+            curr = new GeoPoint((int) (Integer.valueOf(cursor.getString(cursor.getColumnIndex(LATITUDE))) * 1E6),
+                    (int) (Integer.valueOf(cursor.getString(cursor.getColumnIndex(LONGITUDE))) * 1E6));
+
+            for (; cursor.moveToNext(); cursor.moveToNext())
+            {
+                prev = curr;
+                // Integer.parseInt(cursor.getString(cursor.getColumnIndex(LATITUDE)));
+                curr = new GeoPoint(Integer.parseInt(cursor.getString(cursor.getColumnIndex(LATITUDE))),
+                        Integer.parseInt(cursor.getString(cursor.getColumnIndex(LONGITUDE))));
+                Location.distanceBetween(prev.getLatitudeE6() / 1E6, prev.getLongitudeE6() / 1E6,
+                        curr.getLatitudeE6() / 1E6, curr.getLongitudeE6() / 1E6, result);
+                sum += result[0];
+            }
+        }
+
+        return sum;
+    }
+
+    public float getActivityTotalTime()
+    {
+        long total = 0;
+        Date date;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+
+        if (cursor.getCount() > 0)
+        {
+            cursor.moveToFirst();
+
+            for (; cursor.moveToNext(); cursor.moveToNext())
+            {
+                try
+                {
+                    date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
+                    total += date.getTime();
+                } catch (ParseException ex)
+                {
+                    Log.e("Date", ex.getMessage(), ex);
+                }
+            }
+        }
+
+        return total;
+    }
+
+    public float getActivityTotalDistance()
+    {
+        long total = 0;
+
+        if (cursor.getCount() > 0)
+        {
+            cursor.moveToFirst();
+
+            for (; cursor.moveToNext(); cursor.moveToNext())
+            {
+                total += cursor.getLong(cursor.getColumnIndex(TDISTANCE));
+            }
+        }
+
+        return total;
+    }
+
+    public float getAverageTime()
+    {
+        float avg = 0;
+        long total = 0;
+        Date date;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+
+        if (cursor.getCount() > 0)
+        {
+            cursor.moveToFirst();
+
+            for (; cursor.moveToNext(); cursor.moveToNext())
+            {
+                try
+                {
+                    date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
+                    total += date.getTime();
+                } catch (ParseException ex)
+                {
+                    Log.e("Date", ex.getMessage(), ex);
+                }
+            }
+
+            avg = total / cursor.getCount();
+        }
+
+        return avg;
+    }
+
+    public float getAverageDistance()
+    {
+        float avg = 0;
+        long total = 0;
+
+        if (cursor.getCount() > 0)
+        {
+            cursor.moveToFirst();
+
+            for (; cursor.moveToNext(); cursor.moveToNext())
+            {
+                total += cursor.getLong(cursor.getColumnIndex(TDISTANCE));
+            }
+
+            if (cursor.getCount() > 0)
+                avg = total / cursor.getCount();
+        }
+        return avg;
+    }
+
+    public int getTotalNumberActivities()
+    {
+        return cursor.getCount();
+    }
 }

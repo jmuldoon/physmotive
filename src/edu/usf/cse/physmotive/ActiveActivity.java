@@ -167,7 +167,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 3, this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 3, this);
         dblManager.open();
-        dblManager.insert(raceId, "0", "0", "0", 0, "start", userId);
+        dblManager.insert(raceId, 0, 0, 0, 0, "start", userId);
         dblManager.close();
 
         // TODO: Intitiate Timer. Set sTime (startTime)
@@ -253,8 +253,8 @@ public class ActiveActivity extends MapActivity implements LocationListener
         Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
 
         dblManager.open();
-        dblManager.insert(raceId, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()),
-                String.valueOf(loc.getSpeed()), (int) loc.getTime(), "", userId);
+        dblManager.insert(raceId, (int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6), loc.getSpeed(),
+                (int) loc.getTime(), "", userId);
         dblManager.close();
     }
 
