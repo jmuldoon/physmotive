@@ -28,11 +28,11 @@ public abstract class GeneralDBM
         dbHelper.close();
     }
     
-    public abstract int insert();
-    public abstract boolean update();
-    public abstract boolean delete();
-    public abstract Cursor get();
-    public abstract Cursor getList();
+    //public abstract int insert();
+    //public abstract boolean update();
+    //public abstract boolean delete();
+    //public abstract Cursor get();
+    //public abstract Cursor getList();
     // TODO: make this a nonabstract method
-    public abstract Cursor getForExport(); 
+    public abstract Cursor getForExport(int id); 
 }

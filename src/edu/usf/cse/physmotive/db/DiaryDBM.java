@@ -9,7 +9,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-public class DiaryDBM
+public class DiaryDBM 
 {
     // Database
     static final String TABLENAME = "diary";
