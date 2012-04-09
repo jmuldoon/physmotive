@@ -2,16 +2,6 @@ package edu.usf.cse.physmotive;
 
 import java.util.Arrays;
 
-import com.androidplot.series.XYSeries;
-import com.androidplot.ui.AnchorPosition;
-import com.androidplot.ui.widget.Widget;
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.LineAndPointRenderer;
-import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XLayoutStyle;
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.YLayoutStyle;
-
 import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -24,6 +14,12 @@ import android.widget.DatePicker;
 import android.widget.Gallery;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.androidplot.series.XYSeries;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYPlot;
+
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.UserDBM;
 import edu.usf.cse.physmotive.logic.Statistics;
@@ -92,42 +88,54 @@ public class StatisticsMenu extends Activity
         // TODO: get data
         // TODO: Graph??
         // TODO: create stats, live data
-        
+
         // Initialize our XYPlot reference:
         mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
- 
+
         // Create two arrays of y-values to plot:
-        Number[] series1Numbers = {1, 8, 5, 2, 7, 4};
-        Number[] series2Numbers = {4, 6, 3, 8, 2, 10};
- 
+        Number[] series1Numbers = { 1, 8, 5, 2, 7, 4 };
+        Number[] series2Numbers = { 4, 6, 3, 8, 2, 10 };
+
         // Turn the above arrays into XYSeries:
-        XYSeries series1 = new SimpleXYSeries(
-                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
-                "Series1");                             // Set the display title of the series
- 
+        XYSeries series1 = new SimpleXYSeries(Arrays.asList(series1Numbers), // SimpleXYSeries
+                                                                             // takes
+                                                                             // a
+                                                                             // List
+                                                                             // so
+                                                                             // turn
+                                                                             // our
+                                                                             // array
+                                                                             // into
+                                                                             // a
+                                                                             // List
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use
+                                                        // the element index as
+                                                        // the x value
+                "Series1"); // Set the display title of the series
+
         // Same as above, for series2
-        XYSeries series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, 
+        XYSeries series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
                 "Series2");
- 
-        // Create a formatter to use for drawing a series using LineAndPointRenderer:
-        LineAndPointFormatter series1Format = new LineAndPointFormatter(
-                Color.rgb(0, 200, 0),                   // line color
-                Color.rgb(0, 100, 0),                   // point color
-                Color.rgb(150, 190, 150));              // fill color (optional)
- 
+
+        // Create a formatter to use for drawing a series using
+        // LineAndPointRenderer:
+        LineAndPointFormatter series1Format = new LineAndPointFormatter(Color.rgb(0, 200, 0), // line
+                                                                                              // color
+                Color.rgb(0, 100, 0), // point color
+                Color.rgb(150, 190, 150)); // fill color (optional)
+
         // Add series1 to the xyplot:
         mySimpleXYPlot.addSeries(series1, series1Format);
- 
+
         // Same as above, with series2:
-        mySimpleXYPlot.addSeries(series2, new LineAndPointFormatter(Color.rgb(0, 0, 200), Color.rgb(0, 0, 100),
-                Color.rgb(150, 150, 190)));
- 
- 
+        mySimpleXYPlot.addSeries(series2,
+                new LineAndPointFormatter(Color.rgb(0, 0, 200), Color.rgb(0, 0, 100), Color.rgb(150, 150, 190)));
+
         // Reduce the number of range labels
         mySimpleXYPlot.setTicksPerRangeLabel(3);
- 
-        // By default, AndroidPlot displays developer guides to aid in laying out your plot.
+
+        // By default, AndroidPlot displays developer guides to aid in laying
+        // out your plot.
         // To get rid of them call disableAllMarkup():
         mySimpleXYPlot.disableAllMarkup();
     }
