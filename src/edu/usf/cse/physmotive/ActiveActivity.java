@@ -324,6 +324,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
         addGeoPoint(point, "Current Location", loc.getLatitude() + " : " + loc.getLongitude());
         Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
+        Log.d("Speed", "" + loc.getSpeed());
 
         dblManager.open();
         dblManager.insert(raceId, (int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6), loc.getSpeed(),
