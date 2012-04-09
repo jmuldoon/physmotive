@@ -20,23 +20,23 @@
         android:layout_below="@+id/activityGallery"
         android:textOff="@string/distanceOrTimeToggleButtonOff"
         android:textOn="@string/distanceOrTimeToggleButtonOn" />
-
-    <ImageView
-        android:id="@+id/distanceOrTimeChartImageView"
+
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/mySimpleXYPlot"
         android:layout_width="wrap_content"
-        android:layout_height="250dp"
+        android:layout_height="300dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/minuteEditText"
-        android:contentDescription="@string/activityMenuGraph"
-        android:src="@drawable/ic_launcher" />
-
+        android:src="@drawable/ic_launcher"
+        title="Distance v. Time" />
+    
     <Button
         android:id="@+id/manualButton"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/distanceOrTimeChartImageView"
+        android:layout_below="@+id/mySimpleXYPlot"
         android:text="@string/manualButtonText" />
 
     <Button
@@ -44,7 +44,7 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/distanceOrTimeChartImageView"
+        android:layout_below="@+id/mySimpleXYPlot"
         android:text="@string/automaticButtonText" />
 
     <EditText

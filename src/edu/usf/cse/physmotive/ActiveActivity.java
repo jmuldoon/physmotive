@@ -18,7 +18,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -29,6 +28,7 @@ import com.google.android.maps.OverlayItem;
 
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.LocationDBM;
+import edu.usf.cse.physmotive.logic.Statistics;
 
 public class ActiveActivity extends MapActivity implements LocationListener
 {
@@ -74,8 +74,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
         unitType = b.getInt("unitType");
         unitValue = b.getInt("unitValue");
 
-        Toast.makeText(this, startType, Toast.LENGTH_SHORT).show();
-
         dblManager = new LocationDBM(this);
         dbaManager = new ActivityDBM(this);
 
@@ -87,9 +85,10 @@ public class ActiveActivity extends MapActivity implements LocationListener
         currentDistanceTextView = (TextView) findViewById(R.id.currentDistanceTextView);
         endActivityButton = (Button) findViewById(R.id.endActivityButton);
         activityProgressBar = (ProgressBar) findViewById(R.id.acitvityProgressBar);
-        afterInit();
         activityProgressBar.setMax(100);
-        activityProgressBar.setProgress(10);
+
+        // Sets up Timer
+        afterInit();
 
         // On Clicks
         setOnClickListeners();
@@ -296,11 +295,17 @@ public class ActiveActivity extends MapActivity implements LocationListener
         currentSpeedTextView.setText(String.valueOf(loc.getSpeed()));
         currentDistanceTextView.setText(String.valueOf(tDistance));
     }
+    
+    public void updateTimings(double prev, double curr){
+    	prev = curr;
+    	curr = currentTime()-prev;
+    }
 
     @Override
     public void onLocationChanged(Location loc)
     {
         float[] result = new float[3];
+        double speed = 0, ptime = 0, ftime = 0, timeTaken = 0;
         mapController = mapView.getController();
 
         point = new GeoPoint((int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6));
@@ -308,6 +313,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // TODO: Make sure this logic works.
         // Update GeoPoints to keep current Stats
         updateGeoPoints(point);
+        updateTimings(ptime, ftime);
 
         // Update the distance for total Distance
         if (prev != null)
@@ -315,6 +321,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
             Location.distanceBetween(prev.getLatitudeE6() / 1E6, prev.getLongitudeE6() / 1E6, curr.getLatitudeE6() / 1E6,
                     curr.getLongitudeE6() / 1E6, result);
             tDistance += result[0];
+            
+            timeTaken = ftime - ptime;
+            speed = Statistics.getSpeed(result[0], timeTaken);
         }
 
         // Update Stats on Page
@@ -326,9 +335,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
         addGeoPoint(point, "Current Location", loc.getLatitude() + " : " + loc.getLongitude());
         Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
-
+        
         dblManager.open();
-        dblManager.insert(raceId, (int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6), loc.getSpeed(),
+        dblManager.insert(raceId, (int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6), (int)speed,
                 (int) loc.getTime(), "", userId);
         dblManager.close();
 
@@ -400,6 +409,12 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
         return String.format("%02d", hours) + ":" + String.format("%02d", minutes % 60) + ":"
                 + String.format("%02d", tTime % 60);
+    }
+
+    public double currentTime()
+    {
+        long interval = System.nanoTime() - startTimePoint;
+        return interval;
     }
 
     public void setLabelText(String string)

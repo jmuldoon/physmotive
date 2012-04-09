@@ -30,24 +30,24 @@
         android:layout_marginBottom="19dp"
         android:text="@string/totalTimeValue"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
     
-    <ImageView
-        android:id="@+id/progressChartImageView"
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/mySimpleXYPlot"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/filterDatePicker"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/statisticsProgressGraph"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_launcher"
+        title="Stats v Stats" />
         
 
     <TextView
         android:id="@+id/NumberOfRacesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/progressChartImageView"
-        android:layout_below="@+id/progressChartImageView"
+        android:layout_alignRight="@+id/mySimpleXYPlot"
+        android:layout_below="@+id/mySimpleXYPlot"
         android:layout_marginTop="22dp"
         android:text="@string/numberOfRacesValue"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -75,16 +75,16 @@
         android:id="@+id/filterTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/progressChartImageView"
         android:layout_below="@+id/activityGallery"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="27dp"
-        android:text="Date Filter" />
+        android:text="Date Filter to Current" />
 
     <TextView
         android:id="@+id/BMITextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/progressChartImageView"
+        android:layout_alignLeft="@+id/mySimpleXYPlot"
         android:layout_below="@+id/NumberOfRacesTextView"
         android:layout_marginTop="28dp"
         android:text="#NAN" />
@@ -95,15 +95,5 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/filterTextView" />
-
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/mySimpleXYPlot"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/filterDatePicker"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_launcher"
-        title="A Simple XYPlot Example" />
 
 </RelativeLayout>

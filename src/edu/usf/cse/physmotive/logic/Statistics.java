@@ -52,6 +52,15 @@ public class Statistics
         return bmi;
     }
 
+    // initial = ini, final = fin, and time is the time between both points
+    public static double getSpeed(float distance, double time){
+    	double spd = 0;
+    	if (time > 0){
+    		spd = (Math.sqrt(Math.pow(distance, 2))) / time;
+    	}
+    	return spd;
+    }
+    
     public float getRaceTotalTime()
     {
         float diff = 0;
