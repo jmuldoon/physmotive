@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayout1"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent" >
-
+    android:layout_height="fill_parent" 
+    android:background="@drawable/background">
+    
     <Gallery
         android:id="@+id/activityGallery"
         android:layout_width="fill_parent"
@@ -104,6 +105,6 @@
         android:layout_below="@+id/filterDatePicker"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_launcher"
-        title="A Simple XYPlot Example" />
+        title="Time vs. Distance" />
 
 </RelativeLayout>
