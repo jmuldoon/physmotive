@@ -165,26 +165,27 @@ public class StatisticsMenu extends Activity
 
         dbaManager.close();
         
-
-        chartData = new ChartData(cur1, 1, 2);
-        Number x[] = chartData.getX();
-        Number y[] = chartData.getY();
+        if(cur1.getCount()!=0)
+        {
+            chartData = new ChartData(cur1, 1, 2);
+            Number x[] = chartData.getX();
+            Number y[] = chartData.getY();
         
-        XYSeries series1 = new SimpleXYSeries(
-              Arrays.asList(x),          // SimpleXYSeries takes a List so turn our array into a List
-              Arrays.asList(y),         // Y_VALS_ONLY means use the element index as the x value
-              //SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED,
-              "Distance");                             // Set the display title of the series
+            XYSeries series1 = new SimpleXYSeries(
+                    Arrays.asList(x),          // SimpleXYSeries takes a List so turn our array into a List
+                    Arrays.asList(y),         // Y_VALS_ONLY means use the element index as the x value
+                    //SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED,
+                    "Distance");                             // Set the display title of the series
         
-     // Create a formatter to use for drawing a series using LineAndPointRenderer:
-      LineAndPointFormatter series1Format = new LineAndPointFormatter(
-              Color.rgb(0, 200, 0),                   // line color
-              Color.rgb(0, 100, 0),                   // point color
-              //Color.rgb(150, 190, 150));              // fill color (optional)
-              null);
+            // Create a formatter to use for drawing a series using LineAndPointRenderer:
+            LineAndPointFormatter series1Format = new LineAndPointFormatter(
+                    Color.rgb(0, 200, 0),                   // line color
+                    Color.rgb(0, 100, 0),                   // point color
+                    //Color.rgb(150, 190, 150));              // fill color (optional)
+                    null);
       
-      mySimpleXYPlot.addSeries(series1, series1Format);
-        
+            mySimpleXYPlot.addSeries(series1, series1Format);
+        }
         
 
         Toast.makeText(this, Integer.toString(cur1.getCount()), Toast.LENGTH_SHORT).show();
