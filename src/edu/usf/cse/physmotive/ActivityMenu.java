@@ -75,7 +75,7 @@ public class ActivityMenu extends Activity
 
         if (distanceOrTimeToggleButton.isChecked())
         {
-            unitValue = Integer.valueOf(minuteEditText.getText().toString()) * 60;
+            unitValue = Integer.valueOf(minuteEditText.getText().toString());
             unitType = 1;
         } else
         {

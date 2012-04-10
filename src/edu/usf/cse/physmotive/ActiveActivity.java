@@ -134,16 +134,16 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
     private int progressWork()
     {
-        float progress = 0;
+        double progress = 0;
         // unitType == 0 is time in sec, unitType == 1 is distance in meters
         if (unitType == 0)
         {
-            progress = (int) (((double) tTime / (double) unitValue) * 100);
+            progress = (((double) tTime / (double) unitValue) * 100);
         } else
         {
-            progress = (int) (((double) tDistance / (double) unitValue) * 100);
+            progress = (((double) tDistance / (double) unitValue) * 100);
         }
-        return Math.round(progress);
+        return (int)Math.round(progress);
     }
 
     private boolean activityComplete()
@@ -165,11 +165,13 @@ public class ActiveActivity extends MapActivity implements LocationListener
     private void onFinish()
     {
     	StopWatch.stopCounting();
-        // If not complete
+            	
+    	// If not complete
         // TODO: delete race.
         // Only delete(raceId) needs be called.
         if (!activityComplete() && endFlag == 0)
         {
+        	Log.e("onFinish", "delete");
             dbaManager.open();
             dbaManager.delete(raceId);
             dbaManager.close();
@@ -180,6 +182,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // dblManager.insert(raceId, lat, lng, spd, lts, "finished", userId);
         // TODO: get tTime to insert int seconds for total time.
         else if (activityComplete()){
+        	Log.e("onFinish", "finish");
             dbaManager.open();
             dbaManager.update(raceId, userId, (int) tTime, (int) tDistance);
             dbaManager.close();
@@ -189,10 +192,10 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // TODO: make sure it saves current info
         else if (!activityComplete() && endFlag == 1)
         {
+        	Log.e("onFinish", "end");
         	dbaManager.open();
             dbaManager.update(raceId, userId, (int) tTime, (int) tDistance);
-            dbaManager.close();
-        }
+            dbaManager.close();}
     }
 
     private void setOnClickListeners()
@@ -287,7 +290,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
     	tTime = (long)t;
     	ptime = ftime;
     	ftime = t-ptime;
-    	Log.e("time:ptime:ftime", t+":"+ptime+":"+ftime);
     }
 
     @Override
@@ -322,7 +324,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
         mapView.invalidate();
 
         addGeoPoint(point, "Current Location", loc.getLatitude() + " : " + loc.getLongitude());
-        Log.d("lat:long:time", loc.getLatitude() + ":" + loc.getLongitude() + ":" + Statistics.roundTwoDecimals(speed));
 
         dblManager.open();
         dblManager.insert(raceId, (int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6), (int) speed,
@@ -333,7 +334,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         updateProgressBar();
 
         if (activityComplete())
-            onFinish();
+            finish();
     }
 
     @Override
