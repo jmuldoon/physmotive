@@ -23,7 +23,6 @@ import com.google.android.maps.OverlayItem;
 
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.LocationDBM;
-import edu.usf.cse.physmotive.logic.Statistics;
 
 public class ActivityView extends MapActivity implements LocationListener
 {
@@ -65,7 +64,6 @@ public class ActivityView extends MapActivity implements LocationListener
     private Cursor activityCursor;
     private ActivityDBM activityDBM;
     private LocationDBM locationDBM;
-    private Statistics statsActivity;
 
     // Called when the activity is first created.
     @Override
@@ -114,6 +112,7 @@ public class ActivityView extends MapActivity implements LocationListener
 
         activityDBM.open();
         activityInfo = activityDBM.get(activityId);
+        startManagingCursor(activityInfo);
         activityDBM.close();
 
         raceId_tv.setText("Race Id #" + activityInfo.getString(activityInfo.getColumnIndex(ID)));
@@ -131,15 +130,16 @@ public class ActivityView extends MapActivity implements LocationListener
         int day = -1, month = -1, year = -1; // -1 defaults for all
         
         activityDBM.open();
-        activityCursor = activityDBM.getStatisticsList(userId, activityId, day, month, year);
-        statsActivity = new Statistics(activityCursor);
+        activityCursor = activityDBM.getRaceStats(userId, activityId);
+        startManagingCursor(activityCursor);
         activityDBM.close();
 
         locationDBM.open();
         locationCursor = locationDBM.getList(activityId, day, month, year);
+        startManagingCursor(locationCursor);
         locationDBM.close();
         
-        raceTotTime_tv.setText("Total Time: " + activityCursor.getInt(activityCursor.getColumnIndex(TOTALTIME)) + " s");
+        raceTotTime_tv.setText("Total Time: " + activityCursor.getDouble(activityCursor.getColumnIndex(TOTALTIME)) + " s");
         raceTotDist_tv.setText("Total Distance: " + activityCursor.getFloat(activityCursor.getColumnIndex(TOTALDISTANCE)) + " m");
         raceTotPace_tv.setText("Speed: " + ((double)activityCursor.getFloat(activityCursor.getColumnIndex(TOTALDISTANCE)) / (double)activityCursor.getInt(activityCursor.getColumnIndex(TOTALTIME))) + " m/s");
     }

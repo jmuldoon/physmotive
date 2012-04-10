@@ -146,6 +146,18 @@ public class ActivityDBM
 
         return c;
     }
+    
+    public Cursor getRaceStats(int userID, int raceID)
+    {
+        String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
+
+        String whereClause = EUSR + " = " + userID + " and " + ID + " = " + raceID;
+
+        Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        c.moveToFirst();
+
+        return c;
+    }
 
     public Cursor getForExport(int id)
     {
