@@ -27,7 +27,9 @@ import edu.usf.cse.physmotive.ui.ImageAdapter;
 
 public class StatisticsMenu extends Activity
 {
-    public static final String USERID = "userId";
+	static final String TOTALTIME = "totalTime";
+	
+	public static final String USERID = "userId";
 
     protected Gallery gallery;
     protected DatePicker filterDatePicker;
@@ -149,26 +151,26 @@ public class StatisticsMenu extends Activity
     private void updateStatistics()
     {
         dbaManager.open();
-
+        
         Cursor cur1 = dbaManager.getStatisticsList(userId, activityId, filterDatePicker.getDayOfMonth(),
                 filterDatePicker.getMonth() + 1, filterDatePicker.getYear());
         startManagingCursor(cur1);
         statsActivity = new Statistics(cur1);
 
         dbaManager.close();
-
+        
         NumberOfRacesTextView.setText("Total Activities Completed: " + statsActivity.getTotalNumberActivities());
-        averageTimeTextView.setText("Average Time: " + statsActivity.getAverageTime());
-        averageDistanceTextView.setText("Average Distance: " + statsActivity.getAverageDistance());
-        totalTimeTextView.setText("Total Time: " + statsActivity.getActivityTotalTime());
-        totalDistanceTextView.setText("Total Distance: " + statsActivity.getActivityTotalDistance());
+        averageTimeTextView.setText("Average Time: " + Statistics.roundTwoDecimals(statsActivity.getAverageTime()) + " s");
+        averageDistanceTextView.setText("Average Distance: " + Statistics.roundTwoDecimals(statsActivity.getAverageDistance()) + " m");
+        totalTimeTextView.setText("Total Time: " + Statistics.roundTwoDecimals(statsActivity.getActivityTotalTime())+ " s");
+        totalDistanceTextView.setText("Total Distance: " + Statistics.roundTwoDecimals(statsActivity.getActivityTotalDistance()) + " m");
 
         dbuManager.open();
         Cursor cur2 = dbuManager.getList(userId);
         startManagingCursor(cur2);
         statsUser = new Statistics(cur2);
         dbuManager.close();
-        bmiTextView.setText("Body Mass Index: " + statsUser.getBMI());
+        bmiTextView.setText("BMI: " + Statistics.roundTwoDecimals(statsUser.getBMI()));
     }
 
 }

@@ -120,30 +120,44 @@ public class Statistics
         return sum;
     }
 
-    public float getActivityTotalTime()
-    {
-        long total = 0;
-        Date date;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+//    public float getActivityTotalTime()
+//    {
+//        long total = 0;
+//        Date date;
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+//
+//        if (cursor.getCount() > 0)
+//        {
+//            cursor.moveToFirst();
+//
+//            do{
+//                try
+//                {
+//                    date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
+//                    total += date.getTime();
+//                } catch (ParseException ex)
+//                {
+//                    Log.e("Date", ex.getMessage(), ex);
+//                }
+//            }while(cursor.moveToNext());
+//        }
+//
+//        return total;
+//    }
+    
+	public float getActivityTotalTime() {
+		float total = 0;
 
-        if (cursor.getCount() > 0)
-        {
-            cursor.moveToFirst();
+		if (cursor.getCount() > 0) {
+			cursor.moveToFirst();
 
-            do{
-                try
-                {
-                    date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
-                    total += date.getTime();
-                } catch (ParseException ex)
-                {
-                    Log.e("Date", ex.getMessage(), ex);
-                }
-            }while(cursor.moveToNext());
-        }
+			do {
+				total += cursor.getDouble(cursor.getColumnIndex(TTIME));
+			} while (cursor.moveToNext());
+		}
 
-        return total;
-    }
+		return total;
+	}
 
     public float getActivityTotalDistance()
     {
@@ -161,34 +175,52 @@ public class Statistics
         return total;
     }
 
-    public float getAverageTime()
-    {
-        float avg = 0;
-        long total = 0;
-        Date date;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+//    public float getAverageTime()
+//    {
+//        float avg = 0;
+//        long total = 0;
+//        Date date;
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+//
+//        if (cursor.getCount() > 0)
+//        {
+//            cursor.moveToFirst();
+//
+//            do{
+//                try
+//                {
+//                    date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
+//                    total += date.getTime();
+//                } catch (ParseException ex)
+//                {
+//                    Log.e("Date", ex.getMessage(), ex);
+//                }
+//            }while(cursor.moveToNext());
+//
+//            avg = total / cursor.getCount();
+//        }
+//
+//        return avg;
+//    }
 
-        if (cursor.getCount() > 0)
+    public float getAverageTime(){
+    	float avg = 0, total = 0;
+    	
+    	if (cursor.getCount() > 0)
         {
             cursor.moveToFirst();
 
             do{
-                try
-                {
-                    date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
-                    total += date.getTime();
-                } catch (ParseException ex)
-                {
-                    Log.e("Date", ex.getMessage(), ex);
-                }
+                total += cursor.getLong(cursor.getColumnIndex(TTIME));
             }while(cursor.moveToNext());
-
-            avg = total / cursor.getCount();
+        
+            avg = total/cursor.getCount();
         }
-
-        return avg;
+    	
+    	return avg;
     }
-
+    
+    
     public float getAverageDistance()
     {
         float avg = 0;
