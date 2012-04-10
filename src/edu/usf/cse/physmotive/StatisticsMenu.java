@@ -164,13 +164,14 @@ public class StatisticsMenu extends Activity
         dbaManager.close();
         
 
-        chartData = new ChartData(cur1, 2, 3);
+        chartData = new ChartData(cur1, 1, 2);
         Number x[] = chartData.getX();
         Number y[] = chartData.getY();
         
         XYSeries series1 = new SimpleXYSeries(
               Arrays.asList(x),          // SimpleXYSeries takes a List so turn our array into a List
-              Arrays.asList(y), // Y_VALS_ONLY means use the element index as the x value
+              Arrays.asList(y),         // Y_VALS_ONLY means use the element index as the x value
+              //SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED,
               "Distance");                             // Set the display title of the series
         
      // Create a formatter to use for drawing a series using LineAndPointRenderer:

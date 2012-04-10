@@ -39,7 +39,7 @@
         android:layout_above="@+id/totalTimeTextView"
         android:layout_below="@+id/filterDatePicker"
         android:layout_centerHorizontal="true"
-        title="Stats v Stats"
+        title="Distance v Stats"
         android:src="@drawable/ic_launcher" />
 
     <TextView
