@@ -63,8 +63,6 @@ public class ActivityMenu extends Activity
         gallery.setAdapter(new ImageAdapter(this));
 
         setOnClickListeners();
-
-        // TODO: Fix Pictures
     }
 
     private void bundleUserInformation(Intent mIntent)

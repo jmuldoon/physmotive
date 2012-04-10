@@ -192,8 +192,8 @@ public class MainMenu extends Activity implements LocationListener
                             {
                                 Toast.makeText(MainMenu.this, "The user is saving...", Toast.LENGTH_SHORT).show();
                                 userDBM.open();
-                                userId = userDBM.insert(firstName.getText().toString(), lastName.getText().toString(), 0, 0, 0,
-                                        0, 0, 0, 0, userId);
+                                userId = userDBM.insert(firstName.getText().toString(), lastName.getText().toString(), 0, 0,
+                                        0, 0, 0, 0, 0, userId);
                                 userDBM.close();
                                 firstName.setText("");
                                 lastName.setText("");

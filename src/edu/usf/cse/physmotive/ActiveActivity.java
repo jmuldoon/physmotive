@@ -93,13 +93,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // On Clicks
         setOnClickListeners();
 
-        // TODO: also give me time info etc!!
-        // TODO: on update put the totalTime and totalDistance with the
-        // activity.
-
-        // Setup for the progress bar thread
-        // initializeProgressBar();
-
         // Checks from previous screen if it starts manually or automatically.
         // if automatic it will just call for location services, otherwise
         // a dialog box will pop-up and wait till ready before starting them.
@@ -245,7 +238,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
         dblManager.insert(raceId, 0, 0, 0, 0, "start", userId);
         dblManager.close();
 
-        // TODO: Intitiate Timer. Set sTime (startTime)
         startCounting();
     }
 
@@ -295,10 +287,11 @@ public class ActiveActivity extends MapActivity implements LocationListener
         currentSpeedTextView.setText(String.valueOf(loc.getSpeed()));
         currentDistanceTextView.setText(String.valueOf(tDistance));
     }
-    
-    public void updateTimings(double prev, double curr){
-    	prev = curr;
-    	curr = currentTime()-prev;
+
+    public void updateTimings(double prev, double curr)
+    {
+        prev = curr;
+        curr = currentTime() - prev;
     }
 
     @Override
@@ -310,7 +303,6 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
         point = new GeoPoint((int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6));
 
-        // TODO: Make sure this logic works.
         // Update GeoPoints to keep current Stats
         updateGeoPoints(point);
         updateTimings(ptime, ftime);
@@ -321,7 +313,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
             Location.distanceBetween(prev.getLatitudeE6() / 1E6, prev.getLongitudeE6() / 1E6, curr.getLatitudeE6() / 1E6,
                     curr.getLongitudeE6() / 1E6, result);
             tDistance += result[0];
-            
+
             timeTaken = ftime - ptime;
             speed = Statistics.getSpeed(result[0], timeTaken);
         }
@@ -335,9 +327,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
         addGeoPoint(point, "Current Location", loc.getLatitude() + " : " + loc.getLongitude());
         Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
-        
+
         dblManager.open();
-        dblManager.insert(raceId, (int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6), (int)speed,
+        dblManager.insert(raceId, (int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6), (int) speed,
                 (int) loc.getTime(), "", userId);
         dblManager.close();
 
