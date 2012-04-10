@@ -118,7 +118,9 @@ public class StatisticsMenu extends Activity
         mySimpleXYPlot.setRangeLabel("Distance");
  
         // Reduce the number of range labels
-        mySimpleXYPlot.setTicksPerRangeLabel(3);
+        mySimpleXYPlot.setTicksPerRangeLabel(1);
+        mySimpleXYPlot.setTicksPerDomainLabel(1);
+        mySimpleXYPlot.setDomainLeftMin(0);
 
         // By default, AndroidPlot displays developer guides to aid in laying
         // out your plot.
@@ -178,7 +180,8 @@ public class StatisticsMenu extends Activity
       LineAndPointFormatter series1Format = new LineAndPointFormatter(
               Color.rgb(0, 200, 0),                   // line color
               Color.rgb(0, 100, 0),                   // point color
-              Color.rgb(150, 190, 150));              // fill color (optional)
+              //Color.rgb(150, 190, 150));              // fill color (optional)
+              null);
       
       mySimpleXYPlot.addSeries(series1, series1Format);
         
