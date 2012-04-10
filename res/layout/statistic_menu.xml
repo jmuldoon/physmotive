@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayout1"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent" >
-
+    android:layout_height="fill_parent" 
+    android:background="@drawable/background">
+    
     <Gallery
         android:id="@+id/activityGallery"
         android:layout_width="fill_parent"
@@ -95,5 +96,15 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/filterTextView" />
+
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/mySimpleXYPlot"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/filterDatePicker"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_launcher"
+        title="Time vs. Distance" />
 
 </RelativeLayout>
