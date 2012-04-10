@@ -35,6 +35,8 @@ public class ActivityView extends MapActivity implements LocationListener
     static final String DIARYID = "diaryId";
     static final String LATITUDE = "lat";
     static final String LONGITUDE = "lng";
+    static final String TOTALTIME = "totalTime";
+    static final String TOTALDISTANCE = "totalDistance";
     static final String ID = "_id";
     static final String EDATE = "entryDate";
 
@@ -60,9 +62,10 @@ public class ActivityView extends MapActivity implements LocationListener
     private int userId, activityId, diaryId = 0;
     private Cursor activityInfo;
     private Cursor locationCursor;
+    private Cursor activityCursor;
     private ActivityDBM activityDBM;
     private LocationDBM locationDBM;
-    private Statistics statsLocation;
+    private Statistics statsActivity;
 
     // Called when the activity is first created.
     @Override
@@ -94,7 +97,6 @@ public class ActivityView extends MapActivity implements LocationListener
         Drawable drawable = this.getResources().getDrawable(R.drawable.androidmarker);
         itemizedOverlay = new MapItemizedOverlay(drawable, this);
 
-        // TODO: Make sure buttons work properly
         // TODO: Make logic so you cannot infinite loop
     }
 
@@ -127,30 +129,32 @@ public class ActivityView extends MapActivity implements LocationListener
     private void updateStatistics()
     {
         int day = -1, month = -1, year = -1; // -1 defaults for all
+        
+        activityDBM.open();
+        activityCursor = activityDBM.getStatisticsList(userId, activityId, day, month, year);
+        statsActivity = new Statistics(activityCursor);
+        activityDBM.close();
+
         locationDBM.open();
-
         locationCursor = locationDBM.getList(activityId, day, month, year);
-        statsLocation = new Statistics(locationCursor);
-
         locationDBM.close();
-
-        raceTotTime_tv.setText("Total Time: " + statsLocation.getRaceTotalTime());
-        raceTotDist_tv.setText("Total Distance: " + statsLocation.getRaceTotalDistance());
-        raceTotPace_tv.setText("Speed: " + (statsLocation.getRaceTotalDistance() / statsLocation.getRaceTotalTime()));
+        
+        raceTotTime_tv.setText("Total Time: " + activityCursor.getColumnIndex(TOTALTIME));
+        raceTotDist_tv.setText("Total Distance: " + activityCursor.getColumnIndex(TOTALDISTANCE));
+        raceTotPace_tv.setText("Speed: " + ((double)activityCursor.getColumnIndex(TOTALDISTANCE) / (double)activityCursor.getColumnIndex(TOTALTIME)));
     }
 
     private void initializeMap()
     {
         mapController = mapView.getController();
-
+        
         locationCursor.moveToFirst();
-        for (; locationCursor.moveToNext(); locationCursor.moveToNext())
-        {
+        do{
             point = new GeoPoint(Integer.valueOf(locationCursor.getString(locationCursor.getColumnIndex(LATITUDE))),
                     Integer.valueOf(locationCursor.getString(locationCursor.getColumnIndex(LONGITUDE))));
 
             addGeoPoint(point, "Current Location", "lat : lng");
-        }
+        }while(locationCursor.moveToNext());
     }
 
     private void bundleUserInformation(Intent mIntent)

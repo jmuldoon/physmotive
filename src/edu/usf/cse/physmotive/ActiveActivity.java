@@ -11,7 +11,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -180,8 +179,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // TODO: Get Final GPS pull save with Finished note.
         // dblManager.insert(raceId, lat, lng, spd, lts, "finished", userId);
         // TODO: get tTime to insert int seconds for total time.
-        else if (activityComplete())
-        {
+        else if (activityComplete()){
             dbaManager.open();
             dbaManager.update(raceId, userId, (int) tTime, (int) tDistance);
             dbaManager.close();
@@ -191,10 +189,9 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // TODO: make sure it saves current info
         else if (!activityComplete() && endFlag == 1)
         {
-            // Do nothing since it should have already saved the information as
-            // is.
-            // TODO: make sure the last entered data has a finished tag on it.
-            // maybe Finished Early?
+        	dbaManager.open();
+            dbaManager.update(raceId, userId, (int) tTime, (int) tDistance);
+            dbaManager.close();
         }
     }
 
@@ -287,6 +284,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
     }
    
     public void updateTimings(double t){
+    	tTime = (long)t;
     	ptime = ftime;
     	ftime = t-ptime;
     	Log.e("time:ptime:ftime", t+":"+ptime+":"+ftime);

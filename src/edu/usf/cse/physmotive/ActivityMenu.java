@@ -121,6 +121,7 @@ public class ActivityMenu extends Activity
             public void onItemClick(AdapterView parent, View v, int position, long id)
             {
                 activitySelection = position;
+                Toast.makeText(ActivityMenu.this, "Only running is available for Beta release.", Toast.LENGTH_LONG).show();
             }
         });
         distanceOrTimeToggleButton.setOnClickListener(new OnClickListener() {

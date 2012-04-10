@@ -140,6 +140,7 @@ public class StatisticsMenu extends Activity
             public void onItemClick(AdapterView parent, View v, int position, long id)
             {
                 activityId = position;
+                Toast.makeText(StatisticsMenu.this, "Only running is available for Beta release.", Toast.LENGTH_LONG).show();
                 updateStatistics();
             }
         });
@@ -155,8 +156,6 @@ public class StatisticsMenu extends Activity
         statsActivity = new Statistics(cur1);
 
         dbaManager.close();
-
-        Toast.makeText(this, Integer.toString(cur1.getCount()), Toast.LENGTH_SHORT).show();
 
         NumberOfRacesTextView.setText("Total Activities Completed: " + statsActivity.getTotalNumberActivities());
         averageTimeTextView.setText("Average Time: " + statsActivity.getAverageTime());

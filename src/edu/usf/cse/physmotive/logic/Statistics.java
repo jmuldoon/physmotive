@@ -103,8 +103,8 @@ public class Statistics
         if (cursor.getCount() > 0)
         {
             cursor.moveToFirst();
-            curr = new GeoPoint((int) (Integer.valueOf(cursor.getString(cursor.getColumnIndex(LATITUDE))) * 1E6),
-                    (int) (Integer.valueOf(cursor.getString(cursor.getColumnIndex(LONGITUDE))) * 1E6));
+            curr = new GeoPoint((int) (Integer.parseInt(cursor.getString(cursor.getColumnIndex(LATITUDE)))/ 1E6),
+                    (int) (Integer.parseInt(cursor.getString(cursor.getColumnIndex(LONGITUDE)))/ 1E6));
 
             do{
                 prev = curr;
