@@ -22,12 +22,15 @@ import com.androidplot.xy.XYPlot;
 
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.UserDBM;
+import edu.usf.cse.physmotive.logic.ChartData;
 import edu.usf.cse.physmotive.logic.Statistics;
 import edu.usf.cse.physmotive.ui.ImageAdapter;
 
 public class StatisticsMenu extends Activity
 {
-    public static final String USERID = "userId";
+	static final String TOTALTIME = "totalTime";
+	
+	public static final String USERID = "userId";
 
     protected Gallery gallery;
     protected DatePicker filterDatePicker;
@@ -92,22 +95,24 @@ public class StatisticsMenu extends Activity
 
  
         // Create two arrays of y-values to plot:
-        Number[] series1Numbers = {};
+        //Number[] series1Numbers = {};
  
         // Turn the above arrays into XYSeries:
-        XYSeries series1 = new SimpleXYSeries(
-                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
-                "Distance");                             // Set the display title of the series
- 
+//        XYSeries series1 = new SimpleXYSeries(
+//                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
+//                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
+//                "Distance");                             // Set the display title of the series
+// 
         // Create a formatter to use for drawing a series using LineAndPointRenderer:
-        LineAndPointFormatter series1Format = new LineAndPointFormatter(
-                Color.rgb(0, 200, 0),                   // line color
-                Color.rgb(0, 100, 0),                   // point color
-                Color.rgb(150, 190, 150));              // fill color (optional)
+//        LineAndPointFormatter series1Format = new LineAndPointFormatter(
+//                Color.rgb(0, 200, 0),                   // line color
+//                Color.rgb(0, 100, 0),                   // point color
+//                Color.rgb(150, 190, 150));              // fill color (optional)
  
         // Add series1 to the xyplot:
-        mySimpleXYPlot.addSeries(series1, series1Format);
+        //mySimpleXYPlot.addSeries(series1, series1Format);
+        
+        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
  
         mySimpleXYPlot.setDomainLabel("Time");
         mySimpleXYPlot.setRangeLabel("Distance");
@@ -148,27 +153,50 @@ public class StatisticsMenu extends Activity
 
     private void updateStatistics()
     {
+        ChartData chartData;
         dbaManager.open();
-
+        
         Cursor cur1 = dbaManager.getStatisticsList(userId, activityId, filterDatePicker.getDayOfMonth(),
                 filterDatePicker.getMonth() + 1, filterDatePicker.getYear());
         startManagingCursor(cur1);
         statsActivity = new Statistics(cur1);
 
         dbaManager.close();
+        
+
+        chartData = new ChartData(cur1, 2, 3);
+        Number x[] = chartData.getX();
+        Number y[] = chartData.getY();
+        
+        XYSeries series1 = new SimpleXYSeries(
+              Arrays.asList(x),          // SimpleXYSeries takes a List so turn our array into a List
+              Arrays.asList(y), // Y_VALS_ONLY means use the element index as the x value
+              "Distance");                             // Set the display title of the series
+        
+     // Create a formatter to use for drawing a series using LineAndPointRenderer:
+      LineAndPointFormatter series1Format = new LineAndPointFormatter(
+              Color.rgb(0, 200, 0),                   // line color
+              Color.rgb(0, 100, 0),                   // point color
+              Color.rgb(150, 190, 150));              // fill color (optional)
+      
+      mySimpleXYPlot.addSeries(series1, series1Format);
+        
+        
+
+        Toast.makeText(this, Integer.toString(cur1.getCount()), Toast.LENGTH_SHORT).show();
 
         NumberOfRacesTextView.setText("Total Activities Completed: " + statsActivity.getTotalNumberActivities());
-        averageTimeTextView.setText("Average Time: " + statsActivity.getAverageTime());
-        averageDistanceTextView.setText("Average Distance: " + statsActivity.getAverageDistance());
-        totalTimeTextView.setText("Total Time: " + statsActivity.getActivityTotalTime());
-        totalDistanceTextView.setText("Total Distance: " + statsActivity.getActivityTotalDistance());
+        averageTimeTextView.setText("Average Time: " + Statistics.roundTwoDecimals(statsActivity.getAverageTime()) + " s");
+        averageDistanceTextView.setText("Average Distance: " + Statistics.roundTwoDecimals(statsActivity.getAverageDistance()) + " m");
+        totalTimeTextView.setText("Total Time: " + Statistics.roundTwoDecimals(statsActivity.getActivityTotalTime())+ " s");
+        totalDistanceTextView.setText("Total Distance: " + Statistics.roundTwoDecimals(statsActivity.getActivityTotalDistance()) + " m");
 
         dbuManager.open();
         Cursor cur2 = dbuManager.getList(userId);
         startManagingCursor(cur2);
         statsUser = new Statistics(cur2);
         dbuManager.close();
-        bmiTextView.setText("Body Mass Index: " + statsUser.getBMI());
+        bmiTextView.setText("BMI: " + Statistics.roundTwoDecimals(statsUser.getBMI()));
     }
 
 }

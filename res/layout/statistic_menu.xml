@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayout1"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent" 
-    android:background="@drawable/background">
-    
+    android:layout_height="fill_parent"
+    android:background="@drawable/background" >
+
     <Gallery
         android:id="@+id/activityGallery"
         android:layout_width="fill_parent"
@@ -31,47 +31,17 @@
         android:layout_marginBottom="19dp"
         android:text="@string/totalTimeValue"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-    
+
     <com.androidplot.xy.XYPlot
         android:id="@+id/mySimpleXYPlot"
         android:layout_width="wrap_content"
-        android:layout_height="300dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="100dp"
+        android:layout_above="@+id/totalTimeTextView"
         android:layout_below="@+id/filterDatePicker"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_launcher"
-        title="Stats v Stats" />
-        
+        title="Stats v Stats"
+        android:src="@drawable/ic_launcher" />
 
-    <TextView
-        android:id="@+id/NumberOfRacesTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/mySimpleXYPlot"
-        android:layout_below="@+id/mySimpleXYPlot"
-        android:layout_marginTop="22dp"
-        android:text="@string/numberOfRacesValue"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/averageDistanceTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/totalTimeTextView"
-        android:layout_toRightOf="@+id/NumberOfRacesTextView"
-        android:text="@string/averageDistanceValue"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/averageTimeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/totalTimeTextView"
-        android:layout_alignBottom="@+id/totalTimeTextView"
-        android:layout_toRightOf="@+id/NumberOfRacesTextView"
-        android:text="@string/averageTimeValue"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    
     <TextView
         android:id="@+id/filterTextView"
         android:layout_width="wrap_content"
@@ -81,14 +51,6 @@
         android:layout_marginTop="27dp"
         android:text="Date Filter to Current" />
 
-    <TextView
-        android:id="@+id/BMITextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/mySimpleXYPlot"
-        android:layout_below="@+id/NumberOfRacesTextView"
-        android:layout_marginTop="28dp"
-        android:text="#NAN" />
     <DatePicker
         android:id="@+id/filterDatePicker"
         android:layout_width="wrap_content"
@@ -97,14 +59,39 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/filterTextView" />
 
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/mySimpleXYPlot"
+    <TextView
+        android:id="@+id/averageDistanceTextView"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/filterDatePicker"
+        android:layout_alignParentLeft="true"
+        android:text="@string/averageDistanceValue"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/averageTimeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/totalDistanceTextView"
+        android:layout_alignParentLeft="true"
+        android:text="@string/averageTimeValue"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/NumberOfRacesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activityGallery"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_launcher"
-        title="Time vs. Distance" />
+        android:text="@string/numberOfRacesValue"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/BMITextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/averageTimeTextView"
+        android:layout_toRightOf="@+id/filterTextView"
+        android:text="#NAN" />
 
 </RelativeLayout>

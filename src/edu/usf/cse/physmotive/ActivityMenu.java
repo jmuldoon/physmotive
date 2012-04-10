@@ -1,7 +1,16 @@
 package edu.usf.cse.physmotive;
 
+import java.util.Arrays;
+
+import com.androidplot.series.XYSeries;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYPlot;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,6 +22,7 @@ import android.widget.Gallery;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import edu.usf.cse.physmotive.db.ActivityDBM;
+import edu.usf.cse.physmotive.logic.ChartData;
 import edu.usf.cse.physmotive.ui.ImageAdapter;
 
 public class ActivityMenu extends Activity
@@ -37,6 +47,8 @@ public class ActivityMenu extends Activity
 
     private int userId, activityId, activitySelection = 0;
     private String startType;
+    
+    private XYPlot mySimpleXYPlot;
 
     // Called when the activity is first created.
     @Override
@@ -63,6 +75,43 @@ public class ActivityMenu extends Activity
         gallery.setAdapter(new ImageAdapter(this));
 
         setOnClickListeners();
+        
+        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+        
+        mySimpleXYPlot.setDomainLabel("Time");
+        mySimpleXYPlot.setRangeLabel("Distance");
+ 
+        // Reduce the number of range labels
+        mySimpleXYPlot.setTicksPerRangeLabel(3);
+
+        // By default, AndroidPlot displays developer guides to aid in laying
+        // out your plot.
+        // To get rid of them call disableAllMarkup():
+        mySimpleXYPlot.disableAllMarkup();
+        
+        //do some db stuff
+        activityDBM.open();
+        Cursor cursor = activityDBM.getRaceStats(userId, activityId);
+        activityDBM.close();
+        
+        ChartData chartData = new ChartData(cursor, 2, 3);
+        Number x[] = chartData.getX();
+        Number y[] = chartData.getY();
+        
+        XYSeries series1 = new SimpleXYSeries(
+              Arrays.asList(x),          // SimpleXYSeries takes a List so turn our array into a List
+              Arrays.asList(y), // Y_VALS_ONLY means use the element index as the x value
+              "Distance");                             // Set the display title of the series
+        
+     // Create a formatter to use for drawing a series using LineAndPointRenderer:
+      LineAndPointFormatter series1Format = new LineAndPointFormatter(
+              Color.rgb(0, 200, 0),                   // line color
+              Color.rgb(0, 100, 0),                   // point color
+              Color.rgb(150, 190, 150));              // fill color (optional)
+      
+      mySimpleXYPlot.addSeries(series1, series1Format);
+
+        // TODO: Fix Pictures
     }
 
     private void bundleUserInformation(Intent mIntent)
@@ -75,7 +124,7 @@ public class ActivityMenu extends Activity
 
         if (distanceOrTimeToggleButton.isChecked())
         {
-            unitValue = Integer.valueOf(minuteEditText.getText().toString()) * 60;
+            unitValue = Integer.valueOf(minuteEditText.getText().toString());
             unitType = 1;
         } else
         {

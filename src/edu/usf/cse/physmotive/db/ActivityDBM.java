@@ -147,6 +147,14 @@ public class ActivityDBM
         return c;
     }
     
+//<<<<<<< HEAD
+//    public Cursor getStatisticsList(int userID, int activityID)
+//    {
+//        String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
+//
+//        // this is for past week.
+//        String whereClause = EUSR + " = " + userID + " and " + AID + " = " + activityID;
+//=======
     public Cursor getRaceStats(int userID, int raceID)
     {
         String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
