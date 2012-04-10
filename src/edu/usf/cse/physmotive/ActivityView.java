@@ -139,9 +139,9 @@ public class ActivityView extends MapActivity implements LocationListener
         locationCursor = locationDBM.getList(activityId, day, month, year);
         locationDBM.close();
         
-        raceTotTime_tv.setText("Total Time: " + activityCursor.getColumnIndex(TOTALTIME));
-        raceTotDist_tv.setText("Total Distance: " + activityCursor.getColumnIndex(TOTALDISTANCE));
-        raceTotPace_tv.setText("Speed: " + ((double)activityCursor.getColumnIndex(TOTALDISTANCE) / (double)activityCursor.getColumnIndex(TOTALTIME)));
+        raceTotTime_tv.setText("Total Time: " + activityCursor.getInt(activityCursor.getColumnIndex(TOTALTIME)) + " s");
+        raceTotDist_tv.setText("Total Distance: " + activityCursor.getFloat(activityCursor.getColumnIndex(TOTALDISTANCE)) + " m");
+        raceTotPace_tv.setText("Speed: " + ((double)activityCursor.getFloat(activityCursor.getColumnIndex(TOTALDISTANCE)) / (double)activityCursor.getInt(activityCursor.getColumnIndex(TOTALTIME))) + " m/s");
     }
 
     private void initializeMap()
