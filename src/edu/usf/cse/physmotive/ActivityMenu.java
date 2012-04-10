@@ -91,7 +91,7 @@ public class ActivityMenu extends Activity
         
         //do some db stuff
         activityDBM.open();
-        Cursor cursor = activityDBM.getStatisticsList(userId, activityId);
+        Cursor cursor = activityDBM.getRaceStats(userId, activityId);
         activityDBM.close();
         
         ChartData chartData = new ChartData(cursor, 2, 3);
@@ -124,7 +124,7 @@ public class ActivityMenu extends Activity
 
         if (distanceOrTimeToggleButton.isChecked())
         {
-            unitValue = Integer.valueOf(minuteEditText.getText().toString()) * 60;
+            unitValue = Integer.valueOf(minuteEditText.getText().toString());
             unitType = 1;
         } else
         {
@@ -170,6 +170,7 @@ public class ActivityMenu extends Activity
             public void onItemClick(AdapterView parent, View v, int position, long id)
             {
                 activitySelection = position;
+                Toast.makeText(ActivityMenu.this, "Only running is available for Beta release.", Toast.LENGTH_LONG).show();
             }
         });
         distanceOrTimeToggleButton.setOnClickListener(new OnClickListener() {

@@ -1,6 +1,7 @@
 package edu.usf.cse.physmotive.logic;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,6 +35,11 @@ public class Statistics
         cursor = cur;
     }
 
+    public static double roundTwoDecimals(double d) {
+        DecimalFormat twoDForm = new DecimalFormat("#.##");
+        return Double.valueOf(twoDForm.format(d));
+    }
+    
     public double getBMI()
     {
         double bmi = 0, weight = 0, height = 0;
@@ -55,8 +61,8 @@ public class Statistics
     // initial = ini, final = fin, and time is the time between both points
     public static double getSpeed(float distance, double time){
     	double spd = 0;
-    	if (time > 0){
-    		spd = (Math.sqrt(Math.pow(distance, 2))) / time;
+    	if (time != 0){
+    		spd = (Math.abs(distance) / Math.abs(time));
     	}
     	return spd;
     }
@@ -97,11 +103,10 @@ public class Statistics
         if (cursor.getCount() > 0)
         {
             cursor.moveToFirst();
-            curr = new GeoPoint((int) (Integer.valueOf(cursor.getString(cursor.getColumnIndex(LATITUDE))) * 1E6),
-                    (int) (Integer.valueOf(cursor.getString(cursor.getColumnIndex(LONGITUDE))) * 1E6));
+            curr = new GeoPoint((int) (Integer.parseInt(cursor.getString(cursor.getColumnIndex(LATITUDE)))/ 1E6),
+                    (int) (Integer.parseInt(cursor.getString(cursor.getColumnIndex(LONGITUDE)))/ 1E6));
 
-            for (; cursor.moveToNext(); cursor.moveToNext())
-            {
+            do{
                 prev = curr;
                 // Integer.parseInt(cursor.getString(cursor.getColumnIndex(LATITUDE)));
                 curr = new GeoPoint(Integer.parseInt(cursor.getString(cursor.getColumnIndex(LATITUDE))),
@@ -109,37 +114,50 @@ public class Statistics
                 Location.distanceBetween(prev.getLatitudeE6() / 1E6, prev.getLongitudeE6() / 1E6,
                         curr.getLatitudeE6() / 1E6, curr.getLongitudeE6() / 1E6, result);
                 sum += result[0];
-            }
+            }while(cursor.moveToNext());
         }
 
         return sum;
     }
 
-    public float getActivityTotalTime()
-    {
-        long total = 0;
-        Date date;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+//    public float getActivityTotalTime()
+//    {
+//        long total = 0;
+//        Date date;
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+//
+//        if (cursor.getCount() > 0)
+//        {
+//            cursor.moveToFirst();
+//
+//            do{
+//                try
+//                {
+//                    date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
+//                    total += date.getTime();
+//                } catch (ParseException ex)
+//                {
+//                    Log.e("Date", ex.getMessage(), ex);
+//                }
+//            }while(cursor.moveToNext());
+//        }
+//
+//        return total;
+//    }
+    
+	public float getActivityTotalTime() {
+		float total = 0;
 
-        if (cursor.getCount() > 0)
-        {
-            cursor.moveToFirst();
+		if (cursor.getCount() > 0) {
+			cursor.moveToFirst();
 
-            for (; cursor.moveToNext(); cursor.moveToNext())
-            {
-                try
-                {
-                    date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
-                    total += date.getTime();
-                } catch (ParseException ex)
-                {
-                    Log.e("Date", ex.getMessage(), ex);
-                }
-            }
-        }
+			do {
+				total += cursor.getDouble(cursor.getColumnIndex(TTIME));
+			} while (cursor.moveToNext());
+		}
 
-        return total;
-    }
+		return total;
+	}
 
     public float getActivityTotalDistance()
     {
@@ -149,44 +167,60 @@ public class Statistics
         {
             cursor.moveToFirst();
 
-            for (; cursor.moveToNext(); cursor.moveToNext())
-            {
+            do{
                 total += cursor.getLong(cursor.getColumnIndex(TDISTANCE));
-            }
+            }while(cursor.moveToNext());
         }
 
         return total;
     }
 
-    public float getAverageTime()
-    {
-        float avg = 0;
-        long total = 0;
-        Date date;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+//    public float getAverageTime()
+//    {
+//        float avg = 0;
+//        long total = 0;
+//        Date date;
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS", Locale.US);
+//
+//        if (cursor.getCount() > 0)
+//        {
+//            cursor.moveToFirst();
+//
+//            do{
+//                try
+//                {
+//                    date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
+//                    total += date.getTime();
+//                } catch (ParseException ex)
+//                {
+//                    Log.e("Date", ex.getMessage(), ex);
+//                }
+//            }while(cursor.moveToNext());
+//
+//            avg = total / cursor.getCount();
+//        }
+//
+//        return avg;
+//    }
 
-        if (cursor.getCount() > 0)
+    public float getAverageTime(){
+    	float avg = 0, total = 0;
+    	
+    	if (cursor.getCount() > 0)
         {
             cursor.moveToFirst();
 
-            for (; cursor.moveToNext(); cursor.moveToNext())
-            {
-                try
-                {
-                    date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
-                    total += date.getTime();
-                } catch (ParseException ex)
-                {
-                    Log.e("Date", ex.getMessage(), ex);
-                }
-            }
-
-            avg = total / cursor.getCount();
+            do{
+                total += cursor.getLong(cursor.getColumnIndex(TTIME));
+            }while(cursor.moveToNext());
+        
+            avg = total/cursor.getCount();
         }
-
-        return avg;
+    	
+    	return avg;
     }
-
+    
+    
     public float getAverageDistance()
     {
         float avg = 0;
@@ -196,10 +230,9 @@ public class Statistics
         {
             cursor.moveToFirst();
 
-            for (; cursor.moveToNext(); cursor.moveToNext())
-            {
+            do{
                 total += cursor.getLong(cursor.getColumnIndex(TDISTANCE));
-            }
+            }while(cursor.moveToNext());
 
             if (cursor.getCount() > 0)
                 avg = total / cursor.getCount();

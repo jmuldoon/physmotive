@@ -28,7 +28,9 @@ import edu.usf.cse.physmotive.ui.ImageAdapter;
 
 public class StatisticsMenu extends Activity
 {
-    public static final String USERID = "userId";
+	static final String TOTALTIME = "totalTime";
+	
+	public static final String USERID = "userId";
 
     protected Gallery gallery;
     protected DatePicker filterDatePicker;
@@ -143,6 +145,7 @@ public class StatisticsMenu extends Activity
             public void onItemClick(AdapterView parent, View v, int position, long id)
             {
                 activityId = position;
+                Toast.makeText(StatisticsMenu.this, "Only running is available for Beta release.", Toast.LENGTH_LONG).show();
                 updateStatistics();
             }
         });
@@ -152,7 +155,7 @@ public class StatisticsMenu extends Activity
     {
         ChartData chartData;
         dbaManager.open();
-
+        
         Cursor cur1 = dbaManager.getStatisticsList(userId, activityId, filterDatePicker.getDayOfMonth(),
                 filterDatePicker.getMonth() + 1, filterDatePicker.getYear());
         startManagingCursor(cur1);
@@ -160,6 +163,7 @@ public class StatisticsMenu extends Activity
 
         dbaManager.close();
         
+
         chartData = new ChartData(cur1, 2, 3);
         Number x[] = chartData.getX();
         Number y[] = chartData.getY();
@@ -182,17 +186,17 @@ public class StatisticsMenu extends Activity
         Toast.makeText(this, Integer.toString(cur1.getCount()), Toast.LENGTH_SHORT).show();
 
         NumberOfRacesTextView.setText("Total Activities Completed: " + statsActivity.getTotalNumberActivities());
-        averageTimeTextView.setText("Average Time: " + statsActivity.getAverageTime());
-        averageDistanceTextView.setText("Average Distance: " + statsActivity.getAverageDistance());
-        totalTimeTextView.setText("Total Time: " + statsActivity.getActivityTotalTime());
-        totalDistanceTextView.setText("Total Distance: " + statsActivity.getActivityTotalDistance());
+        averageTimeTextView.setText("Average Time: " + Statistics.roundTwoDecimals(statsActivity.getAverageTime()) + " s");
+        averageDistanceTextView.setText("Average Distance: " + Statistics.roundTwoDecimals(statsActivity.getAverageDistance()) + " m");
+        totalTimeTextView.setText("Total Time: " + Statistics.roundTwoDecimals(statsActivity.getActivityTotalTime())+ " s");
+        totalDistanceTextView.setText("Total Distance: " + Statistics.roundTwoDecimals(statsActivity.getActivityTotalDistance()) + " m");
 
         dbuManager.open();
         Cursor cur2 = dbuManager.getList(userId);
         startManagingCursor(cur2);
         statsUser = new Statistics(cur2);
         dbuManager.close();
-        bmiTextView.setText("Body Mass Index: " + statsUser.getBMI());
+        bmiTextView.setText("BMI: " + Statistics.roundTwoDecimals(statsUser.getBMI()));
     }
 
 }

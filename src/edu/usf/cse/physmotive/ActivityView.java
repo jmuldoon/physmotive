@@ -23,7 +23,6 @@ import com.google.android.maps.OverlayItem;
 
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.LocationDBM;
-import edu.usf.cse.physmotive.logic.Statistics;
 
 public class ActivityView extends MapActivity implements LocationListener
 {
@@ -35,6 +34,8 @@ public class ActivityView extends MapActivity implements LocationListener
     static final String DIARYID = "diaryId";
     static final String LATITUDE = "lat";
     static final String LONGITUDE = "lng";
+    static final String TOTALTIME = "totalTime";
+    static final String TOTALDISTANCE = "totalDistance";
     static final String ID = "_id";
     static final String EDATE = "entryDate";
 
@@ -60,9 +61,9 @@ public class ActivityView extends MapActivity implements LocationListener
     private int userId, activityId, diaryId = 0;
     private Cursor activityInfo;
     private Cursor locationCursor;
+    private Cursor activityCursor;
     private ActivityDBM activityDBM;
     private LocationDBM locationDBM;
-    private Statistics statsLocation;
 
     // Called when the activity is first created.
     @Override
@@ -94,7 +95,7 @@ public class ActivityView extends MapActivity implements LocationListener
         Drawable drawable = this.getResources().getDrawable(R.drawable.androidmarker);
         itemizedOverlay = new MapItemizedOverlay(drawable, this);
 
-        // TODO: Make sure buttons work properly
+        // TODO: Make logic so you cannot infinite loop
     }
 
     @Override
@@ -111,6 +112,7 @@ public class ActivityView extends MapActivity implements LocationListener
 
         activityDBM.open();
         activityInfo = activityDBM.get(activityId);
+        startManagingCursor(activityInfo);
         activityDBM.close();
 
         raceId_tv.setText("Race Id #" + activityInfo.getString(activityInfo.getColumnIndex(ID)));
@@ -126,30 +128,33 @@ public class ActivityView extends MapActivity implements LocationListener
     private void updateStatistics()
     {
         int day = -1, month = -1, year = -1; // -1 defaults for all
+        
+        activityDBM.open();
+        activityCursor = activityDBM.getRaceStats(userId, activityId);
+        startManagingCursor(activityCursor);
+        activityDBM.close();
+
         locationDBM.open();
-
         locationCursor = locationDBM.getList(activityId, day, month, year);
-        statsLocation = new Statistics(locationCursor);
-
+        startManagingCursor(locationCursor);
         locationDBM.close();
-
-        raceTotTime_tv.setText("Total Time: " + statsLocation.getRaceTotalTime());
-        raceTotDist_tv.setText("Total Distance: " + statsLocation.getRaceTotalDistance());
-        raceTotPace_tv.setText("Speed: " + (statsLocation.getRaceTotalDistance() / statsLocation.getRaceTotalTime()));
+        
+        raceTotTime_tv.setText("Total Time: " + activityCursor.getDouble(activityCursor.getColumnIndex(TOTALTIME)) + " s");
+        raceTotDist_tv.setText("Total Distance: " + activityCursor.getFloat(activityCursor.getColumnIndex(TOTALDISTANCE)) + " m");
+        raceTotPace_tv.setText("Speed: " + ((double)activityCursor.getFloat(activityCursor.getColumnIndex(TOTALDISTANCE)) / (double)activityCursor.getInt(activityCursor.getColumnIndex(TOTALTIME))) + " m/s");
     }
 
     private void initializeMap()
     {
         mapController = mapView.getController();
-
+        
         locationCursor.moveToFirst();
-        for (; locationCursor.moveToNext(); locationCursor.moveToNext())
-        {
+        do{
             point = new GeoPoint(Integer.valueOf(locationCursor.getString(locationCursor.getColumnIndex(LATITUDE))),
                     Integer.valueOf(locationCursor.getString(locationCursor.getColumnIndex(LONGITUDE))));
 
             addGeoPoint(point, "Current Location", "lat : lng");
-        }
+        }while(locationCursor.moveToNext());
     }
 
     private void bundleUserInformation(Intent mIntent)
