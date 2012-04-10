@@ -146,6 +146,19 @@ public class ActivityDBM
 
         return c;
     }
+    
+    public Cursor getStatisticsList(int userID, int activityID)
+    {
+        String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
+
+        // this is for past week.
+        String whereClause = EUSR + " = " + userID + " and " + AID + " = " + activityID;
+
+        Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        c.moveToFirst();
+
+        return c;
+    }
 
     public Cursor getForExport(int id)
     {

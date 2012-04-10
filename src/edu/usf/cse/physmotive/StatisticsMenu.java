@@ -22,6 +22,7 @@ import com.androidplot.xy.XYPlot;
 
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.UserDBM;
+import edu.usf.cse.physmotive.logic.ChartData;
 import edu.usf.cse.physmotive.logic.Statistics;
 import edu.usf.cse.physmotive.ui.ImageAdapter;
 
@@ -92,22 +93,24 @@ public class StatisticsMenu extends Activity
 
  
         // Create two arrays of y-values to plot:
-        Number[] series1Numbers = {};
+        //Number[] series1Numbers = {};
  
         // Turn the above arrays into XYSeries:
-        XYSeries series1 = new SimpleXYSeries(
-                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
-                "Distance");                             // Set the display title of the series
- 
+//        XYSeries series1 = new SimpleXYSeries(
+//                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
+//                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
+//                "Distance");                             // Set the display title of the series
+// 
         // Create a formatter to use for drawing a series using LineAndPointRenderer:
-        LineAndPointFormatter series1Format = new LineAndPointFormatter(
-                Color.rgb(0, 200, 0),                   // line color
-                Color.rgb(0, 100, 0),                   // point color
-                Color.rgb(150, 190, 150));              // fill color (optional)
+//        LineAndPointFormatter series1Format = new LineAndPointFormatter(
+//                Color.rgb(0, 200, 0),                   // line color
+//                Color.rgb(0, 100, 0),                   // point color
+//                Color.rgb(150, 190, 150));              // fill color (optional)
  
         // Add series1 to the xyplot:
-        mySimpleXYPlot.addSeries(series1, series1Format);
+        //mySimpleXYPlot.addSeries(series1, series1Format);
+        
+        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
  
         mySimpleXYPlot.setDomainLabel("Time");
         mySimpleXYPlot.setRangeLabel("Distance");
@@ -147,6 +150,7 @@ public class StatisticsMenu extends Activity
 
     private void updateStatistics()
     {
+        ChartData chartData;
         dbaManager.open();
 
         Cursor cur1 = dbaManager.getStatisticsList(userId, activityId, filterDatePicker.getDayOfMonth(),
@@ -155,6 +159,25 @@ public class StatisticsMenu extends Activity
         statsActivity = new Statistics(cur1);
 
         dbaManager.close();
+        
+        chartData = new ChartData(cur1, 2, 3);
+        Number x[] = chartData.getX();
+        Number y[] = chartData.getY();
+        
+        XYSeries series1 = new SimpleXYSeries(
+              Arrays.asList(x),          // SimpleXYSeries takes a List so turn our array into a List
+              Arrays.asList(y), // Y_VALS_ONLY means use the element index as the x value
+              "Distance");                             // Set the display title of the series
+        
+     // Create a formatter to use for drawing a series using LineAndPointRenderer:
+      LineAndPointFormatter series1Format = new LineAndPointFormatter(
+              Color.rgb(0, 200, 0),                   // line color
+              Color.rgb(0, 100, 0),                   // point color
+              Color.rgb(150, 190, 150));              // fill color (optional)
+      
+      mySimpleXYPlot.addSeries(series1, series1Format);
+        
+        
 
         Toast.makeText(this, Integer.toString(cur1.getCount()), Toast.LENGTH_SHORT).show();
 
