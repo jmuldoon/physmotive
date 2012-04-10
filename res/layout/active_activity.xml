@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-
+    android:layout_height="fill_parent"
+    android:background="@drawable/background" >
     <com.google.android.maps.MapView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mapview"
@@ -16,13 +16,11 @@
     <!-- PUBLISHKEYSTORE -->
     <!-- android:apiKey="0k9XilLp5UyGN5kqJl9VbiRTATyxPoqSmRDMuOA" -->
     <!-- PUBLISHKEYSTORE -->
-
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
         <ProgressBar
             android:id="@+id/acitvityProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
@@ -31,7 +29,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true" />
-
         <TextView
             android:id="@+id/currentSpeedTextView"
             android:layout_width="wrap_content"
@@ -40,8 +37,8 @@
             android:layout_below="@+id/acitvityProgressBar"
             android:layout_marginTop="22dp"
             android:text="@string/currentSpeedValue"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#000000" />
         <TextView
             android:id="@+id/timeTextView"
             android:layout_width="fill_parent"
@@ -49,7 +46,6 @@
             android:layout_below="@+id/currentSpeedTextView"
             android:layout_centerHorizontal="true"
             android:textColor="#000000" />
-
         <TextView
             android:id="@+id/currentDistanceTextView"
             android:layout_width="wrap_content"
@@ -59,8 +55,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
             android:text="@string/currentPaceValue"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#000000" />
         <Button
             android:id="@+id/endActivityButton"
             android:layout_width="wrap_content"
@@ -70,5 +66,4 @@
             android:layout_alignParentRight="true"
             android:text="@string/endActivityButton" />
     </RelativeLayout>
-
 </RelativeLayout>

@@ -61,10 +61,9 @@ public class Statistics
     // initial = ini, final = fin, and time is the time between both points
     public static double getSpeed(float distance, double time){
     	double spd = 0;
-    	if (time > 0){
+    	if (time != 0){
     		spd = (Math.abs(distance) / Math.abs(time));
     	}
-    	Log.i("distance:time:spd", distance + ":" + time + ":" + spd);
     	return spd;
     }
     
@@ -107,8 +106,7 @@ public class Statistics
             curr = new GeoPoint((int) (Integer.valueOf(cursor.getString(cursor.getColumnIndex(LATITUDE))) * 1E6),
                     (int) (Integer.valueOf(cursor.getString(cursor.getColumnIndex(LONGITUDE))) * 1E6));
 
-            for (; cursor.moveToNext(); cursor.moveToNext())
-            {
+            do{
                 prev = curr;
                 // Integer.parseInt(cursor.getString(cursor.getColumnIndex(LATITUDE)));
                 curr = new GeoPoint(Integer.parseInt(cursor.getString(cursor.getColumnIndex(LATITUDE))),
@@ -116,7 +114,7 @@ public class Statistics
                 Location.distanceBetween(prev.getLatitudeE6() / 1E6, prev.getLongitudeE6() / 1E6,
                         curr.getLatitudeE6() / 1E6, curr.getLongitudeE6() / 1E6, result);
                 sum += result[0];
-            }
+            }while(cursor.moveToNext());
         }
 
         return sum;
@@ -132,8 +130,7 @@ public class Statistics
         {
             cursor.moveToFirst();
 
-            for (; cursor.moveToNext(); cursor.moveToNext())
-            {
+            do{
                 try
                 {
                     date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
@@ -142,7 +139,7 @@ public class Statistics
                 {
                     Log.e("Date", ex.getMessage(), ex);
                 }
-            }
+            }while(cursor.moveToNext());
         }
 
         return total;
@@ -156,10 +153,9 @@ public class Statistics
         {
             cursor.moveToFirst();
 
-            for (; cursor.moveToNext(); cursor.moveToNext())
-            {
+            do{
                 total += cursor.getLong(cursor.getColumnIndex(TDISTANCE));
-            }
+            }while(cursor.moveToNext());
         }
 
         return total;
@@ -176,8 +172,7 @@ public class Statistics
         {
             cursor.moveToFirst();
 
-            for (; cursor.moveToNext(); cursor.moveToNext())
-            {
+            do{
                 try
                 {
                     date = dateFormat.parse(cursor.getString(cursor.getColumnIndex(TTIME)));
@@ -186,7 +181,7 @@ public class Statistics
                 {
                     Log.e("Date", ex.getMessage(), ex);
                 }
-            }
+            }while(cursor.moveToNext());
 
             avg = total / cursor.getCount();
         }
@@ -203,10 +198,9 @@ public class Statistics
         {
             cursor.moveToFirst();
 
-            for (; cursor.moveToNext(); cursor.moveToNext())
-            {
+            do{
                 total += cursor.getLong(cursor.getColumnIndex(TDISTANCE));
-            }
+            }while(cursor.moveToNext());
 
             if (cursor.getCount() > 0)
                 avg = total / cursor.getCount();

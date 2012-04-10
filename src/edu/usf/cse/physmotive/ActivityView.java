@@ -95,6 +95,7 @@ public class ActivityView extends MapActivity implements LocationListener
         itemizedOverlay = new MapItemizedOverlay(drawable, this);
 
         // TODO: Make sure buttons work properly
+        // TODO: Make logic so you cannot infinite loop
     }
 
     @Override

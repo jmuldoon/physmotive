@@ -148,7 +148,6 @@ public class DiaryView extends Activity
                     @Override
                     public void onCancel(DialogInterface dialog)
                     {
-                        // TODO Auto-generated method stub
                         updateBindList();
                     }
                 }).create();
@@ -190,7 +189,6 @@ public class DiaryView extends Activity
 
     private void updateBindList()
     {
-        // TODO: Setup List View
         activityDBM.open();
         raceCur = activityDBM.getBoundList(diaryId);
         activityDBM.close();
