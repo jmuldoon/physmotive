@@ -1,6 +1,7 @@
 package edu.usf.cse.physmotive.logic;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,6 +35,11 @@ public class Statistics
         cursor = cur;
     }
 
+    public static double roundTwoDecimals(double d) {
+        DecimalFormat twoDForm = new DecimalFormat("#.##");
+        return Double.valueOf(twoDForm.format(d));
+    }
+    
     public double getBMI()
     {
         double bmi = 0, weight = 0, height = 0;
@@ -56,8 +62,9 @@ public class Statistics
     public static double getSpeed(float distance, double time){
     	double spd = 0;
     	if (time > 0){
-    		spd = (Math.sqrt(Math.pow(distance, 2))) / time;
+    		spd = (Math.abs(distance) / Math.abs(time));
     	}
+    	Log.i("distance:time:spd", distance + ":" + time + ":" + spd);
     	return spd;
     }
     

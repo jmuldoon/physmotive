@@ -29,6 +29,7 @@ import com.google.android.maps.OverlayItem;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.LocationDBM;
 import edu.usf.cse.physmotive.logic.Statistics;
+import edu.usf.cse.physmotive.logic.StopWatch;
 
 public class ActiveActivity extends MapActivity implements LocationListener
 {
@@ -51,14 +52,14 @@ public class ActiveActivity extends MapActivity implements LocationListener
     protected TextView currentDistanceTextView;
     protected TextView currentSpeedTextView;
     protected ProgressBar activityProgressBar;
-
+    protected static TextView time_tv;
+    
     private LocationDBM dblManager;
     private ActivityDBM dbaManager;
     private int userId, raceId, unitType, unitValue, progressStatus = 0, endFlag = 0;
     private long tTime = 0, tDistance = 0;
     private String startType;
-
-    // private Handler handler = new Handler();
+    private double  ptime = 0, ftime = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -116,26 +117,23 @@ public class ActiveActivity extends MapActivity implements LocationListener
         itemizedOverlay = new MapItemizedOverlay(drawable, this);
     }
 
-    // // Normally this would be the way to do it in a background thread. We
-    // will not do it this way for a couple reasons I will explain on vent.
-    // private void initializeProgressBar(){
-    // // Start lengthy operation in a background thread
-    // new Thread(new Runnable() {
-    // public void run() {
-    // while (progressStatus < 100) {
-    // progressStatus = progressWork();
-    //
-    // // Update the progress bar
-    // handler.post(new Runnable() {
-    // public void run() {
-    // activityProgressBar.setProgress(progressStatus);
-    // }
-    // });
-    // }
-    // }
-    // }).start();
-    // }
+    private void afterInit()
+    {
+        time_tv = (TextView) findViewById(R.id.timeTextView);
+        setLabelText("00:00:00", time_tv);
+        StopWatch.setStartTimePoint(Long.valueOf(0));
+        StopWatch.stopCounting();
+    }
 
+    public void setLabelText(String string, TextView label)
+    {
+    	label.setText(string);
+    }
+    
+    public static TextView getTimeLabel(){
+    	return time_tv;
+    }
+    
     private void updateProgressBar()
     {
         progressStatus = progressWork();
@@ -174,7 +172,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
 
     private void onFinish()
     {
-        stopCounting();
+    	StopWatch.stopCounting();
         // If not complete
         // TODO: delete race.
         // Only delete(raceId) needs be called.
@@ -246,7 +244,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         dblManager.close();
 
         // TODO: Intitiate Timer. Set sTime (startTime)
-        startCounting();
+        StopWatch.startCounting();
     }
 
     public void addGeoPoint(GeoPoint p, String greeting, String message)
@@ -290,22 +288,23 @@ public class ActiveActivity extends MapActivity implements LocationListener
         curr = p;
     }
 
-    private void updateStatistics(Location loc)
+    private void updateStatistics(double spd)
     {
-        currentSpeedTextView.setText(String.valueOf(loc.getSpeed()));
+        currentSpeedTextView.setText(String.valueOf(Statistics.roundTwoDecimals(spd)));
         currentDistanceTextView.setText(String.valueOf(tDistance));
     }
     
-    public void updateTimings(double prev, double curr){
-    	prev = curr;
-    	curr = currentTime()-prev;
+    public void updateTimings(double t){
+    	ptime = ftime;
+    	ftime = t-ptime;
+    	Log.e("time:ptime:ftime", t+":"+ptime+":"+ftime);
     }
 
     @Override
     public void onLocationChanged(Location loc)
     {
         float[] result = new float[3];
-        double speed = 0, ptime = 0, ftime = 0, timeTaken = 0;
+        double speed = 0, timeTaken = 0;
         mapController = mapView.getController();
 
         point = new GeoPoint((int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6));
@@ -313,7 +312,7 @@ public class ActiveActivity extends MapActivity implements LocationListener
         // TODO: Make sure this logic works.
         // Update GeoPoints to keep current Stats
         updateGeoPoints(point);
-        updateTimings(ptime, ftime);
+        updateTimings(StopWatch.currentTime());
 
         // Update the distance for total Distance
         if (prev != null)
@@ -327,14 +326,14 @@ public class ActiveActivity extends MapActivity implements LocationListener
         }
 
         // Update Stats on Page
-        updateStatistics(loc);
+        updateStatistics(speed);
 
         mapController.animateTo(point);
         mapController.setZoom(20);
         mapView.invalidate();
 
         addGeoPoint(point, "Current Location", loc.getLatitude() + " : " + loc.getLongitude());
-        Log.d("lat:long", loc.getLatitude() + ":" + loc.getLongitude());
+        Log.d("lat:long:time", loc.getLatitude() + ":" + loc.getLongitude() + ":" + Statistics.roundTwoDecimals(speed));
         
         dblManager.open();
         dblManager.insert(raceId, (int) (loc.getLatitude() * 1E6), (int) (loc.getLongitude() * 1E6), (int)speed,
@@ -365,81 +364,4 @@ public class ActiveActivity extends MapActivity implements LocationListener
     {
         // DO Nothing
     }
-
-    // //////////////////////////////////
-    // This is about to be really ugly //
-    // This is the start of the timer. //
-    // //////////////////////////////////
-    protected TextView time_tv;
-    private long startTimePoint;
-    private static long DELAY = 100;
-    private String applicationState;
-
-    private void afterInit()
-    {
-        time_tv = (TextView) findViewById(R.id.timeTextView);
-        setLabelText("00:00:00");
-        startTimePoint = Long.valueOf(0);
-        stopCounting();
-    }
-
-    private Handler tasksHandler = new Handler();
-
-    public void startCounting()
-    {
-        applicationState = StopWatchStates.IN_COUNTING;
-
-        tasksHandler.removeCallbacks(timeTickRunnable);
-        tasksHandler.postDelayed(timeTickRunnable, DELAY);
-
-        startTimePoint = System.nanoTime();
-    }
-
-    public void stopCounting()
-    {
-        applicationState = StopWatchStates.IN_WAITING;
-    }
-
-    public String currentTimeString()
-    {
-        long interval = System.nanoTime() - startTimePoint;
-        tTime = (int) (interval / 1000000000);
-        int minutes = ((int) tTime) / 60;
-        int hours = minutes / 60;
-
-        return String.format("%02d", hours) + ":" + String.format("%02d", minutes % 60) + ":"
-                + String.format("%02d", tTime % 60);
-    }
-
-    public double currentTime()
-    {
-        long interval = System.nanoTime() - startTimePoint;
-        return interval;
-    }
-
-    public void setLabelText(String string)
-    {
-        // Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
-        time_tv.setText(string);
-    }
-
-    private Runnable timeTickRunnable = new Runnable() {
-        public void run()
-        {
-            if (applicationState == StopWatchStates.IN_COUNTING)
-            {
-                setLabelText(currentTimeString());
-                tasksHandler.postDelayed(timeTickRunnable, DELAY);
-            }
-        }
-    };
-
-    public class StopWatchStates
-    {
-        public static final String IN_COUNTING = "StopWatchStates.IN_COUNTING";
-        public static final String IN_WAITING = "StopWatchStates.IN_WAITING";
-    }
-    // ///////////////////////////////
-    // this is the end of the timer //
-    // ///////////////////////////////
 }
