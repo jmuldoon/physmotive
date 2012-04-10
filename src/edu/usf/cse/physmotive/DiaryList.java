@@ -267,8 +267,8 @@ public class DiaryList extends ListActivity
         diaryDBM.close();
 
         startManagingCursor(cursor);
-        listAdapter = new SimpleCursorAdapter(this, R.layout.diary_list_item, cursor, new String[] { ID, NAME }, new int[] {
-                R.id.D_ID, R.id.D_Name });
+        listAdapter = new SimpleCursorAdapter(this, R.layout.plain_list_item, cursor, new String[] { ID, NAME }, new int[] {
+                R.id.itemId, R.id.itemName });
         setListAdapter(listAdapter);
 
     }
