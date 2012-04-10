@@ -201,8 +201,8 @@ public class ActivityList extends ListActivity
         cursor = activityDBM.getList(userId);
 
         startManagingCursor(cursor);
-        listAdapter = new SimpleCursorAdapter(this, R.layout.activity_list_item, cursor, new String[] { ID, ENTRYDATE },
-                new int[] { R.id.A_ID, R.id.A_Name });
+        listAdapter = new SimpleCursorAdapter(this, R.layout.plain_list_item, cursor, new String[] { ID, ENTRYDATE },
+                new int[] { R.id.itemId, R.id.itemName });
         setListAdapter(listAdapter);
     }
 

@@ -4,17 +4,21 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.DiaryDBM;
@@ -55,6 +59,8 @@ public class DiaryView extends Activity
     private Cursor cur, checkCur, raceCur, diaryCur, userCur;
 
     private ListAdapter adapter;
+    private ListAdapter listAdapter;
+    private ListView bind_lv;
 
     // Called when the activity is first created.
     @Override
@@ -96,7 +102,7 @@ public class DiaryView extends Activity
         super.onResume();
         setupTextEdits();
         setupToggleButtons();
-        updateBindList();
+        updateBoundList();
     }
 
     @Override
@@ -109,57 +115,60 @@ public class DiaryView extends Activity
     @Override
     protected Dialog onCreateDialog(int id)
     {
+        LayoutInflater factory = LayoutInflater.from(this);
+
+        // Setup of the view for the dialog
+        final View bindListDialog = factory.inflate(R.layout.bind_list, null);
+        bind_lv = (ListView) bindListDialog.findViewById(R.id.bindList);
         activityDBM.open();
-        cur = activityDBM.getBindingList(diaryId);
+        Cursor bindCursor = activityDBM.getBindingList(diaryId);
         activityDBM.close();
 
-        return new AlertDialog.Builder(this).setTitle("Races")
-        // set list of races
-                .setMultiChoiceItems(cur, CHECK, EDATE, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int position, boolean checked)
-                    {
-                        activityDBM.open();
-                        AlertDialog AD = (AlertDialog) dialog;
-                        ListView list = AD.getListView();
-                        list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        startManagingCursor(bindCursor);
+        listAdapter = new SimpleCursorAdapter(this, R.layout.check_list_item, bindCursor, new String[] { ID, EDATE },
+                new int[] { R.id.itemId, R.id.itemName });
+        bind_lv.setAdapter(listAdapter);
+        bind_lv.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3)
+            {
+                View currentItem = (View) listAdapter.getItem(position);
+                CheckBox box = (CheckBox) currentItem.findViewById(R.id.itemCheck);
+                if (box.isChecked())
+                    box.setChecked(false);
+                else
+                    box.setChecked(true);
+            }
+        });
 
-                        // gets the cursor of the selected row
-                        checkCur = (Cursor) list.getItemAtPosition(position);
-
-                        if (checked)
-                        {
-                            // Set checked(bound)
-                            // updates the database with selection
-                            activityDBM.setChecked(checkCur.getInt(checkCur.getColumnIndex(ID)), diaryId, userId);
-
-                            // this is SUPPOSED to check the check box
-                            list.setItemChecked(position, true);
-                        } else
-                        {
-                            // Uncheck (unbind)
-                            activityDBM.setUnChecked(checkCur.getInt(checkCur.getColumnIndex(ID)), userId);
-                            list.setItemChecked(position, false);
-                        }
-                        activityDBM.close();
-                    }
-                }).setPositiveButton("OK", new DialogButtonClickHandler()).setOnCancelListener(new OnCancelListener() {
-
-                    @Override
-                    public void onCancel(DialogInterface dialog)
+        return new AlertDialog.Builder(DiaryView.this).setTitle(R.string.newUserTitle).setView(bindListDialog)
+                .setPositiveButton(R.string.btnSave, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton)
                     {
                         updateBindList();
+                        updateBoundList();
                     }
                 }).create();
     }
 
-    public class DialogButtonClickHandler implements DialogInterface.OnClickListener
+    @Override
+    protected void onPrepareDialog(final int id, final Dialog dialog, Bundle args)
     {
-        @Override
-        public void onClick(DialogInterface dialog, int clicked)
+
+        for (int i = 0; i < bind_lv.getCount(); i++)
         {
-            // updates bind list on diary_view
-            updateBindList();
+            checkCur = (Cursor) listAdapter.getItem(i);
+            int value = checkCur.getInt(checkCur.getColumnIndex(CHECK));
+            if (value == 1)
+            {
+
+            }
+            // ((CheckBox)
+            // bind_lv.getChildAt(i).findViewById(R.id.itemCheck)).setChecked(true);
+            // Toast.makeText(this,
+            // Boolean.toString(((CheckBox)
+            // bind_lv.getChildAt(i).findViewById(R.id.itemCheck)).isChecked()),
+            // Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -187,16 +196,31 @@ public class DiaryView extends Activity
         genderToggleButton.setChecked(diaryCur.getInt(diaryCur.getColumnIndex(GENDER)) == 1);
     }
 
-    private void updateBindList()
+    private void updateBoundList()
     {
         activityDBM.open();
         raceCur = activityDBM.getBoundList(diaryId);
         activityDBM.close();
         startManagingCursor(raceCur);
-        adapter = new SimpleCursorAdapter(this, R.layout.activity_list_item, raceCur, new String[] { ID, EDATE }, new int[] {
-                R.id.A_ID, R.id.A_Name });
+        adapter = new SimpleCursorAdapter(this, R.layout.plain_list_item, raceCur, new String[] { ID, EDATE }, new int[] {
+                R.id.itemId, R.id.itemName });
 
         boundListView.setAdapter(adapter);
+    }
+
+    private void updateBindList()
+    {
+        activityDBM.open();
+        for (int i = 0; i < bind_lv.getCount(); i++)
+        {
+            int raceId = Integer.valueOf(((TextView) bind_lv.getChildAt(i).findViewById(R.id.itemId)).getText().toString());
+            if (((CheckBox) bind_lv.getChildAt(i).findViewById(R.id.itemCheck)).isChecked())
+                activityDBM.setChecked(raceId, diaryId, userId);
+            else
+                activityDBM.setUnChecked(raceId, userId);
+        }
+        activityDBM.close();
+
     }
 
     private void setOnClickListeners()

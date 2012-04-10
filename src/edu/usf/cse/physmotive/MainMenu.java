@@ -229,9 +229,9 @@ public class MainMenu extends Activity implements LocationListener
         startManagingCursor(userCursor);
 
         String[] from = new String[] { ID, FNAME, LNAME };
-        int[] to = new int[] { R.id.userIdTV, R.id.userFirstNameTV, R.id.userLastNameTV };
+        int[] to = new int[] { R.id.itemId, R.id.itemText1, R.id.itemText2 };
 
-        adapter = new SimpleCursorAdapter(this, R.layout.user_list_item, userCursor, from, to);
+        adapter = new SimpleCursorAdapter(this, R.layout.two_part_list_item, userCursor, from, to);
         userSpinner.setAdapter(adapter);
 
         // Sets the proper name to display
