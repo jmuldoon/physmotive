@@ -71,6 +71,7 @@ public class StatisticsMenu extends Activity
         totalTimeTextView = (TextView) findViewById(R.id.totalTimeTextView);
         totalDistanceTextView = (TextView) findViewById(R.id.totalDistanceTextView);
         bmiTextView = (TextView) findViewById(R.id.BMITextView);
+        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
 
         // Setting up Radio Buttons
         filterDatePicker = (DatePicker) findViewById(R.id.filterDatePicker);
@@ -89,48 +90,28 @@ public class StatisticsMenu extends Activity
         // TODO: Graph??
         // TODO: create stats, live data
 
-        // Initialize our XYPlot reference:
-        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
-
+ 
         // Create two arrays of y-values to plot:
-        Number[] series1Numbers = { 1, 8, 5, 2, 7, 4 };
-        Number[] series2Numbers = { 4, 6, 3, 8, 2, 10 };
-
+        Number[] series1Numbers = {};
+ 
         // Turn the above arrays into XYSeries:
-        XYSeries series1 = new SimpleXYSeries(Arrays.asList(series1Numbers), // SimpleXYSeries
-                                                                             // takes
-                                                                             // a
-                                                                             // List
-                                                                             // so
-                                                                             // turn
-                                                                             // our
-                                                                             // array
-                                                                             // into
-                                                                             // a
-                                                                             // List
-                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use
-                                                        // the element index as
-                                                        // the x value
-                "Series1"); // Set the display title of the series
-
-        // Same as above, for series2
-        XYSeries series2 = new SimpleXYSeries(Arrays.asList(series2Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY,
-                "Series2");
-
-        // Create a formatter to use for drawing a series using
-        // LineAndPointRenderer:
-        LineAndPointFormatter series1Format = new LineAndPointFormatter(Color.rgb(0, 200, 0), // line
-                                                                                              // color
-                Color.rgb(0, 100, 0), // point color
-                Color.rgb(150, 190, 150)); // fill color (optional)
-
+        XYSeries series1 = new SimpleXYSeries(
+                Arrays.asList(series1Numbers),          // SimpleXYSeries takes a List so turn our array into a List
+                SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, // Y_VALS_ONLY means use the element index as the x value
+                "Distance");                             // Set the display title of the series
+ 
+        // Create a formatter to use for drawing a series using LineAndPointRenderer:
+        LineAndPointFormatter series1Format = new LineAndPointFormatter(
+                Color.rgb(0, 200, 0),                   // line color
+                Color.rgb(0, 100, 0),                   // point color
+                Color.rgb(150, 190, 150));              // fill color (optional)
+ 
         // Add series1 to the xyplot:
         mySimpleXYPlot.addSeries(series1, series1Format);
-
-        // Same as above, with series2:
-        mySimpleXYPlot.addSeries(series2,
-                new LineAndPointFormatter(Color.rgb(0, 0, 200), Color.rgb(0, 0, 100), Color.rgb(150, 150, 190)));
-
+ 
+        mySimpleXYPlot.setDomainLabel("Time");
+        mySimpleXYPlot.setRangeLabel("Distance");
+ 
         // Reduce the number of range labels
         mySimpleXYPlot.setTicksPerRangeLabel(3);
 
