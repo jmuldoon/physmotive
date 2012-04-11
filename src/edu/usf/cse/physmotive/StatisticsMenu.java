@@ -112,15 +112,15 @@ public class StatisticsMenu extends Activity
         // Add series1 to the xyplot:
         //mySimpleXYPlot.addSeries(series1, series1Format);
         
-        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
+//        mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
  
-        mySimpleXYPlot.setDomainLabel("Time");
-        mySimpleXYPlot.setRangeLabel("Distance");
+//        mySimpleXYPlot.setDomainLabel("Time");
+//        mySimpleXYPlot.setRangeLabel("Distance");
  
         // Reduce the number of range labels
-        mySimpleXYPlot.setTicksPerRangeLabel(1);
-        mySimpleXYPlot.setTicksPerDomainLabel(1);
-        mySimpleXYPlot.setDomainLeftMin(0);
+//        mySimpleXYPlot.setTicksPerRangeLabel(1);
+//        mySimpleXYPlot.setTicksPerDomainLabel(1);
+//        mySimpleXYPlot.setDomainLeftMin(0);
 
         // By default, AndroidPlot displays developer guides to aid in laying
         // out your plot.
@@ -183,6 +183,12 @@ public class StatisticsMenu extends Activity
                     Color.rgb(0, 100, 0),                   // point color
                     //Color.rgb(150, 190, 150));              // fill color (optional)
                     null);
+            mySimpleXYPlot.setDomainLabel("Time");
+            mySimpleXYPlot.setRangeLabel("Distance");
+            mySimpleXYPlot.setTicksPerRangeLabel(1);
+            mySimpleXYPlot.setTicksPerDomainLabel(1);
+            mySimpleXYPlot.setDomainLeftMin(0);
+            mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
       
             mySimpleXYPlot.addSeries(series1, series1Format);
         }
