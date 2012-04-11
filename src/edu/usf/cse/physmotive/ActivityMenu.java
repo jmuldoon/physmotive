@@ -94,20 +94,20 @@ public class ActivityMenu extends Activity
         Cursor cursor = activityDBM.getRaceStats(userId);
         activityDBM.close();
         
-        ChartData chartData = new ChartData(cursor, 2, 1);
+        ChartData chartData = new ChartData(cursor, 1, 2);
         Number x[] = chartData.getX();
         Number y[] = chartData.getY();
         
         XYSeries series1 = new SimpleXYSeries(
               Arrays.asList(x),          // SimpleXYSeries takes a List so turn our array into a List
               Arrays.asList(y), // Y_VALS_ONLY means use the element index as the x value
-              "Distance");                             // Set the display title of the series
+              "Distance vs. Time");                             // Set the display title of the series
         
      // Create a formatter to use for drawing a series using LineAndPointRenderer:
       LineAndPointFormatter series1Format = new LineAndPointFormatter(
               Color.rgb(0, 200, 0),                   // line color
               Color.rgb(0, 100, 0),                   // point color
-              Color.rgb(150, 190, 150));              // fill color (optional)
+              null);              // fill color (optional)
       
       mySimpleXYPlot.addSeries(series1, series1Format);
 
