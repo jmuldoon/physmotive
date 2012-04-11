@@ -118,7 +118,9 @@ public class StatisticsMenu extends Activity
         mySimpleXYPlot.setRangeLabel("Distance");
  
         // Reduce the number of range labels
-        mySimpleXYPlot.setTicksPerRangeLabel(3);
+        mySimpleXYPlot.setTicksPerRangeLabel(1);
+        mySimpleXYPlot.setTicksPerDomainLabel(1);
+        mySimpleXYPlot.setDomainLeftMin(0);
 
         // By default, AndroidPlot displays developer guides to aid in laying
         // out your plot.
@@ -163,24 +165,27 @@ public class StatisticsMenu extends Activity
 
         dbaManager.close();
         
-
-        chartData = new ChartData(cur1, 2, 3);
-        Number x[] = chartData.getX();
-        Number y[] = chartData.getY();
+        if(cur1.getCount()!=0)
+        {
+            chartData = new ChartData(cur1, 1, 2);
+            Number x[] = chartData.getX();
+            Number y[] = chartData.getY();
         
-        XYSeries series1 = new SimpleXYSeries(
-              Arrays.asList(x),          // SimpleXYSeries takes a List so turn our array into a List
-              Arrays.asList(y), // Y_VALS_ONLY means use the element index as the x value
-              "Distance");                             // Set the display title of the series
+            XYSeries series1 = new SimpleXYSeries(
+                    Arrays.asList(x),          // SimpleXYSeries takes a List so turn our array into a List
+                    Arrays.asList(y),         // Y_VALS_ONLY means use the element index as the x value
+                    //SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED,
+                    "Distance");                             // Set the display title of the series
         
-     // Create a formatter to use for drawing a series using LineAndPointRenderer:
-      LineAndPointFormatter series1Format = new LineAndPointFormatter(
-              Color.rgb(0, 200, 0),                   // line color
-              Color.rgb(0, 100, 0),                   // point color
-              Color.rgb(150, 190, 150));              // fill color (optional)
+            // Create a formatter to use for drawing a series using LineAndPointRenderer:
+            LineAndPointFormatter series1Format = new LineAndPointFormatter(
+                    Color.rgb(0, 200, 0),                   // line color
+                    Color.rgb(0, 100, 0),                   // point color
+                    //Color.rgb(150, 190, 150));              // fill color (optional)
+                    null);
       
-      mySimpleXYPlot.addSeries(series1, series1Format);
-        
+            mySimpleXYPlot.addSeries(series1, series1Format);
+        }
         
 
         Toast.makeText(this, Integer.toString(cur1.getCount()), Toast.LENGTH_SHORT).show();
