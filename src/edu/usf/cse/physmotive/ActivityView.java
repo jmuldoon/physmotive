@@ -23,6 +23,7 @@ import com.google.android.maps.OverlayItem;
 
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.LocationDBM;
+import edu.usf.cse.physmotive.logic.Statistics;
 
 public class ActivityView extends MapActivity implements LocationListener
 {
@@ -75,8 +76,6 @@ public class ActivityView extends MapActivity implements LocationListener
         mapView.setBuiltInZoomControls(true);
         mapView.setStreetView(true);
 
-        retrieveBundleInfo();
-
         // Connect interface elements to properties
         diary_btn = (Button) findViewById(R.id.toDiaryButton);
         statistics_btn = (Button) findViewById(R.id.toStatisticsButton);
@@ -89,6 +88,7 @@ public class ActivityView extends MapActivity implements LocationListener
         activityDBM = new ActivityDBM(this);
         locationDBM = new LocationDBM(this);
 
+        retrieveBundleInfo();
         setOnClickListeners();
 
         mapOverlays = mapView.getOverlays();
@@ -103,6 +103,16 @@ public class ActivityView extends MapActivity implements LocationListener
     {
         super.onResume();
         setupTextViews();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        activityCursor.close();
+        activityInfo.close();
+        locationCursor.close();
+        activityDBM.close();
     }
 
     private void setupTextViews()
@@ -128,7 +138,7 @@ public class ActivityView extends MapActivity implements LocationListener
     private void updateStatistics()
     {
         int day = -1, month = -1, year = -1; // -1 defaults for all
-        
+
         activityDBM.open();
         activityCursor = activityDBM.getRaceStats(userId, activityId);
         startManagingCursor(activityCursor);
@@ -138,23 +148,29 @@ public class ActivityView extends MapActivity implements LocationListener
         locationCursor = locationDBM.getList(activityId, day, month, year);
         startManagingCursor(locationCursor);
         locationDBM.close();
-        
+
         raceTotTime_tv.setText("Total Time: " + activityCursor.getDouble(activityCursor.getColumnIndex(TOTALTIME)) + " s");
-        raceTotDist_tv.setText("Total Distance: " + activityCursor.getFloat(activityCursor.getColumnIndex(TOTALDISTANCE)) + " m");
-        raceTotPace_tv.setText("Speed: " + ((double)activityCursor.getFloat(activityCursor.getColumnIndex(TOTALDISTANCE)) / (double)activityCursor.getInt(activityCursor.getColumnIndex(TOTALTIME))) + " m/s");
+        raceTotDist_tv.setText("Total Distance: " + activityCursor.getFloat(activityCursor.getColumnIndex(TOTALDISTANCE))
+                + " m");
+        raceTotPace_tv
+                .setText("Speed: "
+                        + Statistics.roundTwoDecimals(((double) activityCursor.getFloat(activityCursor
+                                .getColumnIndex(TOTALDISTANCE)) / (double) activityCursor.getInt(activityCursor
+                                .getColumnIndex(TOTALTIME)))) + " m/s");
     }
 
     private void initializeMap()
     {
         mapController = mapView.getController();
-        
+
         locationCursor.moveToFirst();
-        do{
+        do
+        {
             point = new GeoPoint(Integer.valueOf(locationCursor.getString(locationCursor.getColumnIndex(LATITUDE))),
                     Integer.valueOf(locationCursor.getString(locationCursor.getColumnIndex(LONGITUDE))));
 
             addGeoPoint(point, "Current Location", "lat : lng");
-        }while(locationCursor.moveToNext());
+        } while (locationCursor.moveToNext());
     }
 
     private void bundleUserInformation(Intent mIntent)
@@ -162,6 +178,7 @@ public class ActivityView extends MapActivity implements LocationListener
         Bundle b = new Bundle();
         b.putInt(USERID, userId);
         b.putInt(ACTIVITYID, activityId);
+        b.putInt(DIARYID, diaryId);
         mIntent.putExtras(b);
     }
 
@@ -170,6 +187,13 @@ public class ActivityView extends MapActivity implements LocationListener
         Bundle b = getIntent().getExtras();
         userId = b.getInt(USERID);
         activityId = b.getInt(ACTIVITYID);
+
+        activityDBM.open();
+        Cursor c = activityDBM.getDiaryId(activityId);
+        startManagingCursor(c);
+        activityDBM.close();
+
+        diaryId = c.getInt(c.getColumnIndex(DIARYID));
     }
 
     public void addGeoPoint(GeoPoint p, String greeting, String message)

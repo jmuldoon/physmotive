@@ -116,7 +116,9 @@ public class ActivityDBM
     {
         String[] columns = new String[] { ID, DID, EDATE, CHECK };
         String whereClause = DID + " = " + diaryId + " or " + DID + " < 1";
-        Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, null, null);
+        String orderClause = "_id";
+        // String limitClause = "1 , 8";
+        Cursor c = db.query(TABLENAME, columns, whereClause, null, null, null, orderClause, null);
         c.moveToFirst();
 
         return c;
@@ -146,15 +148,16 @@ public class ActivityDBM
 
         return c;
     }
-    
-//<<<<<<< HEAD
-//    public Cursor getStatisticsList(int userID, int activityID)
-//    {
-//        String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
-//
-//        // this is for past week.
-//        String whereClause = EUSR + " = " + userID + " and " + AID + " = " + activityID;
-//=======
+
+    // <<<<<<< HEAD
+    // public Cursor getStatisticsList(int userID, int activityID)
+    // {
+    // String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
+    //
+    // // this is for past week.
+    // String whereClause = EUSR + " = " + userID + " and " + AID + " = " +
+    // activityID;
+    // =======
     public Cursor getRaceStats(int userID, int raceID)
     {
         String[] columns = new String[] { ID, TTIME, TDISTANCE, EDATE };
@@ -170,6 +173,15 @@ public class ActivityDBM
     public Cursor getForExport(int id)
     {
         String whereClause = EUSR + "=" + id;
+        Cursor c = db.query(TABLENAME, null, whereClause, null, null, null, null);
+        c.moveToFirst();
+
+        return c;
+    }
+
+    public Cursor getDiaryId(int raceId)
+    {
+        String whereClause = ID + "=" + raceId;
         Cursor c = db.query(TABLENAME, null, whereClause, null, null, null, null);
         c.moveToFirst();
 

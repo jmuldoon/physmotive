@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.DiaryDBM;
@@ -29,6 +29,7 @@ public class DiaryView extends Activity
     static final String ID = "_id";
     static final String DIARYID = "diaryId";
     static final String USERID = "userId";
+    static final String ACTIVITYID = "activityId";
     static final String NAME = "name";
     static final String HEIGHT = "height";
     static final String WEIGHT = "weight";
@@ -59,7 +60,7 @@ public class DiaryView extends Activity
     private Cursor cur, checkCur, raceCur, diaryCur, userCur;
 
     private ListAdapter adapter;
-    private ListAdapter listAdapter;
+    private SimpleCursorAdapter listAdapter;
     private ListView bind_lv;
 
     // Called when the activity is first created.
@@ -125,51 +126,34 @@ public class DiaryView extends Activity
         activityDBM.close();
 
         startManagingCursor(bindCursor);
-        listAdapter = new SimpleCursorAdapter(this, R.layout.check_list_item, bindCursor, new String[] { ID, EDATE },
-                new int[] { R.id.itemId, R.id.itemName });
-        bind_lv.setAdapter(listAdapter);
-        bind_lv.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3)
+        listAdapter = new SimpleCursorAdapter(this, R.layout.check_list_item, bindCursor, new String[] { ID, EDATE, CHECK },
+                new int[] { R.id.itemId, R.id.itemName, R.id.itemCheck });
+
+        listAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+            public boolean setViewValue(View view, Cursor cursor, int columnIndex)
             {
-                View currentItem = (View) listAdapter.getItem(position);
-                CheckBox box = (CheckBox) currentItem.findViewById(R.id.itemCheck);
-                if (box.isChecked())
-                    box.setChecked(false);
-                else
-                    box.setChecked(true);
+                int nCheckedIndex = cursor.getColumnIndex(CHECK);
+                if (columnIndex == nCheckedIndex)
+                {
+                    CheckBox cb = (CheckBox) view;
+                    boolean bChecked = (cursor.getInt(nCheckedIndex) != 0);
+                    cb.setChecked(bChecked);
+                    return true;
+                }
+
+                return false;
             }
         });
 
-        return new AlertDialog.Builder(DiaryView.this).setTitle(R.string.newUserTitle).setView(bindListDialog)
+        bind_lv.setAdapter(listAdapter);
+
+        return new AlertDialog.Builder(DiaryView.this).setTitle(R.string.multiRaceTitle).setView(bindListDialog)
                 .setPositiveButton(R.string.btnSave, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton)
                     {
-                        updateBindList();
                         updateBoundList();
                     }
                 }).create();
-    }
-
-    @Override
-    protected void onPrepareDialog(final int id, final Dialog dialog, Bundle args)
-    {
-
-        for (int i = 0; i < bind_lv.getCount(); i++)
-        {
-            checkCur = (Cursor) listAdapter.getItem(i);
-            int value = checkCur.getInt(checkCur.getColumnIndex(CHECK));
-            if (value == 1)
-            {
-
-            }
-            // ((CheckBox)
-            // bind_lv.getChildAt(i).findViewById(R.id.itemCheck)).setChecked(true);
-            // Toast.makeText(this,
-            // Boolean.toString(((CheckBox)
-            // bind_lv.getChildAt(i).findViewById(R.id.itemCheck)).isChecked()),
-            // Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void setupTextEdits()
@@ -196,31 +180,65 @@ public class DiaryView extends Activity
         genderToggleButton.setChecked(diaryCur.getInt(diaryCur.getColumnIndex(GENDER)) == 1);
     }
 
+    // /////////////////////////////////////////////////////
+    // Dead code for updating the DB with checkbox values //
+    // breaks when accessing view out of screen
+    // /////////////////////////////////////////////////////
+    //
+    // private void updateBindList()
+    // {
+    // activityDBM.open();
+    // for (int i = 0; i < bind_lv.getCount(); i++)
+    // {
+    // int raceId = Integer.valueOf(((TextView)
+    // bind_lv.getChildAt(i).findViewById(R.id.itemId)).getText().toString());
+    // if (((CheckBox)
+    // bind_lv.getChildAt(i).findViewById(R.id.itemCheck)).isChecked())
+    // activityDBM.setChecked(raceId, diaryId, userId);
+    // else
+    // activityDBM.setUnChecked(raceId, userId);
+    // }
+    // activityDBM.close();
+    // }
+    // /////////////////////////////////////////////////////
+    // /////////////////////////////////////////////////////
+
     private void updateBoundList()
     {
         activityDBM.open();
         raceCur = activityDBM.getBoundList(diaryId);
         activityDBM.close();
         startManagingCursor(raceCur);
-        adapter = new SimpleCursorAdapter(this, R.layout.plain_list_item, raceCur, new String[] { ID, EDATE }, new int[] {
-                R.id.itemId, R.id.itemName });
+        adapter = new SimpleCursorAdapter(this, R.layout.plain_list_item, raceCur, new String[] { ID, EDATE, CHECK },
+                new int[] { R.id.itemId, R.id.itemName, R.id.itemCheck });
 
         boundListView.setAdapter(adapter);
-    }
+        boundListView.setOnItemClickListener(new OnItemClickListener() {
 
-    private void updateBindList()
-    {
-        activityDBM.open();
-        for (int i = 0; i < bind_lv.getCount(); i++)
-        {
-            int raceId = Integer.valueOf(((TextView) bind_lv.getChildAt(i).findViewById(R.id.itemId)).getText().toString());
-            if (((CheckBox) bind_lv.getChildAt(i).findViewById(R.id.itemCheck)).isChecked())
-                activityDBM.setChecked(raceId, diaryId, userId);
-            else
-                activityDBM.setUnChecked(raceId, userId);
-        }
-        activityDBM.close();
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View v, int position, long id)
+            {
+                // Gets the cursor from the entry selected
 
+                Cursor item = (Cursor) boundListView.getAdapter().getItem(position);
+                // Gets the entry _id of the cursor
+                int itemId = item.getInt(item.getColumnIndex(ID));
+
+                // the new activity being started
+                Intent myIntent = new Intent(v.getContext(), ActivityView.class);
+                // The information being passed to the new activity
+                Bundle bundle = new Bundle();
+
+                // Preparing the data
+                bundle.putInt(USERID, userId);
+                bundle.putInt(ACTIVITYID, itemId);
+
+                // Attaching info and starting new activity
+                myIntent.putExtras(bundle);
+                startActivity(myIntent);
+            }
+
+        });
     }
 
     private void setOnClickListeners()
