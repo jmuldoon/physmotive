@@ -186,9 +186,6 @@ public class StatisticsMenu extends Activity
       
             mySimpleXYPlot.addSeries(series1, series1Format);
         }
-        
-
-        Toast.makeText(this, Integer.toString(cur1.getCount()), Toast.LENGTH_SHORT).show();
 
         NumberOfRacesTextView.setText("Total Activities Completed: " + statsActivity.getTotalNumberActivities());
         averageTimeTextView.setText("Average Time: " + Statistics.roundTwoDecimals(statsActivity.getAverageTime()) + " s");

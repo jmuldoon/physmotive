@@ -14,7 +14,7 @@
         android:layout_height="0dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:textColor="#000000" />
+        android:textColor="#FFFFFF" />
 
     <TextView
         android:id="@+id/itemName"
@@ -22,6 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/itemId"
         android:layout_toRightOf="@+id/itemId"
-        android:textColor="#000000" />
+        android:textColor="#FFFFFF" />
 
 </RelativeLayout>
