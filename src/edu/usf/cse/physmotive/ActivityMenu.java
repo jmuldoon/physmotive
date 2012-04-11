@@ -91,10 +91,10 @@ public class ActivityMenu extends Activity
         
         //do some db stuff
         activityDBM.open();
-        Cursor cursor = activityDBM.getRaceStats(userId, activityId);
+        Cursor cursor = activityDBM.getRaceStats(userId);
         activityDBM.close();
         
-        ChartData chartData = new ChartData(cursor, 2, 3);
+        ChartData chartData = new ChartData(cursor, 2, 1);
         Number x[] = chartData.getX();
         Number y[] = chartData.getY();
         
