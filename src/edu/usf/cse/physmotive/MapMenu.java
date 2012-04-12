@@ -67,13 +67,14 @@ public class MapMenu extends MapActivity implements LocationListener
         initiateLocationServices();
     }
 
-    private void initiateLocationServices(){
-    	// Use the LocationManager class to obtain GPS locations.
+    private void initiateLocationServices()
+    {
+        // Use the LocationManager class to obtain GPS locations.
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
     }
-    
+
     public void addGeoPoint(GeoPoint p, String greeting, String message)
     {
         OverlayItem overlayitem = new OverlayItem(p, greeting, message);
@@ -124,7 +125,7 @@ public class MapMenu extends MapActivity implements LocationListener
 
     public void getInitialLocation()
     {
-    	initiateLocationServices();
+        initiateLocationServices();
         Location lastKnown = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (lastKnown != null)
         {

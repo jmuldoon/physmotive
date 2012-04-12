@@ -290,25 +290,6 @@ public class DiaryList extends ListActivity
     // /////////////////////
     // Database Functions //
     // /////////////////////
-    private int insert(String _name, int _ht, int _wt, int _age, int _gender, String _note, int _usr)
-    {
-        diaryDBM.open();
-        int id = diaryDBM.insert(_name, _ht, _wt, _age, _gender, _note, _usr);
-        diaryDBM.close();
-        updateList();
-
-        return id;
-    }
-
-    // private void update(DiaryDBM dbm, int item_id, String _name, int _ht, int
-    // _wt, int _age, int _gender, String _note, int _usr)
-    // {
-    // dbm.open();
-    // dbm.update(item_id, _name, _ht, _wt, _age, _gender, _note, _usr);
-    // dbm.close();
-    // updateList();
-    // }
-
     private void delete(int item_id, int _usr)
     {
         diaryDBM.open();
@@ -316,22 +297,4 @@ public class DiaryList extends ListActivity
         diaryDBM.close();
         updateList();
     }
-
-    // Currently unused
-    // private Cursor get(DiaryDBM dbm, int item_id)
-    // {
-    // dbm.open();
-    // Cursor c = dbm.get(item_id);
-    // startManagingCursor(c);
-    // dbm.close();
-    // if (c.moveToFirst())
-    // return c;
-    // else
-    // {
-    // Toast.makeText(this, "No Collection found.", Toast.LENGTH_LONG).show();
-    // return null;
-    // }
-    //
-    // }
-
 }

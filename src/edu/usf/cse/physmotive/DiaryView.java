@@ -15,14 +15,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.DiaryDBM;
-import edu.usf.cse.physmotive.db.UserDBM;
 
 public class DiaryView extends Activity
 {
@@ -56,8 +58,7 @@ public class DiaryView extends Activity
     private int userId;
     private ActivityDBM activityDBM;
     private DiaryDBM diaryDBM;
-    private UserDBM userDBM;
-    private Cursor cur, checkCur, raceCur, diaryCur, userCur;
+    private Cursor raceCur, diaryCur, bindCursor;
 
     private ListAdapter adapter;
     private SimpleCursorAdapter listAdapter;
@@ -73,7 +74,6 @@ public class DiaryView extends Activity
         // Creating DBM object
         activityDBM = new ActivityDBM(this);
         diaryDBM = new DiaryDBM(this);
-        userDBM = new UserDBM(this);
 
         // Connect interface elements to properties
         cancelButton = (Button) findViewById(R.id.cancelButton);
@@ -93,8 +93,6 @@ public class DiaryView extends Activity
         diaryId = b.getInt(DIARYID);
 
         setOnClickListeners();
-
-        // TODO: Get Check boxes to update properly.
     }
 
     @Override
@@ -104,6 +102,7 @@ public class DiaryView extends Activity
         setupTextEdits();
         setupToggleButtons();
         updateBoundList();
+
     }
 
     @Override
@@ -121,10 +120,21 @@ public class DiaryView extends Activity
         // Setup of the view for the dialog
         final View bindListDialog = factory.inflate(R.layout.bind_list, null);
         bind_lv = (ListView) bindListDialog.findViewById(R.id.bindList);
-        activityDBM.open();
-        Cursor bindCursor = activityDBM.getBindingList(diaryId);
-        activityDBM.close();
 
+        return new AlertDialog.Builder(DiaryView.this).setTitle(R.string.multiRaceTitle).setView(bindListDialog)
+                .setPositiveButton(R.string.btnSave, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton)
+                    {
+                        updateBoundList();
+                    }
+                }).create();
+    }
+
+    @Override
+    protected void onPrepareDialog(final int id, final Dialog dialog, Bundle args)
+    {
+        activityDBM.open();
+        bindCursor = activityDBM.getBindingList(diaryId);
         startManagingCursor(bindCursor);
         listAdapter = new SimpleCursorAdapter(this, R.layout.check_list_item, bindCursor, new String[] { ID, EDATE, CHECK },
                 new int[] { R.id.itemId, R.id.itemName, R.id.itemCheck });
@@ -138,22 +148,32 @@ public class DiaryView extends Activity
                     CheckBox cb = (CheckBox) view;
                     boolean bChecked = (cursor.getInt(nCheckedIndex) != 0);
                     cb.setChecked(bChecked);
+
+                    cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+                        @Override
+                        public void onCheckedChanged(CompoundButton arg0, boolean arg1)
+                        {
+                            View item = (View) arg0.getParent();
+                            int raceId = Integer.valueOf(((TextView) item.findViewById(R.id.itemId)).getText().toString());
+                            activityDBM.open();
+                            if (((CheckBox) arg0).isChecked())
+                            {
+                                activityDBM.setChecked(raceId, diaryId, userId);
+                            } else
+                            {
+                                activityDBM.setUnChecked(raceId, userId);
+                            }
+                            activityDBM.close();
+                        }
+                    });
                     return true;
                 }
-
                 return false;
             }
         });
-
         bind_lv.setAdapter(listAdapter);
-
-        return new AlertDialog.Builder(DiaryView.this).setTitle(R.string.multiRaceTitle).setView(bindListDialog)
-                .setPositiveButton(R.string.btnSave, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton)
-                    {
-                        updateBoundList();
-                    }
-                }).create();
+        activityDBM.close();
     }
 
     private void setupTextEdits()
@@ -179,29 +199,6 @@ public class DiaryView extends Activity
 
         genderToggleButton.setChecked(diaryCur.getInt(diaryCur.getColumnIndex(GENDER)) == 1);
     }
-
-    // /////////////////////////////////////////////////////
-    // Dead code for updating the DB with checkbox values //
-    // breaks when accessing view out of screen
-    // /////////////////////////////////////////////////////
-    //
-    // private void updateBindList()
-    // {
-    // activityDBM.open();
-    // for (int i = 0; i < bind_lv.getCount(); i++)
-    // {
-    // int raceId = Integer.valueOf(((TextView)
-    // bind_lv.getChildAt(i).findViewById(R.id.itemId)).getText().toString());
-    // if (((CheckBox)
-    // bind_lv.getChildAt(i).findViewById(R.id.itemCheck)).isChecked())
-    // activityDBM.setChecked(raceId, diaryId, userId);
-    // else
-    // activityDBM.setUnChecked(raceId, userId);
-    // }
-    // activityDBM.close();
-    // }
-    // /////////////////////////////////////////////////////
-    // /////////////////////////////////////////////////////
 
     private void updateBoundList()
     {
