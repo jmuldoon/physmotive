@@ -201,6 +201,7 @@ public class ActivityList extends ListActivity
         listAdapter = new SimpleCursorAdapter(this, R.layout.plain_list_item, cursor, new String[] { ID, ENTRYDATE },
                 new int[] { R.id.itemId, R.id.itemName });
         setListAdapter(listAdapter);
+        activityDBM.close();
     }
 
     // private long insert(int usr)
