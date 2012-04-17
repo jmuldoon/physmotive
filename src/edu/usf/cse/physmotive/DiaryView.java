@@ -15,10 +15,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.SimpleCursorAdapter.ViewBinder;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.db.DiaryDBM;
@@ -129,21 +133,7 @@ public class DiaryView extends Activity
         listAdapter = new SimpleCursorAdapter(this, R.layout.check_list_item, bindCursor, new String[] { ID, EDATE, CHECK },
                 new int[] { R.id.itemId, R.id.itemName, R.id.itemCheck });
 
-        listAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            public boolean setViewValue(View view, Cursor cursor, int columnIndex)
-            {
-                int nCheckedIndex = cursor.getColumnIndex(CHECK);
-                if (columnIndex == nCheckedIndex)
-                {
-                    CheckBox cb = (CheckBox) view;
-                    boolean bChecked = (cursor.getInt(nCheckedIndex) != 0);
-                    cb.setChecked(bChecked);
-                    return true;
-                }
-
-                return false;
-            }
-        });
+        listAdapter.setViewBinder(new MyViewBinder());
 
         bind_lv.setAdapter(listAdapter);
 
@@ -154,6 +144,47 @@ public class DiaryView extends Activity
                         updateBoundList();
                     }
                 }).create();
+    }
+
+    public class MyViewBinder implements ViewBinder
+    {
+        @Override
+        public boolean setViewValue(View view, Cursor cursor, int columnIndex)
+        {
+            int checkView = cursor.getColumnIndex(CHECK);
+
+            if (columnIndex == checkView)
+            {
+                CheckBox cb = (CheckBox) view;
+                // Sets checkbox to the value in the cursor
+                boolean bChecked = (cursor.getInt(checkView) != 0);
+                cb.setChecked(bChecked);
+
+                cb.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public class MyOnCheckedChangeListener implements OnCheckedChangeListener
+    {
+        @Override
+        public void onCheckedChanged(CompoundButton checkBox, boolean newVal)
+        {
+            View item = (View) checkBox.getParent(); // Gets the
+                                                     // plain_list_item(Parent)
+                                                     // of the Check Box
+
+            // Gets the DB _id value of the row clicked and updates the Database
+            // appropriately.
+            int itemId = Integer.valueOf(((TextView) item.findViewById(R.id.itemId)).getText().toString());
+            int did = newVal ? diaryId : 0;
+            activityDBM.open();
+            activityDBM.setChecked(itemId, did, userId, newVal);
+            activityDBM.close();
+
+        }
     }
 
     private void setupTextEdits()
