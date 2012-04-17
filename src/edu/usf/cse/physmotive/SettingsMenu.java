@@ -166,8 +166,13 @@ public class SettingsMenu extends Activity
         String fileName;
         String fileExtension;
 
-
-        if (radioButtonCSV.isChecked()) { fileExtension = ".csv"; } else { fileExtension = ".txt"; }
+        if (radioButtonCSV.isChecked())
+        {
+            fileExtension = ".csv";
+        } else
+        {
+            fileExtension = ".txt";
+        }
         fileName = "test" + fileExtension;
 
         if (Environment.MEDIA_MOUNTED.equals(state))
@@ -178,18 +183,26 @@ public class SettingsMenu extends Activity
             try
             {
                 outFile = new FileOutputStream(file);
-                if (radioButtonCSV.isChecked()) { writeCSV(outFile); } else { writeTXT(outFile); }
+                if (radioButtonCSV.isChecked())
+                {
+                    writeCSV(outFile);
+                } else
+                {
+                    writeTXT(outFile);
+                }
                 outFile.close();
-            } 
-            catch (FileNotFoundException ex){}           
-            catch (IOException ex){}         
+            } catch (FileNotFoundException ex)
+            {
+            } catch (IOException ex)
+            {
+            }
         }
 
     }
-    
+
     private void writeCSV(OutputStream outFile)
     {
-        //Write general settings
+        // Write general settings
         String generalString = unitToggleButton.getText().toString();
         generalString = generalString.concat(",");
         generalString = generalString.concat(orientationToggleButton.getText().toString());
@@ -202,124 +215,220 @@ public class SettingsMenu extends Activity
         generalString = generalString.concat(",");
         generalString = generalString.concat(ageEditText.getText().toString());
         generalString = generalString.concat("\n");
-        try {outFile.write(generalString.getBytes()); } catch ( IOException ex ) {}
+        try
+        {
+            outFile.write(generalString.getBytes());
+        } catch (IOException ex)
+        {
+        }
 
-        //Write Activity table
+        // Write Activity table
         dbmActivity.open();
         activityCur = dbmActivity.getForExport(userId);
         dbmActivity.close();
         String activityString = activityCur.getColumnName(0);
-        for(int i=1; i<activityCur.getColumnCount(); ++i) //Write column names
+        for (int i = 1; i < activityCur.getColumnCount(); ++i) // Write column
+                                                               // names
         {
             activityString = activityString.concat(",");
             activityString = activityString.concat(activityCur.getColumnName(i));
         }
         activityString = activityString.concat("\n");
-        try { outFile.write(activityString.getBytes()); } catch ( IOException ex ) {}
-        if(activityCur.moveToFirst())
+        try
+        {
+            outFile.write(activityString.getBytes());
+        } catch (IOException ex)
+        {
+        }
+        if (activityCur.moveToFirst())
         {
             do
             {
-                //have to reset string to first column, for needs to 1
-                if(activityCur.isNull(0)) { activityString = "null"; } else { activityString = activityCur.getString(0); }                
-                for(int i=1;i<activityCur.getColumnCount();++i)
+                // have to reset string to first column, for needs to 1
+                if (activityCur.isNull(0))
+                {
+                    activityString = "null";
+                } else
+                {
+                    activityString = activityCur.getString(0);
+                }
+                for (int i = 1; i < activityCur.getColumnCount(); ++i)
                 {
                     activityString = activityString.concat(",");
-                    if(activityCur.isNull(i)) { activityString = activityString.concat("null"); } else { activityString = activityString.concat(activityCur.getString(i)); }                    
+                    if (activityCur.isNull(i))
+                    {
+                        activityString = activityString.concat("null");
+                    } else
+                    {
+                        activityString = activityString.concat(activityCur.getString(i));
+                    }
                 }
                 activityString = activityString.concat("\n");
-                try { outFile.write(activityString.getBytes()); } catch ( IOException ex ) {}
-            }while(activityCur.moveToNext());
+                try
+                {
+                    outFile.write(activityString.getBytes());
+                } catch (IOException ex)
+                {
+                }
+            } while (activityCur.moveToNext());
         }
-        
-        //Write Diary table
+
+        // Write Diary table
         dbmDiary.open();
         diaryCur = dbmDiary.getForExport(userId);
         dbmDiary.close();
         String diaryString = diaryCur.getColumnName(0);
-        for(int i=1; i<diaryCur.getColumnCount(); ++i) //Write column names
+        for (int i = 1; i < diaryCur.getColumnCount(); ++i) // Write column
+                                                            // names
         {
             diaryString = diaryString.concat(",");
             diaryString = diaryString.concat(diaryCur.getColumnName(i));
         }
         diaryString = diaryString.concat("\n");
-        try { outFile.write(diaryString.getBytes()); } catch ( IOException ex ) {}
-        if(diaryCur.moveToFirst())
+        try
+        {
+            outFile.write(diaryString.getBytes());
+        } catch (IOException ex)
+        {
+        }
+        if (diaryCur.moveToFirst())
         {
             do
             {
-                //have to reset string to first column, for needs to 1
-                if(diaryCur.isNull(0)) { diaryString = "null"; } else { diaryString = diaryCur.getString(0); }
-                for(int i=1;i<diaryCur.getColumnCount();++i)
+                // have to reset string to first column, for needs to 1
+                if (diaryCur.isNull(0))
+                {
+                    diaryString = "null";
+                } else
+                {
+                    diaryString = diaryCur.getString(0);
+                }
+                for (int i = 1; i < diaryCur.getColumnCount(); ++i)
                 {
                     diaryString = diaryString.concat(",");
-                    if(diaryCur.isNull(i)) { diaryString = diaryString.concat("null"); } else { diaryString = diaryString.concat(diaryCur.getString(i)); }    
+                    if (diaryCur.isNull(i))
+                    {
+                        diaryString = diaryString.concat("null");
+                    } else
+                    {
+                        diaryString = diaryString.concat(diaryCur.getString(i));
+                    }
                 }
                 diaryString = diaryString.concat("\n");
-                try { outFile.write(diaryString.getBytes()); } catch ( IOException ex ) {}
-            }while(diaryCur.moveToNext());
+                try
+                {
+                    outFile.write(diaryString.getBytes());
+                } catch (IOException ex)
+                {
+                }
+            } while (diaryCur.moveToNext());
         }
-        
-        //Write Location table
+
+        // Write Location table
         dbmLocation.open();
         locationCur = dbmLocation.getForExport(userId);
         dbmLocation.close();
         String locString = locationCur.getColumnName(0);
-        for(int i=1; i<locationCur.getColumnCount(); ++i) //Write column names
+        for (int i = 1; i < locationCur.getColumnCount(); ++i) // Write column
+                                                               // names
         {
             locString = locString.concat(",");
             locString = locString.concat(locationCur.getColumnName(i));
         }
         locString = locString.concat("\n");
-        try { outFile.write(locString.getBytes()); } catch ( IOException ex ) {}
-        if(locationCur.moveToFirst())
+        try
+        {
+            outFile.write(locString.getBytes());
+        } catch (IOException ex)
+        {
+        }
+        if (locationCur.moveToFirst())
         {
             do
             {
-                //have to reset string to first column, for needs to 1
-                if(locationCur.isNull(0)) { locString = "null"; } else { locString = locationCur.getString(0); }
-                for(int i=1;i<locationCur.getColumnCount();++i)
+                // have to reset string to first column, for needs to 1
+                if (locationCur.isNull(0))
+                {
+                    locString = "null";
+                } else
+                {
+                    locString = locationCur.getString(0);
+                }
+                for (int i = 1; i < locationCur.getColumnCount(); ++i)
                 {
                     locString = locString.concat(",");
-                    if(locationCur.isNull(i)) { locString = locString.concat("null"); } else { locString = locString.concat(locationCur.getString(i)); }    
+                    if (locationCur.isNull(i))
+                    {
+                        locString = locString.concat("null");
+                    } else
+                    {
+                        locString = locString.concat(locationCur.getString(i));
+                    }
                 }
                 locString = locString.concat("\n");
-                try { outFile.write(locString.getBytes()); } catch ( IOException ex ) {}
-            }while(locationCur.moveToNext());
+                try
+                {
+                    outFile.write(locString.getBytes());
+                } catch (IOException ex)
+                {
+                }
+            } while (locationCur.moveToNext());
         }
-        
-        //Write User table
+
+        // Write User table
         dbmUser.open();
         userCur = dbmUser.getForExport(userId);
         dbmUser.close();
         String userString = userCur.getColumnName(0);
-        for(int i=1; i<userCur.getColumnCount(); ++i) //Write column names
+        for (int i = 1; i < userCur.getColumnCount(); ++i) // Write column names
         {
             userString = userString.concat(",");
             userString = userString.concat(userCur.getColumnName(i));
         }
         userString = userString.concat("\n");
-        try { outFile.write(userString.getBytes()); } catch ( IOException ex ) {}
-        if(userCur.moveToFirst())
+        try
+        {
+            outFile.write(userString.getBytes());
+        } catch (IOException ex)
+        {
+        }
+        if (userCur.moveToFirst())
         {
             do
             {
-                //have to reset string to first column, for needs to 1
-                if(userCur.isNull(0)) { userString = "null"; } else { userString = userCur.getString(0); }
-                for(int i=1;i<userCur.getColumnCount();++i)
+                // have to reset string to first column, for needs to 1
+                if (userCur.isNull(0))
+                {
+                    userString = "null";
+                } else
+                {
+                    userString = userCur.getString(0);
+                }
+                for (int i = 1; i < userCur.getColumnCount(); ++i)
                 {
                     userString = userString.concat(",");
-                    if(userCur.isNull(i)) { userString = userString.concat("null"); } else { userString = userString.concat(userCur.getString(i)); }    
+                    if (userCur.isNull(i))
+                    {
+                        userString = userString.concat("null");
+                    } else
+                    {
+                        userString = userString.concat(userCur.getString(i));
+                    }
                 }
                 userString = userString.concat("\n");
-                try { outFile.write(userString.getBytes()); } catch ( IOException ex ) {}
-            }while(userCur.moveToNext());
+                try
+                {
+                    outFile.write(userString.getBytes());
+                } catch (IOException ex)
+                {
+                }
+            } while (userCur.moveToNext());
         }
     }
-    
+
     private void writeTXT(OutputStream outFile)
     {
-        //Write general settings
+        // Write general settings
         String genString = unitToggleButton.getText().toString();
         genString = genString.concat("\t");
         genString = genString.concat(orientationToggleButton.getText().toString());
@@ -332,118 +441,214 @@ public class SettingsMenu extends Activity
         genString = genString.concat("\t");
         genString = genString.concat(ageEditText.getText().toString());
         genString = genString.concat("\n");
-        try {outFile.write(genString.getBytes()); } catch ( IOException ex ) {}
+        try
+        {
+            outFile.write(genString.getBytes());
+        } catch (IOException ex)
+        {
+        }
 
-        //Write Activity table
+        // Write Activity table
         dbmActivity.open();
         activityCur = dbmActivity.getForExport(userId);
         dbmActivity.close();
         String activityString = activityCur.getColumnName(0);
-        for(int i=1; i<activityCur.getColumnCount(); ++i) //Write column names
+        for (int i = 1; i < activityCur.getColumnCount(); ++i) // Write column
+                                                               // names
         {
             activityString = activityString.concat("\t");
             activityString = activityString.concat(activityCur.getColumnName(i));
         }
         activityString = activityString.concat("\n");
-        try { outFile.write(activityString.getBytes()); } catch ( IOException ex ) {}
-        if(activityCur.moveToFirst())
+        try
+        {
+            outFile.write(activityString.getBytes());
+        } catch (IOException ex)
+        {
+        }
+        if (activityCur.moveToFirst())
         {
             do
             {
-                //have to reset string to first column, for needs to 1
-                if(activityCur.isNull(0)) { activityString = "null"; } else { activityString = activityCur.getString(0); }
-                for(int i=1;i<activityCur.getColumnCount();++i)
+                // have to reset string to first column, for needs to 1
+                if (activityCur.isNull(0))
+                {
+                    activityString = "null";
+                } else
+                {
+                    activityString = activityCur.getString(0);
+                }
+                for (int i = 1; i < activityCur.getColumnCount(); ++i)
                 {
                     activityString = activityString.concat(",");
-                    if(activityCur.isNull(i)) { activityString = activityString.concat("null"); } else { activityString = activityString.concat(activityCur.getString(i)); }    
+                    if (activityCur.isNull(i))
+                    {
+                        activityString = activityString.concat("null");
+                    } else
+                    {
+                        activityString = activityString.concat(activityCur.getString(i));
+                    }
                 }
                 activityString = activityString.concat("\n");
-                try { outFile.write(activityString.getBytes()); } catch ( IOException ex ) {}
-            }while(activityCur.moveToNext());
+                try
+                {
+                    outFile.write(activityString.getBytes());
+                } catch (IOException ex)
+                {
+                }
+            } while (activityCur.moveToNext());
         }
-        
-        //Write Diary table
+
+        // Write Diary table
         dbmDiary.open();
         diaryCur = dbmDiary.getForExport(userId);
         dbmDiary.close();
         String diaryString = diaryCur.getColumnName(0);
-        for(int i=1; i<diaryCur.getColumnCount(); ++i) //Write column names
+        for (int i = 1; i < diaryCur.getColumnCount(); ++i) // Write column
+                                                            // names
         {
             diaryString = diaryString.concat("\t");
             diaryString = diaryString.concat(diaryCur.getColumnName(i));
         }
         diaryString = diaryString.concat("\n");
-        try { outFile.write(diaryString.getBytes()); } catch ( IOException ex ) {}
-        if(diaryCur.moveToFirst())
+        try
+        {
+            outFile.write(diaryString.getBytes());
+        } catch (IOException ex)
+        {
+        }
+        if (diaryCur.moveToFirst())
         {
             do
             {
-                //have to reset string to first column, for needs to 1
-                if(diaryCur.isNull(0)) { diaryString = "null"; } else { diaryString = diaryCur.getString(0); }
-                for(int i=1;i<diaryCur.getColumnCount();++i)
+                // have to reset string to first column, for needs to 1
+                if (diaryCur.isNull(0))
+                {
+                    diaryString = "null";
+                } else
+                {
+                    diaryString = diaryCur.getString(0);
+                }
+                for (int i = 1; i < diaryCur.getColumnCount(); ++i)
                 {
                     diaryString = diaryString.concat(",");
-                    if(diaryCur.isNull(i)) { diaryString = diaryString.concat("null"); } else { diaryString = diaryString.concat(diaryCur.getString(i)); }    
+                    if (diaryCur.isNull(i))
+                    {
+                        diaryString = diaryString.concat("null");
+                    } else
+                    {
+                        diaryString = diaryString.concat(diaryCur.getString(i));
+                    }
                 }
                 diaryString = diaryString.concat("\n");
-                try { outFile.write(diaryString.getBytes()); } catch ( IOException ex ) {}
-            }while(diaryCur.moveToNext());
+                try
+                {
+                    outFile.write(diaryString.getBytes());
+                } catch (IOException ex)
+                {
+                }
+            } while (diaryCur.moveToNext());
         }
-        
-        //Write Location table
+
+        // Write Location table
         dbmLocation.open();
         locationCur = dbmLocation.getForExport(userId);
         dbmLocation.close();
         String locString = locationCur.getColumnName(0);
-        for(int i=1; i<locationCur.getColumnCount(); ++i) //Write column names
+        for (int i = 1; i < locationCur.getColumnCount(); ++i) // Write column
+                                                               // names
         {
             locString = locString.concat("\t");
             locString = locString.concat(locationCur.getColumnName(i));
         }
         locString = locString.concat("\n");
-        try { outFile.write(locString.getBytes()); } catch ( IOException ex ) {}
-        if(locationCur.moveToFirst())
+        try
+        {
+            outFile.write(locString.getBytes());
+        } catch (IOException ex)
+        {
+        }
+        if (locationCur.moveToFirst())
         {
             do
             {
-                //have to reset string to first column, for needs to 1
-                if(locationCur.isNull(0)) { locString = "null"; } else { locString = locationCur.getString(0); }
-                for(int i=1;i<locationCur.getColumnCount();++i)
+                // have to reset string to first column, for needs to 1
+                if (locationCur.isNull(0))
+                {
+                    locString = "null";
+                } else
+                {
+                    locString = locationCur.getString(0);
+                }
+                for (int i = 1; i < locationCur.getColumnCount(); ++i)
                 {
                     locString = locString.concat(",");
-                    if(locationCur.isNull(i)) { locString = locString.concat("null"); } else { locString = locString.concat(locationCur.getString(i)); }    
+                    if (locationCur.isNull(i))
+                    {
+                        locString = locString.concat("null");
+                    } else
+                    {
+                        locString = locString.concat(locationCur.getString(i));
+                    }
                 }
                 locString = locString.concat("\n");
-                try { outFile.write(locString.getBytes()); } catch ( IOException ex ) {}
-            }while(locationCur.moveToNext());
+                try
+                {
+                    outFile.write(locString.getBytes());
+                } catch (IOException ex)
+                {
+                }
+            } while (locationCur.moveToNext());
         }
-        
-        //Write User table
+
+        // Write User table
         dbmUser.open();
         userCur = dbmUser.getForExport(userId);
         dbmUser.close();
         String userString = userCur.getColumnName(0);
-        for(int i=1; i<userCur.getColumnCount(); ++i) //Write column names
+        for (int i = 1; i < userCur.getColumnCount(); ++i) // Write column names
         {
             userString = userString.concat("\t");
             userString = userString.concat(userCur.getColumnName(i));
         }
         userString = userString.concat("\n");
-        try { outFile.write(userString.getBytes()); } catch ( IOException ex ) {}
-        if(userCur.moveToFirst())
+        try
+        {
+            outFile.write(userString.getBytes());
+        } catch (IOException ex)
+        {
+        }
+        if (userCur.moveToFirst())
         {
             do
             {
-                //have to reset string to first column, for needs to 1
-                if(userCur.isNull(0)) { userString = "null"; } else { userString = userCur.getString(0); }
-                for(int i=1;i<userCur.getColumnCount();++i)
+                // have to reset string to first column, for needs to 1
+                if (userCur.isNull(0))
+                {
+                    userString = "null";
+                } else
+                {
+                    userString = userCur.getString(0);
+                }
+                for (int i = 1; i < userCur.getColumnCount(); ++i)
                 {
                     userString = userString.concat(",");
-                    if(userCur.isNull(i)) { userString = userString.concat("null"); } else { userString = userString.concat(userCur.getString(i)); }    
+                    if (userCur.isNull(i))
+                    {
+                        userString = userString.concat("null");
+                    } else
+                    {
+                        userString = userString.concat(userCur.getString(i));
+                    }
                 }
                 userString = userString.concat("\n");
-                try { outFile.write(userString.getBytes()); } catch ( IOException ex ) {}
-            }while(userCur.moveToNext());
+                try
+                {
+                    outFile.write(userString.getBytes());
+                } catch (IOException ex)
+                {
+                }
+            } while (userCur.moveToNext());
         }
     }
 }

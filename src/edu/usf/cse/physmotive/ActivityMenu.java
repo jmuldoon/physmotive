@@ -2,11 +2,6 @@ package edu.usf.cse.physmotive;
 
 import java.util.Arrays;
 
-import com.androidplot.series.XYSeries;
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XYPlot;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,6 +16,12 @@ import android.widget.EditText;
 import android.widget.Gallery;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.androidplot.series.XYSeries;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYPlot;
+
 import edu.usf.cse.physmotive.db.ActivityDBM;
 import edu.usf.cse.physmotive.logic.ChartData;
 import edu.usf.cse.physmotive.ui.ImageAdapter;
@@ -47,7 +48,7 @@ public class ActivityMenu extends Activity
 
     private int userId, activityId, activitySelection = 0;
     private String startType;
-    
+
     private XYPlot mySimpleXYPlot;
 
     // Called when the activity is first created.
@@ -75,12 +76,12 @@ public class ActivityMenu extends Activity
         gallery.setAdapter(new ImageAdapter(this));
 
         setOnClickListeners();
-        
+
         mySimpleXYPlot = (XYPlot) findViewById(R.id.mySimpleXYPlot);
-        
+
         mySimpleXYPlot.setDomainLabel("Time");
         mySimpleXYPlot.setRangeLabel("Distance");
- 
+
         // Reduce the number of range labels
         mySimpleXYPlot.setTicksPerRangeLabel(3);
 
@@ -88,30 +89,33 @@ public class ActivityMenu extends Activity
         // out your plot.
         // To get rid of them call disableAllMarkup():
         mySimpleXYPlot.disableAllMarkup();
-        
-        //do some db stuff
+
+        // do some db stuff
         activityDBM.open();
         Cursor cursor = activityDBM.getRaceStats(userId);
         activityDBM.close();
-        
+
         ChartData chartData = new ChartData(cursor, 1, 2);
         Number x[] = chartData.getX();
         Number y[] = chartData.getY();
-        
-        XYSeries series1 = new SimpleXYSeries(
-              Arrays.asList(x),          // SimpleXYSeries takes a List so turn our array into a List
-              Arrays.asList(y), // Y_VALS_ONLY means use the element index as the x value
-              "Distance vs. Time");                             // Set the display title of the series
-        
-     // Create a formatter to use for drawing a series using LineAndPointRenderer:
-      LineAndPointFormatter series1Format = new LineAndPointFormatter(
-              Color.rgb(0, 200, 0),                   // line color
-              Color.rgb(0, 100, 0),                   // point color
-              null);              // fill color (optional)
-      
-      mySimpleXYPlot.addSeries(series1, series1Format);
 
-        // TODO: Fix Pictures
+        XYSeries series1 = new SimpleXYSeries(Arrays.asList(x), // SimpleXYSeries
+                                                                // takes a List
+                                                                // so turn our
+                                                                // array into a
+                                                                // List
+                Arrays.asList(y), // Y_VALS_ONLY means use the element index as
+                                  // the x value
+                "Distance vs. Time"); // Set the display title of the series
+
+        // Create a formatter to use for drawing a series using
+        // LineAndPointRenderer:
+        LineAndPointFormatter series1Format = new LineAndPointFormatter(Color.rgb(0, 200, 0), // line
+                                                                                              // color
+                Color.rgb(0, 100, 0), // point color
+                null); // fill color (optional)
+
+        mySimpleXYPlot.addSeries(series1, series1Format);
     }
 
     private void bundleUserInformation(Intent mIntent)

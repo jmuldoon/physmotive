@@ -17,7 +17,6 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 import edu.usf.cse.physmotive.db.ActivityDBM;
-import edu.usf.cse.physmotive.db.LocationDBM;
 
 public class ActivityList extends ListActivity
 {
@@ -36,7 +35,6 @@ public class ActivityList extends ListActivity
     protected Button addActivityBtn;
     protected ListView activity_lv;
     private ActivityDBM activityDBM;
-    private LocationDBM locationDBM;
     private Cursor cursor;
     private ListAdapter listAdapter;
 
@@ -47,7 +45,6 @@ public class ActivityList extends ListActivity
         setContentView(R.layout.activity_list);
 
         activityDBM = new ActivityDBM(this);
-        locationDBM = new LocationDBM(this);
         activity_lv = (ListView) this.getListView();
 
         // pulling in bundle information
@@ -204,6 +201,7 @@ public class ActivityList extends ListActivity
         listAdapter = new SimpleCursorAdapter(this, R.layout.plain_list_item, cursor, new String[] { ID, ENTRYDATE },
                 new int[] { R.id.itemId, R.id.itemName });
         setListAdapter(listAdapter);
+        activityDBM.close();
     }
 
     // private long insert(int usr)
