@@ -134,15 +134,33 @@ public class DiaryView extends Activity
     @Override
     protected void onPrepareDialog(final int id, final Dialog dialog, Bundle args)
     {
-        activityDBM.open();
-        bindCursor = activityDBM.getBindingList(diaryId);
-        startManagingCursor(bindCursor);
-        listAdapter = new SimpleCursorAdapter(this, R.layout.check_list_item, bindCursor, new String[] { ID, EDATE, CHECK },
-                new int[] { R.id.itemId, R.id.itemName, R.id.itemCheck });
-        listAdapter.setViewBinder(new MyViewBinder());
+        setupMultiList(ONCREATE);
+    }
 
-        bind_lv.setAdapter(listAdapter);
+    private static final boolean ONCREATE = true;
+    private static final boolean ONUPDATE = false;
+
+    private void setupMultiList(Boolean newList)
+    {
+        activityDBM.open();
+        bindCursor = activityDBM.getBindingList(diaryId); // Gets all items tied
+                                                          // to the
+        // user.
+        startManagingCursor(bindCursor);
         activityDBM.close();
+
+        // Uses the cursor to populate a List item with an invisible ID column,
+        // a name column, and the checkbox
+        if (newList)
+        {
+            listAdapter = new SimpleCursorAdapter(this, R.layout.check_list_item, bindCursor, new String[] { ID, EDATE,
+                    CHECK }, new int[] { R.id.itemId, R.id.itemName, R.id.itemCheck });
+            listAdapter.setViewBinder(new MyViewBinder());
+            bind_lv.setAdapter(listAdapter);
+        } else
+        {
+            listAdapter.changeCursor(bindCursor);
+        }
     }
 
     public class MyViewBinder implements ViewBinder
@@ -171,6 +189,7 @@ public class DiaryView extends Activity
         @Override
         public void onCheckedChanged(CompoundButton checkBox, boolean newVal)
         {
+            Log.d("Check changed", "hi");
             View item = (View) checkBox.getParent(); // Gets the
                                                      // plain_list_item(Parent)
                                                      // of the Check Box
@@ -179,10 +198,11 @@ public class DiaryView extends Activity
             // appropriately.
             int itemId = Integer.valueOf(((TextView) item.findViewById(R.id.itemId)).getText().toString());
             int did = newVal ? diaryId : 0;
+
             activityDBM.open();
             activityDBM.setChecked(itemId, did, userId, newVal);
             activityDBM.close();
-
+            setupMultiList(ONUPDATE);
         }
     }
 
@@ -225,15 +245,11 @@ public class DiaryView extends Activity
             @Override
             public void onItemClick(AdapterView<?> arg0, View v, int position, long id)
             {
-                // Gets the cursor from the entry selected
-
-                Cursor item = (Cursor) boundListView.getAdapter().getItem(position);
                 // Gets the entry _id of the cursor
+                Cursor item = (Cursor) boundListView.getAdapter().getItem(position);
                 int itemId = item.getInt(item.getColumnIndex(ID));
 
-                // the new activity being started
                 Intent myIntent = new Intent(v.getContext(), ActivityView.class);
-                // The information being passed to the new activity
                 Bundle bundle = new Bundle();
 
                 // Preparing the data
