@@ -134,15 +134,28 @@ public class DiaryView extends Activity
     @Override
     protected void onPrepareDialog(final int id, final Dialog dialog, Bundle args)
     {
+        setupMultiList(ONCREATE);
+    }
+
+    private static final Boolean ONCREATE = true;
+    private static final Boolean ONUPDATE = false;
+
+    public void setupMultiList(Boolean newVal)
+    {
         activityDBM.open();
         bindCursor = activityDBM.getBindingList(diaryId);
         startManagingCursor(bindCursor);
-        listAdapter = new SimpleCursorAdapter(this, R.layout.check_list_item, bindCursor, new String[] { ID, EDATE, CHECK },
-                new int[] { R.id.itemId, R.id.itemName, R.id.itemCheck });
-        listAdapter.setViewBinder(new MyViewBinder());
-
-        bind_lv.setAdapter(listAdapter);
         activityDBM.close();
+
+        if (newVal)
+        {
+            listAdapter = new SimpleCursorAdapter(this, R.layout.check_list_item, bindCursor, new String[] { ID, EDATE,
+                    CHECK }, new int[] { R.id.itemId, R.id.itemName, R.id.itemCheck });
+            listAdapter.setViewBinder(new MyViewBinder());
+
+            bind_lv.setAdapter(listAdapter);
+        } else
+            listAdapter.changeCursor(bindCursor);
     }
 
     public class MyViewBinder implements ViewBinder
@@ -182,6 +195,7 @@ public class DiaryView extends Activity
             activityDBM.open();
             activityDBM.setChecked(itemId, did, userId, newVal);
             activityDBM.close();
+            setupMultiList(ONUPDATE);
 
         }
     }
