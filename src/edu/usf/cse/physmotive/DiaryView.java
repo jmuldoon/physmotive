@@ -141,6 +141,7 @@ public class DiaryView extends Activity
     private static final boolean ONUPDATE = false;
 
     private void setupMultiList(Boolean newList)
+
     {
         activityDBM.open();
         bindCursor = activityDBM.getBindingList(diaryId); // Gets all items tied
@@ -152,6 +153,7 @@ public class DiaryView extends Activity
         // Uses the cursor to populate a List item with an invisible ID column,
         // a name column, and the checkbox
         if (newList)
+
         {
             listAdapter = new SimpleCursorAdapter(this, R.layout.check_list_item, bindCursor, new String[] { ID, EDATE,
                     CHECK }, new int[] { R.id.itemId, R.id.itemName, R.id.itemCheck });
@@ -161,6 +163,7 @@ public class DiaryView extends Activity
         {
             listAdapter.changeCursor(bindCursor);
         }
+
     }
 
     public class MyViewBinder implements ViewBinder
