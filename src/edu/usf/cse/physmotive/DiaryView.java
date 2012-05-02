@@ -30,6 +30,7 @@ import edu.usf.cse.physmotive.db.DiaryDBM;
 public class DiaryView extends Activity
 {
     // More checkout shit
+
     static final String ID = "_id";
     static final String DIARYID = "diaryId";
     static final String USERID = "userId";
